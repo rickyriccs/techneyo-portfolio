@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  Globe, Smartphone, Cloud, Brain, Palette, Megaphone, Server, Shield, ArrowRight, CheckCircle2
+  Globe, MapPin, MessageCircle, Brain, Palette, Megaphone, Server, Users, ArrowRight, CheckCircle2
 } from "lucide-react";
 
 const fadeUp = {
@@ -14,44 +14,44 @@ const fadeUp = {
 
 const services = [
   {
-    icon: Globe, title: "Web Development",
-    desc: "We build high-performance websites and web applications using modern technologies like React, Next.js, and Node.js.",
-    features: ["Custom Web Applications", "E-commerce Solutions", "Progressive Web Apps", "CMS Development"],
+    icon: Globe, title: "Website & Landing Page Development",
+    desc: "Professional, mobile-friendly websites and landing pages that explain your services clearly and convert visitors into inquiries.",
+    features: ["Business Website", "Landing Page", "Service Pages", "Portfolio/Gallery"],
   },
   {
-    icon: Smartphone, title: "Mobile App Development",
-    desc: "Native and cross-platform mobile applications for iOS and Android that deliver seamless user experiences.",
-    features: ["iOS & Android Apps", "React Native / Flutter", "App Store Optimization", "Maintenance & Updates"],
+    icon: MapPin, title: "Google Business & Local SEO",
+    desc: "Improve local search visibility so nearby customers can find your business on Google and trust your online presence.",
+    features: ["Google Business Profile", "Local Keywords", "Review Strategy", "Location SEO"],
   },
   {
-    icon: Cloud, title: "Cloud & DevOps",
-    desc: "Scalable cloud infrastructure design, migration, and management with automated CI/CD pipelines.",
-    features: ["AWS / Azure / GCP", "Cloud Migration", "CI/CD Pipelines", "Infrastructure as Code"],
+    icon: MessageCircle, title: "WhatsApp Inquiry & Follow-up System",
+    desc: "Convert website visitors into WhatsApp leads and manage inquiry conversations more professionally.",
+    features: ["WhatsApp Button", "Form to WhatsApp", "Auto-reply Flow", "Follow-up Templates"],
   },
   {
-    icon: Brain, title: "AI & Automation",
-    desc: "Leverage artificial intelligence and machine learning to automate processes and gain intelligent insights.",
-    features: ["Machine Learning Models", "Chatbots & NLP", "Process Automation", "Predictive Analytics"],
+    icon: Users, title: "Lead Management CRM",
+    desc: "Track inquiries, follow-ups, customer notes, status, source, and conversion in one simple lead management system.",
+    features: ["Lead Capture", "Status Tracking", "Follow-up Reminders", "Admin Dashboard"],
   },
   {
-    icon: Palette, title: "UI/UX Design",
-    desc: "User-centered design that combines aesthetics with functionality to create engaging digital experiences.",
-    features: ["User Research", "Wireframing & Prototyping", "Visual Design", "Usability Testing"],
+    icon: Server, title: "Custom Software & Business Automation",
+    desc: "Custom dashboards, booking systems, reports, billing tools, portals, and workflow automation for growing businesses.",
+    features: ["Admin Dashboards", "Booking Systems", "Report Systems", "Customer Portals"],
   },
   {
-    icon: Megaphone, title: "Digital Marketing",
-    desc: "Data-driven marketing strategies that increase your online visibility and drive qualified leads.",
-    features: ["SEO Optimization", "PPC Campaigns", "Social Media Marketing", "Content Strategy"],
+    icon: Megaphone, title: "Digital Marketing & Ad-Ready Setup",
+    desc: "Prepare your business for Google, Facebook, Instagram, and WhatsApp campaigns with landing pages and tracking.",
+    features: ["Campaign Creatives", "Offer Pages", "Lead Forms", "Tracking Setup"],
   },
   {
-    icon: Server, title: "Server Management",
-    desc: "24/7 server monitoring, maintenance, and security to ensure your infrastructure runs smoothly.",
-    features: ["Server Setup & Config", "Performance Monitoring", "Security Hardening", "Backup & Recovery"],
+    icon: Brain, title: "AI-Powered Business Tools",
+    desc: "Use AI for customer support, reports, content, lead qualification, internal automation, and business insights.",
+    features: ["AI Chatbot", "AI FAQ Assistant", "AI Reports", "AI Lead Qualification"],
   },
   {
-    icon: Shield, title: "IT Consulting",
-    desc: "Strategic technology consulting to align your IT infrastructure with business goals and drive growth.",
-    features: ["Technology Assessment", "Digital Strategy", "Vendor Management", "IT Roadmap Planning"],
+    icon: Palette, title: "Branding & Creative Design",
+    desc: "Professional visual identity and marketing creatives that make your business look trustworthy online and offline.",
+    features: ["Logo Design", "Social Creatives", "Posters", "Offer Banners"],
   },
 ];
 
@@ -64,10 +64,10 @@ const Services = () => {
           <motion.div initial="hidden" animate="visible" className="max-w-3xl">
             <motion.p variants={fadeUp} custom={0} className="text-accent font-semibold text-sm tracking-widest uppercase mb-4">Our Services</motion.p>
             <motion.h1 variants={fadeUp} custom={1} className="font-display text-4xl sm:text-5xl font-bold text-primary-foreground mb-6">
-              Comprehensive IT Solutions for Your Business
+              Local Business Growth & Automation Solutions
             </motion.h1>
             <motion.p variants={fadeUp} custom={2} className="text-primary-foreground/70 text-lg leading-relaxed">
-              From concept to deployment and beyond — we offer end-to-end technology services tailored to your needs.
+              Websites, Google visibility, WhatsApp inquiry systems, CRM, custom software, marketing setup, and AI tools for practical business growth.
             </motion.p>
           </motion.div>
         </div>
@@ -108,7 +108,7 @@ const Services = () => {
                   to="/contact"
                   className="btn-hero text-xs px-5 py-2.5 self-start shrink-0"
                 >
-                  Get Quote <ArrowRight size={14} />
+                  Request Audit <ArrowRight size={14} />
                 </Link>
               </motion.div>
             ))}
@@ -121,14 +121,14 @@ const Services = () => {
         <div className="section-container relative z-10 text-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <motion.h2 variants={fadeUp} custom={0} className="font-display text-3xl sm:text-4xl font-bold text-primary-foreground mb-4">
-              Need a Custom Solution?
+              Need a Digital Growth System?
             </motion.h2>
             <motion.p variants={fadeUp} custom={1} className="text-primary-foreground/70 text-lg max-w-xl mx-auto mb-8">
-              Every business is unique. Let us build a tailored solution that fits your exact requirements.
+              We will review your current presence and suggest a practical setup for more inquiries, better follow-ups, and smoother operations.
             </motion.p>
             <motion.div variants={fadeUp} custom={2}>
               <Link to="/contact" className="inline-flex items-center gap-2 rounded-lg px-7 py-3.5 text-sm font-semibold bg-primary-foreground text-primary hover:bg-primary-foreground/90 transition-all">
-                Contact Us <ArrowRight size={18} />
+                Request Free Business Audit <ArrowRight size={18} />
               </Link>
             </motion.div>
           </motion.div>

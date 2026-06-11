@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
-import { MapPin, Phone, Mail, Linkedin, Facebook, Instagram, Twitter } from "lucide-react";
+import { MapPin, Phone, Mail, Linkedin, Facebook, Instagram, Twitter, MessageCircle } from "lucide-react";
 
 const services = [
-  "Web Development",
-  "Mobile App Development",
-  "Cloud & DevOps",
-  "AI & Automation",
-  "UI/UX Design",
+  "Website Development",
+  "Local SEO",
+  "Lead Management CRM",
+  "WhatsApp Automation",
+  "Custom Software",
+  "AI Business Tools",
   "Digital Marketing",
-  "IT Consulting",
 ];
 
 const Footer = () => {
@@ -24,7 +24,7 @@ const Footer = () => {
               </div>
             </div>
             <p className="text-background/60 text-sm leading-relaxed mb-5">
-              Delivering innovative IT solutions since 2021. Based in Ludhiana, Punjab, we empower businesses with cutting-edge technology.
+              Techneyo Solutions helps local businesses grow with websites, local SEO, CRM, WhatsApp automation, custom software, and practical AI tools.
             </p>
             <div className="flex gap-3">
               {[
@@ -84,15 +84,19 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-start gap-3 text-sm text-background/60">
                 <MapPin size={16} className="mt-0.5 shrink-0 text-accent" />
-                Ludhiana, Punjab
+                Ludhiana, Punjab and remote clients
               </li>
               <li className="flex items-center gap-3 text-sm text-background/60">
                 <Phone size={16} className="shrink-0 text-accent" />
-                +91 99887 73122
+                <a href="tel:+919988773122" className="hover:text-background transition-colors">+91 99887 73122</a>
               </li>
               <li className="flex items-center gap-3 text-sm text-background/60">
                 <Mail size={16} className="shrink-0 text-accent" />
-                hello@techneyo.com
+                <a href="mailto:hello@techneyo.com" className="hover:text-background transition-colors">hello@techneyo.com</a>
+              </li>
+              <li className="flex items-center gap-3 text-sm text-background/60">
+                <MessageCircle size={16} className="shrink-0 text-accent" />
+                <a href="https://wa.me/919988773122" target="_blank" rel="noopener noreferrer" className="hover:text-background transition-colors">Chat on WhatsApp</a>
               </li>
             </ul>
           </div>
@@ -101,7 +105,7 @@ const Footer = () => {
       <div className="border-t border-background/10">
         <div className="section-container py-5 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-background/40">
           <p>© {new Date().getFullYear()} Techneyo Solutions. All rights reserved.</p>
-          <p>Established 2021 · Ludhiana, Punjab</p>
+          <p>Website, SEO, CRM, WhatsApp automation, software, and AI tools</p>
         </div>
       </div>
     </footer>

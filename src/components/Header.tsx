@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Phone } from "lucide-react";
+import { Menu, MessageCircle, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
@@ -66,15 +66,17 @@ const Header = () => {
           {/* CTA */}
           <div className="hidden md:flex items-center gap-3">
             <a
-              href="tel:+919988773122"
+              href="https://wa.me/919988773122"
+              target="_blank"
+              rel="noopener noreferrer"
               className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
                 scrolled
                   ? "btn-hero"
                   : "bg-primary-foreground/15 text-primary-foreground border border-primary-foreground/30 hover:bg-primary-foreground/25"
-              }`}
+                }`}
             >
-              <Phone size={16} />
-              Call Now
+              <MessageCircle size={16} />
+              Free Audit
             </a>
           </div>
 
@@ -114,11 +116,13 @@ const Header = () => {
                 </Link>
               ))}
               <a
-                href="tel:+919988773122"
+                href="https://wa.me/919988773122"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="btn-hero w-full mt-3 text-center block"
               >
-                <Phone size={16} className="inline mr-2" />
-                Call Now
+                <MessageCircle size={16} className="inline mr-2" />
+                Request Free Audit
               </a>
             </div>
           </motion.div>

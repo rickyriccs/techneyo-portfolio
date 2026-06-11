@@ -17,15 +17,47 @@ const contactInfo = [
   { icon: Clock, title: "Business Hours", detail: "Mon - Sat: 9:00 AM - 7:00 PM", href: "#" },
 ];
 
+const needOptions = [
+  "Website",
+  "Google Business Profile",
+  "SEO",
+  "WhatsApp inquiry system",
+  "CRM",
+  "Custom software",
+  "Mobile app",
+  "AI automation",
+  "Not sure, need guidance",
+];
+
 const Contact = () => {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
+  const [form, setForm] = useState({
+    name: "",
+    businessName: "",
+    phone: "",
+    city: "",
+    businessType: "",
+    hasWebsite: "",
+    hasGoogleProfile: "",
+    need: "",
+    message: "",
+  });
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 4000);
-    setForm({ name: "", email: "", phone: "", message: "" });
+    setForm({
+      name: "",
+      businessName: "",
+      phone: "",
+      city: "",
+      businessType: "",
+      hasWebsite: "",
+      hasGoogleProfile: "",
+      need: "",
+      message: "",
+    });
   };
 
   return (
@@ -36,10 +68,10 @@ const Contact = () => {
           <motion.div initial="hidden" animate="visible" className="max-w-3xl">
             <motion.p variants={fadeUp} custom={0} className="text-accent font-semibold text-sm tracking-widest uppercase mb-4">Contact Us</motion.p>
             <motion.h1 variants={fadeUp} custom={1} className="font-display text-4xl sm:text-5xl font-bold text-primary-foreground mb-6">
-              Let's Start a Conversation
+              Request a Free Digital Business Audit
             </motion.h1>
             <motion.p variants={fadeUp} custom={2} className="text-primary-foreground/70 text-lg leading-relaxed">
-              Have a project in mind? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+              Tell us about your business. We will review your website, Google visibility, WhatsApp inquiry flow, and lead capture opportunities.
             </motion.p>
           </motion.div>
         </div>
@@ -51,46 +83,114 @@ const Contact = () => {
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid lg:grid-cols-5 gap-10">
             {/* Form */}
             <motion.div variants={fadeUp} custom={0} className="lg:col-span-3">
-              <h2 className="font-display text-2xl font-bold text-foreground mb-6">Send Us a Message</h2>
+              <h2 className="font-display text-2xl font-bold text-foreground mb-6">Business Audit Form</h2>
               {submitted && (
                 <div className="mb-6 p-4 rounded-lg bg-accent/10 border border-accent/20 text-accent text-sm font-medium">
-                  Thank you! Your message has been sent. We'll get back to you shortly.
+                  Thank you. Our team will review your business requirements and contact you with practical improvement suggestions.
                 </div>
               )}
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="text-sm font-medium text-foreground mb-1.5 block">Full Name</label>
+                    <label className="text-sm font-medium text-foreground mb-1.5 block">Name</label>
                     <input
                       type="text"
                       required
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
                       className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
-                      placeholder="John Doe"
+                      placeholder="Your name"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-foreground mb-1.5 block">Email Address</label>
+                    <label className="text-sm font-medium text-foreground mb-1.5 block">Business Name</label>
                     <input
-                      type="email"
+                      type="text"
                       required
-                      value={form.email}
-                      onChange={(e) => setForm({ ...form, email: e.target.value })}
+                      value={form.businessName}
+                      onChange={(e) => setForm({ ...form, businessName: e.target.value })}
                       className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
-                      placeholder="john@example.com"
+                      placeholder="Your business name"
+                    />
+                  </div>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-5">
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-1.5 block">Phone/WhatsApp Number</label>
+                    <input
+                      type="tel"
+                      required
+                      value={form.phone}
+                      onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                      className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                      placeholder="+91 98765 43210"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-1.5 block">City</label>
+                    <input
+                      type="text"
+                      required
+                      value={form.city}
+                      onChange={(e) => setForm({ ...form, city: e.target.value })}
+                      className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                      placeholder="Ludhiana"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-1.5 block">Phone Number</label>
+                  <label className="text-sm font-medium text-foreground mb-1.5 block">Business Type</label>
                   <input
-                    type="tel"
-                    value={form.phone}
-                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                    type="text"
+                    required
+                    value={form.businessType}
+                    onChange={(e) => setForm({ ...form, businessType: e.target.value })}
                     className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
-                    placeholder="+91 98765 43210"
+                    placeholder="Clinic, coaching institute, restaurant, salon, real estate, manufacturing..."
                   />
+                </div>
+                <div className="grid sm:grid-cols-2 gap-5">
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-1.5 block">Do you already have a website?</label>
+                    <select
+                      required
+                      value={form.hasWebsite}
+                      onChange={(e) => setForm({ ...form, hasWebsite: e.target.value })}
+                      className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                    >
+                      <option value="">Select one</option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-1.5 block">Do you have Google Business Profile?</label>
+                    <select
+                      required
+                      value={form.hasGoogleProfile}
+                      onChange={(e) => setForm({ ...form, hasGoogleProfile: e.target.value })}
+                      className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                    >
+                      <option value="">Select one</option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                      <option value="Not sure">Not Sure</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-1.5 block">What do you need?</label>
+                  <select
+                    required
+                    value={form.need}
+                    onChange={(e) => setForm({ ...form, need: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                  >
+                    <option value="">Select a requirement</option>
+                    {needOptions.map((option) => (
+                      <option key={option} value={option}>{option}</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-foreground mb-1.5 block">Message</label>
@@ -100,11 +200,11 @@ const Contact = () => {
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
                     className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors resize-none"
-                    placeholder="Tell us about your project..."
+                    placeholder="Tell us what you want to improve, automate, or promote..."
                   />
                 </div>
                 <button type="submit" className="btn-hero">
-                  <Send size={16} /> Send Message
+                  <Send size={16} /> Request Free Audit
                 </button>
               </form>
             </motion.div>
