@@ -226,7 +226,7 @@ const Index = () => {
               Grow Your Local Business with Website, Marketing & Automation Solutions
             </motion.h1>
             <motion.p variants={fadeUp} custom={2} className="text-primary-foreground/75 text-lg sm:text-xl max-w-3xl mb-8 leading-relaxed">
-              Techneyo Solutions helps Ludhiana businesses get more inquiries, improve Google visibility, manage leads, and automate customer follow-ups with modern digital tools.
+              Techneyo Solutions helps businesses get more inquiries, improve Google visibility, manage leads, and automate customer follow-ups with modern digital tools.
             </motion.p>
             <motion.div variants={fadeUp} custom={3} className="flex flex-wrap gap-4">
               <Link to="/contact" className="btn-hero">
