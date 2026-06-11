@@ -17,7 +17,7 @@ const values = [
 ];
 
 const milestones = [
-  { year: "2021", title: "Founded", desc: "NexaTech established in New Delhi with a vision to democratize technology." },
+  { year: "2021", title: "Founded", desc: "Techneyo Solutions established in Ludhiana, Punjab with a vision to democratize technology." },
   { year: "2022", title: "50+ Projects", desc: "Crossed 50 successful project deliveries across multiple industries." },
   { year: "2023", title: "Team Expansion", desc: "Grew to 25+ talented professionals and expanded service offerings." },
   { year: "2024", title: "AI & Cloud", desc: "Launched dedicated AI solutions and cloud consulting divisions." },
@@ -59,7 +59,7 @@ const About = () => {
                 From a Vision to a Trusted IT Partner
               </motion.h2>
               <motion.p variants={fadeUp} custom={2} className="text-muted-foreground leading-relaxed mb-4">
-                NexaTech was founded in 2021 in the heart of New Delhi with a clear mission — to make world-class technology solutions accessible to businesses of all sizes. What started as a small team of passionate developers has grown into a full-service IT company.
+                Techneyo Solutions was founded in 2021 in Ludhiana, Punjab with a clear mission: to make world-class technology solutions accessible to businesses of all sizes. What started as a small team of passionate developers has grown into a full-service IT company.
               </motion.p>
               <motion.p variants={fadeUp} custom={3} className="text-muted-foreground leading-relaxed">
                 Today, we serve 50+ clients with a team of 30+ professionals, delivering everything from custom web applications to enterprise cloud solutions.

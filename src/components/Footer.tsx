@@ -19,13 +19,12 @@ const Footer = () => {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 rounded-lg hero-gradient flex items-center justify-center">
-                <span className="font-display font-bold text-lg text-primary-foreground">N</span>
+              <div className="h-12 w-40 rounded-md bg-white px-2 py-1 flex items-center justify-center">
+                <img src="/logo.png" alt="Techneyo Solutions" className="h-full w-full object-contain" />
               </div>
-              <span className="font-display font-bold text-xl">NexaTech</span>
             </div>
             <p className="text-background/60 text-sm leading-relaxed mb-5">
-              Delivering innovative IT solutions since 2021. Based in New Delhi, India, we empower businesses with cutting-edge technology.
+              Delivering innovative IT solutions since 2021. Based in Ludhiana, Punjab, we empower businesses with cutting-edge technology.
             </p>
             <div className="flex gap-3">
               {[
@@ -85,15 +84,15 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-start gap-3 text-sm text-background/60">
                 <MapPin size={16} className="mt-0.5 shrink-0 text-accent" />
-                New Delhi, India
+                Ludhiana, Punjab
               </li>
               <li className="flex items-center gap-3 text-sm text-background/60">
                 <Phone size={16} className="shrink-0 text-accent" />
-                +91 123 456 7890
+                +91 99887 73122
               </li>
               <li className="flex items-center gap-3 text-sm text-background/60">
                 <Mail size={16} className="shrink-0 text-accent" />
-                hello@nexatech.in
+                hello@techneyo.com
               </li>
             </ul>
           </div>
@@ -101,8 +100,8 @@ const Footer = () => {
       </div>
       <div className="border-t border-background/10">
         <div className="section-container py-5 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-background/40">
-          <p>© {new Date().getFullYear()} NexaTech. All rights reserved.</p>
-          <p>Established 2021 · New Delhi, India</p>
+          <p>© {new Date().getFullYear()} Techneyo Solutions. All rights reserved.</p>
+          <p>Established 2021 · Ludhiana, Punjab</p>
         </div>
       </div>
     </footer>

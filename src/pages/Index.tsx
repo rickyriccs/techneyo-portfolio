@@ -33,7 +33,7 @@ const whyChooseUs = [
 ];
 
 const testimonials = [
-  { name: "Rajesh Sharma", role: "CEO, FinEdge Solutions", text: "NexaTech transformed our digital presence. Their web development team delivered beyond expectations.", rating: 5 },
+  { name: "Rajesh Sharma", role: "CEO, FinEdge Solutions", text: "Techneyo Solutions transformed our digital presence. Their web development team delivered beyond expectations.", rating: 5 },
   { name: "Priya Mehta", role: "Founder, StyleHub", text: "The mobile app they built for us increased our revenue by 40%. Highly recommend their services.", rating: 5 },
   { name: "Amit Verma", role: "CTO, DataFlow Inc.", text: "Their cloud migration expertise saved us significant costs. Professional and reliable team.", rating: 5 },
 ];
@@ -114,10 +114,10 @@ const Index = () => {
               About Us
             </motion.p>
             <motion.h2 variants={fadeUp} custom={1} className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-5">
-              Your Trusted IT Partner in New Delhi
+              Your Trusted IT Partner in Ludhiana
             </motion.h2>
             <motion.p variants={fadeUp} custom={2} className="text-muted-foreground text-lg leading-relaxed">
-              Established in 2021, NexaTech is a full-service IT company headquartered in New Delhi, India. We combine technical expertise with creative thinking to deliver digital solutions that help businesses thrive in today's competitive landscape.
+              Established in 2021, Techneyo Solutions is a full-service IT company based in Ludhiana, Punjab. We combine technical expertise with creative thinking to deliver digital solutions that help businesses thrive in today's competitive landscape.
             </motion.p>
             <motion.div variants={fadeUp} custom={3} className="mt-8">
               <Link to="/about" className="btn-hero">
@@ -185,7 +185,7 @@ const Index = () => {
           >
             <div className="text-center mb-14">
               <motion.p variants={fadeUp} custom={0} className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">
-                Why NexaTech
+                Why Techneyo
               </motion.p>
               <motion.h2 variants={fadeUp} custom={1} className="font-display text-3xl sm:text-4xl font-bold text-foreground">
                 Why Choose Us
@@ -261,7 +261,7 @@ const Index = () => {
               <Link to="/contact" className="inline-flex items-center gap-2 rounded-lg px-7 py-3.5 text-sm font-semibold bg-primary-foreground text-primary hover:bg-primary-foreground/90 transition-all">
                 Contact Us <ArrowRight size={18} />
               </Link>
-              <a href="tel:+911234567890" className="btn-outline-hero">
+              <a href="tel:+919988773122" className="btn-outline-hero">
                 <Phone size={18} /> Call Now
               </a>
             </motion.div>
@@ -287,9 +287,9 @@ const Index = () => {
             </div>
             <motion.div variants={fadeUp} custom={2} className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
               {[
-                { icon: Phone, title: "Call Us", detail: "+91 123 456 7890", href: "tel:+911234567890" },
-                { icon: Mail, title: "Email Us", detail: "hello@nexatech.in", href: "mailto:hello@nexatech.in" },
-                { icon: MapPin, title: "Visit Us", detail: "New Delhi, India", href: "#" },
+                { icon: Phone, title: "Call Us", detail: "+91 99887 73122", href: "tel:+919988773122" },
+                { icon: Mail, title: "Email Us", detail: "hello@techneyo.com", href: "mailto:hello@techneyo.com" },
+                { icon: MapPin, title: "Visit Us", detail: "Ludhiana, Punjab", href: "#" },
               ].map((c) => (
                 <a key={c.title} href={c.href} className="card-elevated p-6 text-center group">
                   <div className="w-12 h-12 rounded-full bg-primary/10 mx-auto mb-3 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">

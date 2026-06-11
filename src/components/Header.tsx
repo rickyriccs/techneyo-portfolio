@@ -37,12 +37,9 @@ const Header = () => {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-lg hero-gradient flex items-center justify-center">
-              <span className="text-primary-foreground font-display font-bold text-lg">N</span>
+            <div className="h-11 w-36 rounded-md bg-white px-2 py-1 shadow-sm flex items-center justify-center">
+              <img src="/logo.png" alt="Techneyo Solutions" className="h-full w-full object-contain" />
             </div>
-            <span className={`font-display font-bold text-xl ${scrolled ? "text-foreground" : "text-primary-foreground"} transition-colors`}>
-              NexaTech
-            </span>
           </Link>
 
           {/* Desktop Nav */}
@@ -69,7 +66,7 @@ const Header = () => {
           {/* CTA */}
           <div className="hidden md:flex items-center gap-3">
             <a
-              href="tel:+911234567890"
+              href="tel:+919988773122"
               className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
                 scrolled
                   ? "btn-hero"
@@ -117,7 +114,7 @@ const Header = () => {
                 </Link>
               ))}
               <a
-                href="tel:+911234567890"
+                href="tel:+919988773122"
                 className="btn-hero w-full mt-3 text-center block"
               >
                 <Phone size={16} className="inline mr-2" />

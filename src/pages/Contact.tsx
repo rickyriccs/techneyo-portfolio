@@ -11,9 +11,9 @@ const fadeUp = {
 };
 
 const contactInfo = [
-  { icon: Phone, title: "Phone", detail: "+91 123 456 7890", href: "tel:+911234567890" },
-  { icon: Mail, title: "Email", detail: "hello@nexatech.in", href: "mailto:hello@nexatech.in" },
-  { icon: MapPin, title: "Address", detail: "Connaught Place, New Delhi, India 110001", href: "#" },
+  { icon: Phone, title: "Phone", detail: "+91 99887 73122", href: "tel:+919988773122" },
+  { icon: Mail, title: "Email", detail: "hello@techneyo.com", href: "mailto:hello@techneyo.com" },
+  { icon: MapPin, title: "Address", detail: "Ludhiana, Punjab", href: "#" },
   { icon: Clock, title: "Business Hours", detail: "Mon - Sat: 9:00 AM - 7:00 PM", href: "#" },
 ];
 
@@ -126,7 +126,7 @@ const Contact = () => {
 
               {/* WhatsApp */}
               <a
-                href="https://wa.me/911234567890"
+                href="https://wa.me/919988773122"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="card-elevated p-5 flex items-center gap-4 border-accent/30 group"
@@ -149,14 +149,14 @@ const Contact = () => {
         <div className="section-container py-10">
           <div className="rounded-xl overflow-hidden border border-border" style={{ height: 400 }}>
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14006.552270028998!2d77.21505565!3d28.6328295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd37b741d057%3A0xcdee88e47393c3f1!2sConnaught%20Place%2C%20New%20Delhi%2C%20Delhi!5e0!3m2!1sen!2sin!4v1700000000000"
+              src="https://www.google.com/maps?q=Ludhiana%2C%20Punjab&output=embed"
               width="100%"
               height="100%"
               style={{ border: 0 }}
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="NexaTech Location - New Delhi"
+              title="Techneyo Solutions Location - Ludhiana, Punjab"
             />
           </div>
         </div>
