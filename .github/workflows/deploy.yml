@@ -39,4 +39,5 @@ jobs:
           REMOTE_PORT: ${{ secrets.HOSTINGER_PORT }}
           SOURCE: "dist/"
           TARGET: ${{ secrets.HOSTINGER_DEPLOY_PATH }}
-          ARGS: "-rlgoDzvc --delete"
+          ARGS: "-rlgoDzvc"
+#          EXCLUDE: "/subdomains/, /.well-known/, /.htaccess"
