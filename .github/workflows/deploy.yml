@@ -1,71 +1,42 @@
-name: NodeJS with Webpack
+name: Deploy React Production to Hostinger
 
 on:
   push:
-    branches: [ "production" ]
+    branches:
+      - production
 
 jobs:
-  build:
+  build-and-deploy:
+    name: Build Fresh and Deploy Dist
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x, 22.x]
-
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout production branch
+        uses: actions/checkout@v4
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
 
-    - name: Validate secrets
-      run: |
-          test -n "${{ secrets.HOSTINGER_HOST }}" || (echo "HOSTINGER_HOST missing" && exit 1)
-          test -n "${{ secrets.HOSTINGER_PORT }}" || (echo "HOSTINGER_PORT missing" && exit 1)
-          test -n "${{ secrets.HOSTINGER_USER }}" || (echo "HOSTINGER_USER missing" && exit 1)
-          test -n "${{ secrets.HOSTINGER_PATH }}" || (echo "HOSTINGER_PATH missing" && exit 1)
-          test -n "${{ secrets.HOSTINGER_SSH_KEY }}" || (echo "HOSTINGER_SSH_KEY missing" && exit 1)
+      - name: Fresh install dependencies
+        run: npm ci
 
-    - name: Debug SSH config without exposing secrets
-      run: |
-        echo "Host length: $(echo -n '${{ secrets.HOSTINGER_HOST }}' | wc -c)"
-        echo "Port length: $(echo -n '${{ secrets.HOSTINGER_PORT }}' | wc -c)"
-        echo "User length: $(echo -n '${{ secrets.HOSTINGER_USER }}' | wc -c)"
+      - name: Build React project
+        run: npm run build
 
-    - name: Test SSH
-      run: |
-        mkdir -p ~/.ssh
-        printf '%s\n' "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/id_ed25519
-        chmod 600 ~/.ssh/id_ed25519
+      - name: Confirm dist folder
+        run: |
+          ls -la
+          ls -la dist
 
-        ssh -o StrictHostKeyChecking=no \
-          -p "${{ secrets.HOSTINGER_PORT }}" \
-          "${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}" \
-          "pwd && ls -la"
-
-    - name: Setup SSH
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/id_ed25519
-        chmod 600 ~/.ssh/id_ed25519
-        ssh-keyscan -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_HOST }} >> ~/.ssh/known_hosts
-
-    - name: Test SSH connection
-      run: |
-        ssh -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} "pwd && ls -la"
-
-    - name: Check Hostinger path
-      run: |
-        ssh -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} "pwd && ls -la && ls -la ${{ secrets.HOSTINGER_PATH }}"
-
-    - name: Deploy files
-      run: |
-        rsync -avz \
-          --exclude=".git" \
-          --exclude=".github" \
-          --exclude=".env" \
-          --exclude="node_modules" \
-          -e "ssh -p ${{ secrets.HOSTINGER_PORT }}" \
-          ./ ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_PATH }}/
+      - name: Deploy dist files to Hostinger public_html
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.HOSTINGER_HOST }}
+          REMOTE_USER: ${{ secrets.HOSTINGER_USER }}
+          REMOTE_PORT: ${{ secrets.HOSTINGER_PORT }}
+          SOURCE: "dist/"
+          TARGET: ${{ secrets.HOSTINGER_DEPLOY_PATH }}
+          ARGS: "-rlgoDzvc --delete"
