@@ -8,7 +8,7 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isConfigured, isLoading, session, profile, refreshProfile } = useAdminAuth();
-  const [email, setEmail] = useState("admin@techneyo.com");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
