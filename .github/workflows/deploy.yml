@@ -29,6 +29,7 @@ jobs:
         run: |
           ls -la
           ls -la dist
+          test -f dist/.htaccess
 
       - name: Deploy dist files to Hostinger public_html
         uses: easingthemes/ssh-deploy@main
@@ -40,4 +41,4 @@ jobs:
           SOURCE: "dist/"
           TARGET: ${{ secrets.HOSTINGER_DEPLOY_PATH }}
           ARGS: "-rlgoDzvc --delete"
-          EXCLUDE: "/subdomains/, /.well-known/, /.htaccess"
+          EXCLUDE: "/subdomains/, /.well-known/"
