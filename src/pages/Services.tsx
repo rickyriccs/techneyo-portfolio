@@ -116,26 +116,37 @@ const Services = () => {
   }, []);
 
   return (
-    <div>
+    <div className="public-premium min-h-screen overflow-hidden text-white">
       {/* Hero */}
-      <section className="relative pt-32 pb-20 hero-gradient">
+      <section className="premium-hero relative overflow-hidden pb-20 pt-32">
+        <div className="premium-grid-bg" />
+        <div className="premium-orbit premium-orbit-a" />
         <div className="section-container relative z-10">
           <motion.div initial="hidden" animate="visible" className="max-w-3xl">
-            <motion.p variants={fadeUp} custom={0} className="text-accent font-semibold text-sm tracking-widest uppercase mb-4">Our Services</motion.p>
-            <motion.h1 variants={fadeUp} custom={1} className="font-display text-4xl sm:text-5xl font-bold text-primary-foreground mb-6">
-              Local Business Growth & Automation Solutions
+            <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">Our Services</motion.p>
+            <motion.h1 variants={fadeUp} custom={1} className="mb-6 font-display text-4xl font-bold leading-tight text-white sm:text-6xl">
+              Website, automation and digital tools built for business growth.
             </motion.h1>
-            <motion.p variants={fadeUp} custom={2} className="text-primary-foreground/70 text-lg leading-relaxed">
-              Websites, Google visibility, WhatsApp inquiry systems, CRM, custom software, marketing setup, and AI tools for practical business growth.
+            <motion.p variants={fadeUp} custom={2} className="max-w-2xl text-lg leading-8 text-white/68">
+              From starter websites to CRM dashboards, WhatsApp enquiry flows and custom software, Techneyo helps businesses across India look trusted and capture leads.
             </motion.p>
+            <motion.div variants={fadeUp} custom={3} className="mt-8 flex flex-wrap gap-3">
+              {["Website from Rs. 999", "Lead capture ready", "Admin controlled", "All India service"].map((item) => (
+                <span key={item} className="premium-badge">{item}</span>
+              ))}
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
       {/* Services Grid */}
-      <section className="section-padding bg-background">
+      <section id="tools" className="premium-section scroll-mt-24">
         <div className="section-container">
-          <div className="space-y-8">
+          <div className="mb-10 max-w-3xl">
+            <p className="premium-eyebrow">Dynamic service stack</p>
+            <h2 className="font-display text-3xl font-bold text-white sm:text-5xl">Services controlled from Supabase and ready for admin updates.</h2>
+          </div>
+          <div className="space-y-6">
             {services.map((s, i) => {
               const ServiceIcon = iconMap[s.icon_name] || Globe;
 
@@ -145,18 +156,18 @@ const Services = () => {
                 initial={{ opacity: 1, y: 0 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: Math.min(i * 0.04, 0.2), duration: 0.25 }}
-                className="card-elevated p-6 md:p-8 grid md:grid-cols-[auto_1fr_auto] gap-6 items-start"
+                className="premium-card premium-card-hover grid items-start gap-6 p-6 md:grid-cols-[auto_1fr_auto] md:p-8"
               >
-                <div className="w-14 h-14 rounded-xl hero-gradient flex items-center justify-center shrink-0">
-                  <ServiceIcon size={26} className="text-primary-foreground" />
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-cyan-300/10 text-cyan-100">
+                  <ServiceIcon size={26} />
                 </div>
                 <div>
-                  <h3 className="font-display text-xl font-bold text-foreground mb-2">{s.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed mb-4">{s.description}</p>
+                  <h3 className="mb-2 font-display text-xl font-bold text-white">{s.title}</h3>
+                  <p className="mb-4 leading-relaxed text-white/62">{s.description}</p>
                   <div className="grid grid-cols-2 gap-2">
                     {s.features.map((f) => (
-                      <div key={f} className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <CheckCircle2 size={14} className="text-accent shrink-0" />
+                      <div key={f} className="flex items-center gap-2 text-sm text-white/60">
+                        <CheckCircle2 size={14} className="shrink-0 text-emerald-200" />
                         {f}
                       </div>
                     ))}
@@ -164,7 +175,7 @@ const Services = () => {
                 </div>
                 <Link
                   to="/contact"
-                  className="btn-hero text-xs px-5 py-2.5 self-start shrink-0"
+                  className="premium-btn premium-btn-primary shrink-0 self-start px-5 py-2.5 text-xs"
                 >
                   Request Audit <ArrowRight size={14} />
                 </Link>
@@ -176,17 +187,20 @@ const Services = () => {
       </section>
 
       {/* CTA */}
-      <section className="relative py-20 hero-gradient">
-        <div className="section-container relative z-10 text-center">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }}>
-            <motion.h2 variants={fadeUp} custom={0} className="font-display text-3xl sm:text-4xl font-bold text-primary-foreground mb-4">
+      <section id="offers" className="premium-section scroll-mt-24">
+        <div className="section-container">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} className="premium-final-cta">
+            <div>
+            <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">Free consultation</motion.p>
+            <motion.h2 variants={fadeUp} custom={1} className="mb-4 font-display text-3xl font-bold text-white sm:text-5xl">
               Need a Digital Growth System?
             </motion.h2>
-            <motion.p variants={fadeUp} custom={1} className="text-primary-foreground/70 text-lg max-w-xl mx-auto mb-8">
+            <motion.p variants={fadeUp} custom={2} className="max-w-xl text-lg leading-8 text-white/65">
               We will review your current presence and suggest a practical setup for more inquiries, better follow-ups, and smoother operations.
             </motion.p>
-            <motion.div variants={fadeUp} custom={2}>
-              <Link to="/contact" className="inline-flex items-center gap-2 rounded-lg px-7 py-3.5 text-sm font-semibold bg-primary-foreground text-primary hover:bg-primary-foreground/90 transition-all">
+            </div>
+            <motion.div variants={fadeUp} custom={3}>
+              <Link to="/contact" className="premium-btn premium-btn-primary">
                 Request Free Business Audit <ArrowRight size={18} />
               </Link>
             </motion.div>

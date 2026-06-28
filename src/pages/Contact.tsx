@@ -31,6 +31,8 @@ const needOptions = [
 ];
 
 const Contact = () => {
+  const fieldClass = "w-full rounded-lg border border-white/10 bg-white/[0.055] px-4 py-3 text-sm text-white outline-none transition-colors placeholder:text-white/35 focus:border-cyan-200/50 focus:ring-2 focus:ring-cyan-300/15";
+  const labelClass = "mb-1.5 block text-sm font-medium text-white/82";
   const [form, setForm] = useState({
     name: "",
     businessName: "",
@@ -98,129 +100,132 @@ const Contact = () => {
   };
 
   return (
-    <div>
+    <div className="public-premium min-h-screen overflow-hidden text-white">
       {/* Hero */}
-      <section className="relative pt-32 pb-20 hero-gradient">
+      <section className="premium-hero relative overflow-hidden pb-20 pt-32">
+        <div className="premium-grid-bg" />
+        <div className="premium-orbit premium-orbit-a" />
         <div className="section-container relative z-10">
           <motion.div initial="hidden" animate="visible" className="max-w-3xl">
-            <motion.p variants={fadeUp} custom={0} className="text-accent font-semibold text-sm tracking-widest uppercase mb-4">Contact Us</motion.p>
-            <motion.h1 variants={fadeUp} custom={1} className="font-display text-4xl sm:text-5xl font-bold text-primary-foreground mb-6">
+            <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">Contact Us</motion.p>
+            <motion.h1 variants={fadeUp} custom={1} className="mb-6 font-display text-4xl font-bold leading-tight text-white sm:text-6xl">
               Request a Free Digital Business Audit
             </motion.h1>
-            <motion.p variants={fadeUp} custom={2} className="text-primary-foreground/70 text-lg leading-relaxed">
-              Tell us about your business. We will review your website, Google visibility, WhatsApp inquiry flow, and lead capture opportunities.
+            <motion.p variants={fadeUp} custom={2} className="max-w-2xl text-lg leading-8 text-white/68">
+              Tell us about your business. We will review your website, Google visibility, WhatsApp enquiry flow, lead capture, and automation opportunities.
             </motion.p>
           </motion.div>
         </div>
       </section>
 
       {/* Contact Content */}
-      <section className="section-padding bg-background">
+      <section className="premium-section">
         <div className="section-container">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid lg:grid-cols-5 gap-10">
             {/* Form */}
-            <motion.div variants={fadeUp} custom={0} className="lg:col-span-3">
-              <h2 className="font-display text-2xl font-bold text-foreground mb-6">Business Audit Form</h2>
+            <motion.div variants={fadeUp} custom={0} className="premium-card lg:col-span-3 p-6 sm:p-8">
+              <p className="premium-eyebrow">Lead form</p>
+              <h2 className="mb-6 font-display text-2xl font-bold text-white">Business Audit Form</h2>
               {submitted && (
-                <div className="mb-6 p-4 rounded-lg bg-accent/10 border border-accent/20 text-accent text-sm font-medium">
+                <div className="mb-6 rounded-lg border border-emerald-300/20 bg-emerald-300/10 p-4 text-sm font-medium text-emerald-100">
                   Thank you. Our team will review your business requirements and contact you with practical improvement suggestions.
                 </div>
               )}
               {submitError && (
-                <div className="mb-6 p-4 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium">
+                <div className="mb-6 rounded-lg border border-destructive/20 bg-destructive/10 p-4 text-sm font-medium text-destructive">
                   {submitError}
                 </div>
               )}
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="text-sm font-medium text-foreground mb-1.5 block">Name</label>
+                    <label className={labelClass}>Name</label>
                     <input
                       type="text"
                       required
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                      className={fieldClass}
                       placeholder="Your name"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-foreground mb-1.5 block">Business Name</label>
+                    <label className={labelClass}>Business Name</label>
                     <input
                       type="text"
                       required
                       value={form.businessName}
                       onChange={(e) => setForm({ ...form, businessName: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                      className={fieldClass}
                       placeholder="Your business name"
                     />
                   </div>
                 </div>
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="text-sm font-medium text-foreground mb-1.5 block">Phone/WhatsApp Number</label>
+                    <label className={labelClass}>Phone/WhatsApp Number</label>
                     <input
                       type="tel"
                       required
                       value={form.phone}
                       onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                      className={fieldClass}
                       placeholder="+91 98765 43210"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-foreground mb-1.5 block">Email</label>
+                    <label className={labelClass}>Email</label>
                     <input
                       type="email"
                       value={form.email}
                       onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                      className={fieldClass}
                       placeholder="you@example.com"
                     />
                   </div>
                 </div>
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="text-sm font-medium text-foreground mb-1.5 block">City</label>
+                    <label className={labelClass}>City</label>
                     <input
                       type="text"
                       required
                       value={form.city}
                       onChange={(e) => setForm({ ...form, city: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                      className={fieldClass}
                       placeholder="Ludhiana"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-foreground mb-1.5 block">State</label>
+                    <label className={labelClass}>State</label>
                     <input
                       type="text"
                       value={form.state}
                       onChange={(e) => setForm({ ...form, state: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                      className={fieldClass}
                       placeholder="Punjab"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-1.5 block">Business Type</label>
+                  <label className={labelClass}>Business Type</label>
                   <input
                     type="text"
                     required
                     value={form.businessType}
                     onChange={(e) => setForm({ ...form, businessType: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                    className={fieldClass}
                     placeholder="Clinic, coaching institute, restaurant, salon, real estate, manufacturing..."
                   />
                 </div>
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="text-sm font-medium text-foreground mb-1.5 block">Do you already have a website?</label>
+                    <label className={labelClass}>Do you already have a website?</label>
                     <select
                       required
                       value={form.hasWebsite}
                       onChange={(e) => setForm({ ...form, hasWebsite: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                      className={fieldClass}
                     >
                       <option value="">Select one</option>
                       <option value="Yes">Yes</option>
@@ -228,12 +233,12 @@ const Contact = () => {
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-foreground mb-1.5 block">Do you have Google Business Profile?</label>
+                    <label className={labelClass}>Do you have Google Business Profile?</label>
                     <select
                       required
                       value={form.hasGoogleProfile}
                       onChange={(e) => setForm({ ...form, hasGoogleProfile: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                      className={fieldClass}
                     >
                       <option value="">Select one</option>
                       <option value="Yes">Yes</option>
@@ -243,12 +248,12 @@ const Contact = () => {
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-1.5 block">What do you need?</label>
+                  <label className={labelClass}>What do you need?</label>
                   <select
                     required
                     value={form.need}
                     onChange={(e) => setForm({ ...form, need: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                    className={fieldClass}
                   >
                     <option value="">Select a requirement</option>
                     {needOptions.map((option) => (
@@ -257,11 +262,11 @@ const Contact = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-1.5 block">Budget Range</label>
+                  <label className={labelClass}>Budget Range</label>
                   <select
                     value={form.budgetRange}
                     onChange={(e) => setForm({ ...form, budgetRange: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                    className={fieldClass}
                   >
                     <option value="">Select budget range</option>
                     <option value="Under Rs. 5,000">Under Rs. 5,000</option>
@@ -271,17 +276,17 @@ const Contact = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-1.5 block">Message</label>
+                  <label className={labelClass}>Message</label>
                   <textarea
                     required
                     rows={5}
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors resize-none"
+                    className={`${fieldClass} resize-none`}
                     placeholder="Tell us what you want to improve, automate, or promote..."
                   />
                 </div>
-                <button type="submit" className="btn-hero" disabled={isSubmitting}>
+                <button type="submit" className="premium-btn premium-btn-primary" disabled={isSubmitting}>
                   <Send size={16} /> {isSubmitting ? "Submitting..." : "Request Free Audit"}
                 </button>
               </form>
@@ -289,15 +294,15 @@ const Contact = () => {
 
             {/* Contact Info */}
             <motion.div variants={fadeUp} custom={1} className="lg:col-span-2 space-y-5">
-              <h2 className="font-display text-2xl font-bold text-foreground mb-6">Contact Information</h2>
+              <h2 className="mb-6 font-display text-2xl font-bold text-white">Contact Information</h2>
               {contactInfo.map((c) => (
-                <a key={c.title} href={c.href} className="card-elevated p-5 flex items-start gap-4 group">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary transition-colors">
-                    <c.icon size={18} className="text-primary group-hover:text-primary-foreground transition-colors" />
+                <a key={c.title} href={c.href} className="premium-card premium-card-hover p-5 flex items-start gap-4 group">
+                  <div className="w-10 h-10 rounded-lg bg-cyan-300/10 flex items-center justify-center shrink-0 text-cyan-100">
+                    <c.icon size={18} />
                   </div>
                   <div>
-                    <h3 className="font-display font-semibold text-foreground text-sm">{c.title}</h3>
-                    <p className="text-muted-foreground text-sm mt-0.5">{c.detail}</p>
+                    <h3 className="font-display font-semibold text-white text-sm">{c.title}</h3>
+                    <p className="text-white/58 text-sm mt-0.5">{c.detail}</p>
                   </div>
                 </a>
               ))}
@@ -307,14 +312,14 @@ const Contact = () => {
                 href="https://wa.me/919988773122"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="card-elevated p-5 flex items-center gap-4 border-accent/30 group"
+                className="premium-card premium-card-hover p-5 flex items-center gap-4 border-accent/30 group"
               >
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{ background: "#25D366" }}>
                   <MessageCircle size={18} className="text-primary-foreground" />
                 </div>
                 <div>
-                  <h3 className="font-display font-semibold text-foreground text-sm">WhatsApp</h3>
-                  <p className="text-muted-foreground text-sm mt-0.5">Quick connect on WhatsApp</p>
+                  <h3 className="font-display font-semibold text-white text-sm">WhatsApp</h3>
+                  <p className="text-white/58 text-sm mt-0.5">Quick connect on WhatsApp</p>
                 </div>
               </a>
             </motion.div>
@@ -323,9 +328,9 @@ const Contact = () => {
       </section>
 
       {/* Map */}
-      <section className="bg-muted/50">
+      <section className="pb-12">
         <div className="section-container py-10">
-          <div className="rounded-xl overflow-hidden border border-border" style={{ height: 400 }}>
+          <div className="rounded-xl overflow-hidden border border-white/10" style={{ height: 400 }}>
             <iframe
               src="https://www.google.com/maps?q=Ludhiana%2C%20Punjab&output=embed"
               width="100%"

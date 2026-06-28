@@ -5,8 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
   { label: "Home", path: "/" },
-  { label: "About", path: "/about" },
   { label: "Services", path: "/services" },
+  { label: "Offers", path: "/offers" },
+  { label: "Tools", path: "/tools" },
+  { label: "About", path: "/about" },
   { label: "Contact Us", path: "/contact" },
 ];
 
@@ -25,19 +27,22 @@ const Header = () => {
     setIsOpen(false);
   }, [location]);
 
+  const isActive = (path: string) => {
+    const [pathname, hash] = path.split("#");
+    return location.pathname === pathname && (!hash || location.hash === `#${hash}`);
+  };
+
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-card/95 backdrop-blur-md shadow-md border-b border-border"
-          : "bg-transparent"
+      className={`fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[#030711]/88 shadow-2xl shadow-cyan-950/20 backdrop-blur-xl transition-all duration-300 ${
+        scrolled ? "md:bg-[#030711]/92" : "md:bg-[#030711]/76"
       }`}
     >
       <div className="section-container">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex h-16 items-center justify-between md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <div className="h-11 w-36 rounded-md bg-white px-2 py-1 shadow-sm flex items-center justify-center">
+            <div className="flex h-11 w-36 items-center justify-center rounded-md bg-white px-2 py-1 shadow-sm shadow-cyan-400/10">
               <img src="/logo.png" alt="Techneyo Solutions" className="h-full w-full object-contain" />
             </div>
           </Link>
@@ -48,14 +53,10 @@ const Header = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  location.pathname === link.path
-                    ? scrolled
-                      ? "text-primary bg-primary/10"
-                      : "text-primary-foreground bg-primary-foreground/15"
-                    : scrolled
-                    ? "text-muted-foreground hover:text-foreground hover:bg-muted"
-                    : "text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10"
+                className={`rounded-lg px-3 py-2 text-sm font-semibold transition-all duration-200 ${
+                  isActive(link.path)
+                    ? "bg-cyan-300/18 text-cyan-50 shadow-[0_0_24px_rgb(34_211_238_/_0.14)]"
+                    : "text-slate-300 hover:bg-white/10 hover:text-cyan-50"
                 }`}
               >
                 {link.label}
@@ -69,11 +70,7 @@ const Header = () => {
               href="https://wa.me/919988773122"
               target="_blank"
               rel="noopener noreferrer"
-              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
-                scrolled
-                  ? "btn-hero"
-                  : "bg-primary-foreground/15 text-primary-foreground border border-primary-foreground/30 hover:bg-primary-foreground/25"
-                }`}
+              className="inline-flex items-center gap-2 rounded-lg border border-cyan-200/20 bg-white/10 px-5 py-2.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-200 hover:bg-cyan-300/15"
             >
               <MessageCircle size={16} />
               Free Audit
@@ -83,9 +80,7 @@ const Header = () => {
           {/* Mobile toggle */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className={`md:hidden p-2 rounded-lg transition-colors ${
-              scrolled ? "text-foreground" : "text-primary-foreground"
-            }`}
+            className="rounded-lg p-2 text-white transition-colors hover:bg-white/10 md:hidden"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -99,7 +94,7 @@ const Header = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-card border-b border-border overflow-hidden"
+            className="overflow-hidden border-b border-white/10 bg-[#030711]/95 backdrop-blur-xl md:hidden"
           >
             <div className="section-container py-4 space-y-1">
               {navLinks.map((link) => (
@@ -107,9 +102,9 @@ const Header = () => {
                   key={link.path}
                   to={link.path}
                   className={`block px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                    location.pathname === link.path
-                      ? "text-primary bg-primary/10"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    isActive(link.path)
+                      ? "bg-cyan-300/18 text-cyan-50"
+                      : "text-slate-300 hover:bg-white/10 hover:text-cyan-50"
                   }`}
                 >
                   {link.label}
@@ -119,7 +114,7 @@ const Header = () => {
                 href="https://wa.me/919988773122"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-hero w-full mt-3 text-center block"
+                className="premium-btn premium-btn-primary mt-3 w-full"
               >
                 <MessageCircle size={16} className="inline mr-2" />
                 Request Free Audit

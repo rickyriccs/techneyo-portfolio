@@ -12,6 +12,8 @@ import AdminLayout from "./components/admin/AdminLayout";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Services from "./pages/Services";
+import Offers from "./pages/Offers";
+import Tools from "./pages/Tools";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -36,6 +38,8 @@ const AppRoutes = () => {
           <Route path="/" element={<Index />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/offers" element={<Offers />} />
+          <Route path="/tools" element={<Tools />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route element={<AdminGuard />}>
