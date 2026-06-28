@@ -9,6 +9,9 @@ jobs:
   build-and-deploy:
     name: Build Fresh and Deploy Dist
     runs-on: ubuntu-latest
+    env:
+      VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY }}
 
     steps:
       - name: Checkout production branch
@@ -24,17 +27,17 @@ jobs:
 
       - name: Verify frontend environment
         run: |
-          test -n "${VITE_SUPABASE_URL}"
-          test -n "${VITE_SUPABASE_ANON_KEY}"
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          if [ -z "${VITE_SUPABASE_URL}" ]; then
+            echo "Missing VITE_SUPABASE_URL. Add it in GitHub Settings > Secrets and variables > Actions > Variables or Secrets."
+            exit 1
+          fi
+          if [ -z "${VITE_SUPABASE_ANON_KEY}" ]; then
+            echo "Missing VITE_SUPABASE_ANON_KEY. Add it in GitHub Settings > Secrets and variables > Actions > Variables or Secrets."
+            exit 1
+          fi
 
       - name: Build React project
         run: npm run build
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
       - name: Confirm dist folder
         run: |
