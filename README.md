@@ -61,6 +61,15 @@ Protected admin routes:
 
 To log in, create the admin user in Supabase Auth, then add a matching active row in `public.admin_profiles`. The schema file includes the SQL snippet for linking `admin@techneyo.com` after the Auth user exists.
 
+For production builds, add these GitHub Actions secrets so Vite can bake the Supabase browser config into the static bundle deployed to Hostinger:
+
+```text
+VITE_SUPABASE_URL
+VITE_SUPABASE_ANON_KEY
+```
+
+Do not expose `DATABASE_URL` in the frontend build.
+
 Build for production:
 
 ```sh

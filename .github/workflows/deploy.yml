@@ -22,8 +22,19 @@ jobs:
       - name: Fresh install dependencies
         run: npm ci
 
+      - name: Verify frontend environment
+        run: |
+          test -n "${VITE_SUPABASE_URL}"
+          test -n "${VITE_SUPABASE_ANON_KEY}"
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
       - name: Build React project
         run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
       - name: Confirm dist folder
         run: |
