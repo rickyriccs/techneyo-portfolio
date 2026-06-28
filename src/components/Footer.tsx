@@ -37,10 +37,10 @@ const Footer = () => {
             </p>
             <div className="flex gap-3">
               {[
-                { icon: Linkedin, href: "#" },
-                { icon: Facebook, href: "#" },
-                { icon: Instagram, href: "#" },
-                { icon: Twitter, href: "#" },
+                // { icon: Linkedin, href: "#" },
+                { icon: Facebook, href: "https://www.facebook.com/techneyo" },
+                { icon: Instagram, href: "https://www.instagram.com/techneyo" },
+                // { icon: Twitter, href: "#" },
               ].map(({ icon: Icon, href }, i) => (
                 <a
                   key={i}
