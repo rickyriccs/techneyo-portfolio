@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Phone, Mail, MapPin, Clock, MessageCircle, Send } from "lucide-react";
+import { createContactEnquiry } from "@/lib/contact-enquiries";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -34,30 +35,66 @@ const Contact = () => {
     name: "",
     businessName: "",
     phone: "",
+    email: "",
     city: "",
+    state: "",
     businessType: "",
     hasWebsite: "",
     hasGoogleProfile: "",
     need: "",
+    budgetRange: "",
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
-    setForm({
-      name: "",
-      businessName: "",
-      phone: "",
-      city: "",
-      businessType: "",
-      hasWebsite: "",
-      hasGoogleProfile: "",
-      need: "",
-      message: "",
-    });
+    setSubmitError("");
+    setIsSubmitting(true);
+
+    try {
+      await createContactEnquiry({
+        name: form.name,
+        phone: form.phone,
+        email: form.email,
+        businessName: form.businessName,
+        city: form.city,
+        state: form.state,
+        serviceRequired: form.need,
+        budgetRange: form.budgetRange,
+        message: [
+          form.message,
+          `Business type: ${form.businessType}`,
+          `Has website: ${form.hasWebsite}`,
+          `Has Google Business Profile: ${form.hasGoogleProfile}`,
+        ].join("\n"),
+        sourcePage: "/contact",
+      });
+
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 4000);
+      setForm({
+        name: "",
+        businessName: "",
+        phone: "",
+        email: "",
+        city: "",
+        state: "",
+        businessType: "",
+        hasWebsite: "",
+        hasGoogleProfile: "",
+        need: "",
+        budgetRange: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error("Contact enquiry submission failed", error);
+      setSubmitError("We could not save your enquiry right now. Please try again or message us on WhatsApp.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -87,6 +124,11 @@ const Contact = () => {
               {submitted && (
                 <div className="mb-6 p-4 rounded-lg bg-accent/10 border border-accent/20 text-accent text-sm font-medium">
                   Thank you. Our team will review your business requirements and contact you with practical improvement suggestions.
+                </div>
+              )}
+              {submitError && (
+                <div className="mb-6 p-4 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium">
+                  {submitError}
                 </div>
               )}
               <form onSubmit={handleSubmit} className="space-y-5">
@@ -127,6 +169,18 @@ const Contact = () => {
                     />
                   </div>
                   <div>
+                    <label className="text-sm font-medium text-foreground mb-1.5 block">Email</label>
+                    <input
+                      type="email"
+                      value={form.email}
+                      onChange={(e) => setForm({ ...form, email: e.target.value })}
+                      className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                      placeholder="you@example.com"
+                    />
+                  </div>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-5">
+                  <div>
                     <label className="text-sm font-medium text-foreground mb-1.5 block">City</label>
                     <input
                       type="text"
@@ -135,6 +189,16 @@ const Contact = () => {
                       onChange={(e) => setForm({ ...form, city: e.target.value })}
                       className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
                       placeholder="Ludhiana"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-1.5 block">State</label>
+                    <input
+                      type="text"
+                      value={form.state}
+                      onChange={(e) => setForm({ ...form, state: e.target.value })}
+                      className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                      placeholder="Punjab"
                     />
                   </div>
                 </div>
@@ -193,6 +257,20 @@ const Contact = () => {
                   </select>
                 </div>
                 <div>
+                  <label className="text-sm font-medium text-foreground mb-1.5 block">Budget Range</label>
+                  <select
+                    value={form.budgetRange}
+                    onChange={(e) => setForm({ ...form, budgetRange: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                  >
+                    <option value="">Select budget range</option>
+                    <option value="Under Rs. 5,000">Under Rs. 5,000</option>
+                    <option value="Rs. 5,000 - Rs. 15,000">Rs. 5,000 - Rs. 15,000</option>
+                    <option value="Rs. 15,000 - Rs. 50,000">Rs. 15,000 - Rs. 50,000</option>
+                    <option value="Above Rs. 50,000">Above Rs. 50,000</option>
+                  </select>
+                </div>
+                <div>
                   <label className="text-sm font-medium text-foreground mb-1.5 block">Message</label>
                   <textarea
                     required
@@ -203,8 +281,8 @@ const Contact = () => {
                     placeholder="Tell us what you want to improve, automate, or promote..."
                   />
                 </div>
-                <button type="submit" className="btn-hero">
-                  <Send size={16} /> Request Free Audit
+                <button type="submit" className="btn-hero" disabled={isSubmitting}>
+                  <Send size={16} /> {isSubmitting ? "Submitting..." : "Request Free Audit"}
                 </button>
               </form>
             </motion.div>

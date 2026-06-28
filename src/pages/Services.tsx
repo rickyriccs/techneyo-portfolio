@@ -1,8 +1,10 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Globe, MapPin, MessageCircle, Brain, Palette, Megaphone, Server, Users, ArrowRight, CheckCircle2
 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -12,50 +14,107 @@ const fadeUp = {
   }),
 };
 
-const services = [
+const iconMap = {
+  Globe,
+  MapPin,
+  MessageCircle,
+  Brain,
+  Palette,
+  Megaphone,
+  Server,
+  Users,
+};
+
+type Service = {
+  id?: string;
+  icon_name: keyof typeof iconMap;
+  title: string;
+  description: string;
+  features: string[];
+};
+
+const fallbackServices: Service[] = [
   {
-    icon: Globe, title: "Website & Landing Page Development",
-    desc: "Professional, mobile-friendly websites and landing pages that explain your services clearly and convert visitors into inquiries.",
+    icon_name: "Globe",
+    title: "Website & Landing Page Development",
+    description: "Professional, mobile-friendly websites and landing pages that explain your services clearly and convert visitors into inquiries.",
     features: ["Business Website", "Landing Page", "Service Pages", "Portfolio/Gallery"],
   },
   {
-    icon: MapPin, title: "Google Business & Local SEO",
-    desc: "Improve local search visibility so nearby customers can find your business on Google and trust your online presence.",
+    icon_name: "MapPin",
+    title: "Google Business & Local SEO",
+    description: "Improve local search visibility so nearby customers can find your business on Google and trust your online presence.",
     features: ["Google Business Profile", "Local Keywords", "Review Strategy", "Location SEO"],
   },
   {
-    icon: MessageCircle, title: "WhatsApp Inquiry & Follow-up System",
-    desc: "Convert website visitors into WhatsApp leads and manage inquiry conversations more professionally.",
+    icon_name: "MessageCircle",
+    title: "WhatsApp Inquiry & Follow-up System",
+    description: "Convert website visitors into WhatsApp leads and manage inquiry conversations more professionally.",
     features: ["WhatsApp Button", "Form to WhatsApp", "Auto-reply Flow", "Follow-up Templates"],
   },
   {
-    icon: Users, title: "Lead Management CRM",
-    desc: "Track inquiries, follow-ups, customer notes, status, source, and conversion in one simple lead management system.",
+    icon_name: "Users",
+    title: "Lead Management CRM",
+    description: "Track inquiries, follow-ups, customer notes, status, source, and conversion in one simple lead management system.",
     features: ["Lead Capture", "Status Tracking", "Follow-up Reminders", "Admin Dashboard"],
   },
   {
-    icon: Server, title: "Custom Software & Business Automation",
-    desc: "Custom dashboards, booking systems, reports, billing tools, portals, and workflow automation for growing businesses.",
+    icon_name: "Server",
+    title: "Custom Software & Business Automation",
+    description: "Custom dashboards, booking systems, reports, billing tools, portals, and workflow automation for growing businesses.",
     features: ["Admin Dashboards", "Booking Systems", "Report Systems", "Customer Portals"],
   },
   {
-    icon: Megaphone, title: "Digital Marketing & Ad-Ready Setup",
-    desc: "Prepare your business for Google, Facebook, Instagram, and WhatsApp campaigns with landing pages and tracking.",
+    icon_name: "Megaphone",
+    title: "Digital Marketing & Ad-Ready Setup",
+    description: "Prepare your business for Google, Facebook, Instagram, and WhatsApp campaigns with landing pages and tracking.",
     features: ["Campaign Creatives", "Offer Pages", "Lead Forms", "Tracking Setup"],
   },
   {
-    icon: Brain, title: "AI-Powered Business Tools",
-    desc: "Use AI for customer support, reports, content, lead qualification, internal automation, and business insights.",
+    icon_name: "Brain",
+    title: "AI-Powered Business Tools",
+    description: "Use AI for customer support, reports, content, lead qualification, internal automation, and business insights.",
     features: ["AI Chatbot", "AI FAQ Assistant", "AI Reports", "AI Lead Qualification"],
   },
   {
-    icon: Palette, title: "Branding & Creative Design",
-    desc: "Professional visual identity and marketing creatives that make your business look trustworthy online and offline.",
+    icon_name: "Palette",
+    title: "Branding & Creative Design",
+    description: "Professional visual identity and marketing creatives that make your business look trustworthy online and offline.",
     features: ["Logo Design", "Social Creatives", "Posters", "Offer Banners"],
   },
 ];
 
 const Services = () => {
+  const [services, setServices] = useState<Service[]>(fallbackServices);
+
+  useEffect(() => {
+    const loadServices = async () => {
+      if (!supabase) return;
+
+      const { data, error } = await supabase
+        .from("services")
+        .select("id,title,description,icon_name,features")
+        .eq("status", "active")
+        .order("display_order", { ascending: true });
+
+      if (error) {
+        console.error("Failed to load services", error);
+        return;
+      }
+
+      if (data?.length) {
+        setServices(
+          data.map((service) => ({
+            ...service,
+            icon_name: iconMap[service.icon_name as keyof typeof iconMap] ? service.icon_name : "Globe",
+          })) as Service[],
+        );
+      }
+    };
+
+    loadServices();
+  }, []);
+
   return (
     <div>
       {/* Hero */}
@@ -76,25 +135,24 @@ const Services = () => {
       {/* Services Grid */}
       <section className="section-padding bg-background">
         <div className="section-container">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            className="space-y-8"
-          >
-            {services.map((s, i) => (
+          <div className="space-y-8">
+            {services.map((s, i) => {
+              const ServiceIcon = iconMap[s.icon_name] || Globe;
+
+              return (
               <motion.div
-                key={s.title}
-                variants={fadeUp}
-                custom={i}
+                key={s.id || s.title}
+                initial={{ opacity: 1, y: 0 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: Math.min(i * 0.04, 0.2), duration: 0.25 }}
                 className="card-elevated p-6 md:p-8 grid md:grid-cols-[auto_1fr_auto] gap-6 items-start"
               >
                 <div className="w-14 h-14 rounded-xl hero-gradient flex items-center justify-center shrink-0">
-                  <s.icon size={26} className="text-primary-foreground" />
+                  <ServiceIcon size={26} className="text-primary-foreground" />
                 </div>
                 <div>
                   <h3 className="font-display text-xl font-bold text-foreground mb-2">{s.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed mb-4">{s.desc}</p>
+                  <p className="text-muted-foreground leading-relaxed mb-4">{s.description}</p>
                   <div className="grid grid-cols-2 gap-2">
                     {s.features.map((f) => (
                       <div key={f} className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -111,8 +169,9 @@ const Services = () => {
                   Request Audit <ArrowRight size={14} />
                 </Link>
               </motion.div>
-            ))}
-          </motion.div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
