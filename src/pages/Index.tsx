@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import PageMeta from "@/components/PageMeta";
 import { businessInfo, pageDescriptions } from "@/lib/business-info";
 import { organizationSchema } from "@/lib/schema";
@@ -17,14 +16,10 @@ import {
   LayoutDashboard,
   MessageCircle,
   MousePointerClick,
-  Rocket,
   Search,
-  ShieldCheck,
   ShoppingBag,
-  Smartphone,
   Sparkles,
   Star,
-  TimerReset,
   Users,
   Workflow,
   Zap,
@@ -38,8 +33,6 @@ const fadeUp = {
     transition: { delay: i * 0.07, duration: 0.55, ease: "easeOut" as const },
   }),
 };
-
-const bootLines = ["Launching Techneyo Solutions", "Preparing Digital Growth System", "Loading Website Offers"];
 
 const trustItems = [
   "Serving businesses across India",
@@ -127,49 +120,6 @@ const SectionIntro = ({ eyebrow, title, text }: { eyebrow: string; title: string
   </motion.div>
 );
 
-const HomePreloader = () => {
-  const [visible, setVisible] = useState(() => !sessionStorage.getItem("techneyo-preloader-seen"));
-  const reduceMotion = useReducedMotion();
-
-  useEffect(() => {
-    if (!visible) return;
-    const timeout = window.setTimeout(() => {
-      sessionStorage.setItem("techneyo-preloader-seen", "true");
-      setVisible(false);
-    }, reduceMotion ? 350 : 1200);
-    return () => window.clearTimeout(timeout);
-  }, [visible, reduceMotion]);
-
-  if (!visible) return null;
-
-  return (
-    <motion.div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-[#030711]"
-      initial={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-    >
-      <button type="button" onClick={() => setVisible(false)} className="absolute right-5 top-5 text-xs font-semibold uppercase tracking-[0.2em] text-white/50 hover:text-white">
-        Skip
-      </button>
-      <div className="w-full max-w-xl px-6">
-        <div className="mb-5 flex items-center gap-3 text-cyan-300">
-          <Rocket size={20} />
-          <span className="text-xs font-semibold uppercase tracking-[0.3em]">System boot</span>
-        </div>
-        <div className="space-y-3 rounded-lg border border-white/10 bg-white/[0.04] p-5 font-mono text-sm text-white/75 shadow-2xl shadow-cyan-500/10">
-          {bootLines.map((line, index) => (
-            <motion.div key={line} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.22 }}>
-              <span className="text-cyan-300">0{index + 1}</span> / {line}
-            </motion.div>
-          ))}
-          <motion.div className="h-1 rounded-full bg-cyan-300" initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ duration: 0.9, ease: "easeOut" }} />
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
 const DashboardVisual = () => (
   <motion.div className="premium-dashboard" variants={fadeUp} custom={3}>
     <div className="flex items-center justify-between border-b border-white/10 pb-4">
@@ -212,7 +162,6 @@ const Index = () => {
         canonicalPath="/"
         schema={organizationSchema}
       />
-      <HomePreloader />
 
       <section className="premium-hero relative flex min-h-screen items-center overflow-hidden pt-28">
         <div className="premium-grid-bg" />
@@ -247,8 +196,8 @@ const Index = () => {
 
       <div className="premium-marquee border-y border-white/10 bg-white/[0.03] py-4">
         <div className="premium-marquee-track">
-          {[...trustItems, ...trustItems].map((item, index) => (
-            <span key={`${item}-${index}`}><BadgeCheck size={16} /> {item}</span>
+          {trustItems.map((item) => (
+            <span key={item}><BadgeCheck size={16} /> {item}</span>
           ))}
         </div>
       </div>

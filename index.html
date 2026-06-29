@@ -11,12 +11,26 @@
       gtag('config', 'G-1QYNVSTRLK');
     </script>
 
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-PZK8S2PD');</script>
+    <!-- Google Tag Manager: delayed so analytics does not compete with initial rendering. -->
+    <script>
+      (function(w,d,s,l,i){
+        w[l]=w[l]||[];
+        var loadGtm=function(){
+          if(w.__techneyoGtmLoaded) return;
+          w.__techneyoGtmLoaded=true;
+          w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
+          var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+          j.async=true;
+          j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+          f.parentNode.insertBefore(j,f);
+        };
+        if('requestIdleCallback' in w){
+          w.addEventListener('load',function(){w.requestIdleCallback(loadGtm,{timeout:2500});},{once:true});
+        } else {
+          w.addEventListener('load',function(){setTimeout(loadGtm,1200);},{once:true});
+        }
+      })(window,document,'script','dataLayer','GTM-PZK8S2PD');
+    </script>
     <!-- End Google Tag Manager -->
 
     <meta charset="UTF-8" />

@@ -5,7 +5,7 @@ import { businessInfo } from "@/lib/business-info";
 const WhatsAppButton = () => {
   return (
     <>
-      <div className="fixed inset-x-3 bottom-3 z-50 grid grid-cols-3 gap-2 rounded-xl border border-white/10 bg-[#030711]/92 p-2 shadow-2xl shadow-black/30 backdrop-blur-md sm:hidden">
+      <div className="fixed inset-x-3 bottom-3 z-50 grid grid-cols-3 gap-2 rounded-xl border border-white/10 bg-[#030711] p-2 shadow-sm shadow-black/20 sm:hidden">
         <a
           href={businessInfo.whatsappUrl}
           target="_blank"
@@ -35,7 +35,7 @@ const WhatsAppButton = () => {
         target="_blank"
         rel="noopener noreferrer"
         data-cta-location="desktop_floating"
-        className="fixed bottom-4 right-4 z-50 hidden h-14 w-14 items-center justify-center rounded-full shadow-lg transition-transform duration-200 hover:scale-110 sm:bottom-6 sm:right-6 sm:flex"
+        className="fixed bottom-4 right-4 z-50 hidden h-14 w-14 items-center justify-center rounded-full shadow-md transition-transform duration-150 hover:scale-105 sm:bottom-6 sm:right-6 sm:flex"
         style={{ background: "#25D366" }}
         aria-label="Chat on WhatsApp"
       >

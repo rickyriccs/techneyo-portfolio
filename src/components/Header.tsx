@@ -16,14 +16,7 @@ const navLinks = [
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     setIsOpen(false);
@@ -36,9 +29,7 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[#030711]/88 shadow-2xl shadow-cyan-950/20 backdrop-blur-xl transition-all duration-300 ${
-        scrolled ? "md:bg-[#030711]/92" : "md:bg-[#030711]/76"
-      }`}
+      className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[#030711]/94 shadow-sm shadow-black/20"
     >
       <div className="section-container">
         <div className="flex h-16 items-center justify-between md:h-20">
@@ -73,7 +64,7 @@ const Header = () => {
               target="_blank"
               rel="noopener noreferrer"
               data-cta-location="header"
-              className="inline-flex items-center gap-2 rounded-lg border border-cyan-200/20 bg-white/10 px-5 py-2.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-200 hover:bg-cyan-300/15"
+              className="inline-flex items-center gap-2 rounded-lg border border-cyan-200/20 bg-white/10 px-5 py-2.5 text-sm font-bold text-white transition-colors duration-200 hover:bg-cyan-300/15"
             >
               <MessageCircle size={16} />
               Chat on WhatsApp
@@ -94,10 +85,11 @@ const Header = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden border-b border-white/10 bg-[#030711]/95 backdrop-blur-xl md:hidden"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.16, ease: "easeOut" }}
+            className="overflow-hidden border-b border-white/10 bg-[#030711] md:hidden"
           >
             <div className="section-container py-4 space-y-1">
               {navLinks.map((link) => (
