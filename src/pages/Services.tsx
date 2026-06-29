@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabase";
 import PageMeta from "@/components/PageMeta";
 import { pageDescriptions } from "@/lib/business-info";
 import { organizationSchema } from "@/lib/schema";
+import { servicePages, servicePath } from "@/lib/seo-content";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -120,7 +121,7 @@ const Services = () => {
 
   return (
     <div className="public-premium min-h-screen overflow-hidden text-white">
-      <PageMeta title="Services | Techneyo Solutions Website, CRM & Automation" description={pageDescriptions.services} canonicalPath="/services" schema={organizationSchema} />
+      <PageMeta title="Website Development, CRM, SEO & Automation Services | Techneyo Solutions" description={pageDescriptions.services} canonicalPath="/services" schema={organizationSchema} />
       {/* Hero */}
       <section className="premium-hero relative overflow-hidden pb-20 pt-32">
         <div className="premium-grid-bg" />
@@ -129,7 +130,7 @@ const Services = () => {
           <motion.div initial="hidden" animate="visible" className="max-w-3xl">
             <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">Our Services</motion.p>
             <motion.h1 variants={fadeUp} custom={1} className="mb-6 font-display text-4xl font-bold leading-tight text-white sm:text-6xl">
-              Website, automation and digital tools built for business growth.
+              Website, CRM, SEO & automation services for businesses across India.
             </motion.h1>
             <motion.p variants={fadeUp} custom={2} className="max-w-2xl text-lg leading-8 text-white/68">
               From starter websites to CRM dashboards, WhatsApp enquiry flows and custom software, Techneyo Solutions helps businesses across India look trusted and capture leads.
@@ -140,6 +141,29 @@ const Services = () => {
               ))}
             </motion.div>
           </motion.div>
+        </div>
+      </section>
+
+      <section className="premium-section pt-0">
+        <div className="section-container">
+          <div className="mb-10 max-w-3xl">
+            <p className="premium-eyebrow">SEO service pages</p>
+            <h2 className="font-display text-3xl font-bold text-white sm:text-5xl">Explore detailed website, CRM, SEO, and automation services.</h2>
+            <p className="mt-4 leading-7 text-white/62">
+              Each service page explains who it is for, business problems solved, features, process, benefits, FAQs, and related services.
+            </p>
+          </div>
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+            {servicePages.map((service) => (
+              <Link key={service.slug} to={servicePath(service.slug)} className="premium-card premium-card-hover p-5">
+                <h3 className="font-display text-xl font-bold text-white">{service.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-white/62">{service.metaDescription}</p>
+                <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-cyan-100">
+                  View service <ArrowRight size={15} />
+                </span>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 

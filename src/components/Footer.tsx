@@ -3,18 +3,22 @@ import { Globe2, Phone, Mail, Facebook, Instagram, MessageCircle } from "lucide-
 import { businessInfo } from "@/lib/business-info";
 
 const services = [
-  "Website Development",
-  "Local SEO",
-  "Lead Management CRM",
-  "WhatsApp Automation",
-  "Custom Software",
-  "AI Business Tools",
-  "Digital Marketing",
+  { label: "Website Development", path: "/services/website-development" },
+  { label: "Business Website Design", path: "/services/business-website-design" },
+  { label: "CRM Development", path: "/services/crm-development" },
+  { label: "Admin Dashboard Development", path: "/services/admin-dashboard-development" },
+  { label: "Business Automation", path: "/services/business-automation" },
+  { label: "WhatsApp Automation", path: "/services/whatsapp-automation" },
+  { label: "SEO & Digital Presence", path: "/services/seo-digital-presence" },
+  { label: "Custom Software", path: "/services/custom-software-development" },
 ];
 
 const quickLinks = [
   { label: "About Us", path: "/about" },
   { label: "Contact Us", path: "/contact" },
+  { label: "Company Profile", path: "/company-profile" },
+  { label: "Resources", path: "/resources" },
+  { label: "Ludhiana Website Development", path: "/website-development-company-ludhiana" },
   { label: "Privacy Policy", path: "/privacy-policy" },
   { label: "Terms & Conditions", path: "/terms-and-conditions" },
   { label: "Refund & Cancellation Policy", path: "/refund-cancellation-policy" },
@@ -84,12 +88,12 @@ const Footer = () => {
             <h4 className="font-display font-semibold mb-4">Our Services</h4>
             <ul className="space-y-2.5">
               {services.map((s) => (
-                <li key={s}>
+                <li key={s.path}>
                   <Link
-                    to="/services"
+                    to={s.path}
                     className="text-sm text-white/60 hover:text-white transition-colors"
                   >
-                    {s}
+                    {s.label}
                   </Link>
                 </li>
               ))}

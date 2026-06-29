@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import PageMeta from "@/components/PageMeta";
 import { businessInfo, pageDescriptions } from "@/lib/business-info";
 import { organizationSchema } from "@/lib/schema";
+import { servicePages, servicePath } from "@/lib/seo-content";
 import {
   ArrowRight,
   BadgeCheck,
@@ -206,7 +207,7 @@ const Index = () => {
   return (
     <div className="public-premium min-h-screen overflow-hidden bg-[#030711] text-white">
       <PageMeta
-        title="Techneyo Solutions | Website, CRM & Business Automation Services"
+        title="Techneyo Solutions | Website, CRM & Business Automation Services in India"
         description={pageDescriptions.home}
         canonicalPath="/"
         schema={organizationSchema}
@@ -221,10 +222,10 @@ const Index = () => {
           <motion.div initial="hidden" animate="visible">
             <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">Affordable digital growth across India</motion.p>
             <motion.h1 variants={fadeUp} custom={1} className="font-display text-5xl font-bold leading-[0.96] tracking-[-0.03em] text-white sm:text-6xl lg:text-7xl">
-              Affordable Websites & Digital Tools for Businesses Across India
+              Website, CRM & Business Automation Solutions for Businesses Across India
             </motion.h1>
             <motion.p variants={fadeUp} custom={2} className="mt-6 max-w-3xl text-lg leading-8 text-white/68 sm:text-xl">
-              From Rs. 999 starter websites to custom business tools, Techneyo Solutions helps businesses build trust, capture leads, automate work, and grow online.
+              Techneyo Solutions is based in Ludhiana and serves businesses across India with website development, CRM, SEO, WhatsApp automation, admin dashboards, and custom software solutions.
             </motion.p>
             <motion.div variants={fadeUp} custom={3} className="mt-8 flex flex-wrap gap-4">
               <Link to="/contact" className="premium-btn premium-btn-primary">
@@ -333,6 +334,36 @@ const Index = () => {
               <Link to="/services" className="premium-btn premium-btn-primary">
                 Explore Services <ArrowRight size={18} />
               </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="premium-section pt-0">
+        <div className="section-container">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
+            <SectionIntro
+              eyebrow="Service pages"
+              title="Detailed service pages for website, CRM, SEO, and automation needs."
+              text="Use these pages to understand each service, compare related solutions, and move toward the right contact flow."
+            />
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+              {servicePages.map((service, index) => (
+                <motion.div key={service.slug} variants={fadeUp} custom={index + 1}>
+                  <Link to={servicePath(service.slug)} className="premium-card premium-card-hover block h-full p-5">
+                    <h3 className="font-display text-xl font-semibold text-white">{service.title}</h3>
+                    <p className="mt-3 text-sm leading-6 text-white/60">{service.metaDescription}</p>
+                    <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-cyan-100">
+                      Learn more <ArrowRight size={15} />
+                    </span>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <Link to="/website-development-company-ludhiana" className="premium-btn premium-btn-ghost">Website Development in Ludhiana</Link>
+              <Link to="/resources" className="premium-btn premium-btn-ghost">Read Resources</Link>
+              <Link to="/company-profile" className="premium-btn premium-btn-ghost">Company Profile</Link>
             </div>
           </motion.div>
         </div>

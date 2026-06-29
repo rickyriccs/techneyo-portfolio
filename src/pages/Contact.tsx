@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Phone, Mail, MapPin, Clock, MessageCircle, Send } from "lucide-react";
 import { createContactEnquiry } from "@/lib/contact-enquiries";
@@ -104,7 +105,7 @@ const Contact = () => {
 
   return (
     <div className="public-premium min-h-screen overflow-hidden text-white">
-      <PageMeta title="Contact Techneyo Solutions | Discuss Your Digital Requirement" description={pageDescriptions.contact} canonicalPath="/contact" schema={organizationSchema} />
+      <PageMeta title="Contact Techneyo Solutions | Discuss Website, CRM or Automation Requirement" description="Contact Techneyo Solutions to discuss website development, CRM, SEO, WhatsApp automation, admin dashboard, or custom software requirements for your business." canonicalPath="/contact" schema={organizationSchema} />
       {/* Hero */}
       <section className="premium-hero relative overflow-hidden pb-20 pt-32">
         <div className="premium-grid-bg" />
@@ -113,11 +114,16 @@ const Contact = () => {
           <motion.div initial="hidden" animate="visible" className="max-w-3xl">
             <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">Contact Us</motion.p>
             <motion.h1 variants={fadeUp} custom={1} className="mb-6 font-display text-4xl font-bold leading-tight text-white sm:text-6xl">
-              Discuss Your Digital Requirement
+              Discuss Your Website, CRM or Automation Requirement
             </motion.h1>
             <motion.p variants={fadeUp} custom={2} className="max-w-2xl text-lg leading-8 text-white/68">
               Contact Techneyo Solutions for website development, CRM systems, admin dashboards, business automation, SEO setup, WhatsApp automation consultation, and custom web-based software.
             </motion.p>
+            <motion.div variants={fadeUp} custom={3} className="mt-6 flex flex-wrap gap-3">
+              <Link to="/services/website-development" className="premium-badge">website development company in India</Link>
+              <Link to="/services/crm-development" className="premium-badge">CRM development company in India</Link>
+              <Link to="/services/business-automation" className="premium-badge">business automation solutions India</Link>
+            </motion.div>
           </motion.div>
         </div>
       </section>

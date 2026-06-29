@@ -16,6 +16,11 @@ import Offers from "./pages/Offers";
 import Tools from "./pages/Tools";
 import Contact from "./pages/Contact";
 import PolicyPage from "./pages/PolicyPage";
+import ServiceDetail from "./pages/ServiceDetail";
+import LocalSeoPage from "./pages/LocalSeoPage";
+import Resources from "./pages/Resources";
+import ResourcePost from "./pages/ResourcePost";
+import CompanyProfile from "./pages/CompanyProfile";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -39,9 +44,14 @@ const AppRoutes = () => {
           <Route path="/" element={<Index />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/services/:slug" element={<ServiceDetail />} />
           <Route path="/offers" element={<Offers />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/website-development-company-ludhiana" element={<LocalSeoPage />} />
+          <Route path="/resources" element={<Resources />} />
+          <Route path="/resources/:slug" element={<ResourcePost />} />
+          <Route path="/company-profile" element={<CompanyProfile />} />
           <Route path="/privacy-policy" element={<PolicyPage type="privacy" />} />
           <Route path="/terms-and-conditions" element={<PolicyPage type="terms" />} />
           <Route path="/refund-cancellation-policy" element={<PolicyPage type="refund" />} />

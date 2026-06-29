@@ -7,11 +7,11 @@ import { businessInfo } from "@/lib/business-info";
 const navLinks = [
   { label: "Home", path: "/" },
   { label: "Services", path: "/services" },
+  { label: "Ludhiana", path: "/website-development-company-ludhiana" },
+  { label: "Resources", path: "/resources" },
   { label: "Offers", path: "/offers" },
-  { label: "Tools", path: "/tools" },
   { label: "About", path: "/about" },
   { label: "Contact Us", path: "/contact" },
-  { label: "Support", path: "/support" },
 ];
 
 const Header = () => {

@@ -38,7 +38,7 @@ const timeline = [
 const About = () => {
   return (
     <div className="public-premium min-h-screen overflow-hidden text-white">
-      <PageMeta title="About Techneyo Solutions | Digital Growth & Business Automation" description={pageDescriptions.about} canonicalPath="/about" schema={organizationSchema} />
+      <PageMeta title="About Techneyo Solutions | Digital Solutions for Businesses" description={pageDescriptions.about} canonicalPath="/about" schema={organizationSchema} />
       <section className="premium-hero relative overflow-hidden pb-20 pt-32">
         <div className="premium-grid-bg" />
         <div className="premium-orbit premium-orbit-a" />
@@ -54,6 +54,7 @@ const About = () => {
             <motion.div variants={fadeUp} custom={3} className="mt-8 flex flex-wrap gap-3">
               <Link to="/contact" className="premium-btn premium-btn-primary">Get Free Consultation <ArrowRight size={18} /></Link>
               <Link to="/services" className="premium-btn premium-btn-ghost">Explore Services</Link>
+              <Link to="/company-profile" className="premium-btn premium-btn-ghost">Company Profile</Link>
             </motion.div>
           </motion.div>
           <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={3} className="premium-dashboard">

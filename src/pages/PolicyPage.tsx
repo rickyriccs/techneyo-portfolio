@@ -13,7 +13,7 @@ const pageContent = {
     path: "/privacy-policy",
     title: "Privacy Policy | Techneyo Solutions",
     description:
-      "Privacy Policy for Techneyo Solutions covering contact form data, service communication, security, cookies, analytics, third-party tools, and user rights.",
+      "Read the Techneyo Solutions privacy policy to understand how we collect, use, and protect enquiry and contact information.",
     eyebrow: "Privacy Policy",
     heading: "How Techneyo Solutions handles business enquiry and service data.",
     intro:
@@ -45,7 +45,7 @@ const pageContent = {
     path: "/terms-and-conditions",
     title: "Terms & Conditions | Techneyo Solutions",
     description:
-      "Terms and Conditions for using the Techneyo Solutions website and requesting website, CRM, software, automation, SEO, and digital services.",
+      "Read the terms and conditions for using the Techneyo Solutions website and services.",
     eyebrow: "Terms & Conditions",
     heading: "Clear terms for website use, consultations, and service delivery.",
     intro:
@@ -81,7 +81,7 @@ const pageContent = {
     path: "/refund-cancellation-policy",
     title: "Refund & Cancellation Policy | Techneyo Solutions",
     description:
-      "Refund and Cancellation Policy for Techneyo Solutions website, CRM, automation, software, SEO, and digital service projects.",
+      "Understand the refund and cancellation policy for Techneyo Solutions website, software, CRM, and digital service projects.",
     eyebrow: "Refund & Cancellation Policy",
     heading: "A practical refund and cancellation policy for custom digital work.",
     intro:
@@ -113,7 +113,7 @@ const pageContent = {
     path: "/support",
     title: "Support | Techneyo Solutions",
     description:
-      "Get support from Techneyo Solutions by WhatsApp, phone, or email for website, CRM, automation, SEO, and digital service enquiries.",
+      "Get support from Techneyo Solutions through WhatsApp, phone, or email for website, CRM, SEO, automation, and software service queries.",
     eyebrow: "Support",
     heading: "Support for websites, CRM tools, automation, and digital services.",
     intro:

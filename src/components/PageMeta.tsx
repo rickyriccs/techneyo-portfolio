@@ -6,6 +6,8 @@ type PageMetaProps = {
   title: string;
   description: string;
   canonicalPath?: string;
+  ogImage?: string;
+  robots?: string;
   schema?: Record<string, unknown>;
 };
 
@@ -14,18 +16,21 @@ const setMeta = (selector: string, attr: "content" | "href", value: string) => {
   if (element) element.setAttribute(attr, value);
 };
 
-const PageMeta = ({ title, description, canonicalPath, schema }: PageMetaProps) => {
+const PageMeta = ({ title, description, canonicalPath, ogImage = businessInfo.ogImage, robots = "index, follow", schema }: PageMetaProps) => {
   const location = useLocation();
   const canonicalUrl = `${businessInfo.website}${canonicalPath ?? location.pathname}`;
 
   useEffect(() => {
     document.title = title;
     setMeta('meta[name="description"]', "content", description);
+    setMeta('meta[name="robots"]', "content", robots);
     setMeta('meta[property="og:title"]', "content", title);
     setMeta('meta[property="og:description"]', "content", description);
     setMeta('meta[property="og:url"]', "content", canonicalUrl);
+    setMeta('meta[property="og:image"]', "content", ogImage);
     setMeta('meta[name="twitter:title"]', "content", title);
     setMeta('meta[name="twitter:description"]', "content", description);
+    setMeta('meta[name="twitter:image"]', "content", ogImage);
 
     let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
     if (!canonical) {
@@ -49,7 +54,7 @@ const PageMeta = ({ title, description, canonicalPath, schema }: PageMetaProps) 
     return () => {
       document.getElementById("techneyo-page-schema")?.remove();
     };
-  }, [canonicalUrl, description, schema, title]);
+  }, [canonicalUrl, description, ogImage, robots, schema, title]);
 
   return null;
 };
