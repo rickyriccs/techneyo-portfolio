@@ -33,11 +33,11 @@ export const createContactEnquiry = async (input: ContactEnquiryInput) => {
     service_required: input.serviceRequired || null,
     budget_range: input.budgetRange || null,
     message: input.message,
-    source_page: input.sourcePage || window.location.pathname,
+    source_page: input.sourcePage || (typeof window === "undefined" ? null : window.location.pathname),
     utm_source: getUtmValue("utm_source") || null,
     utm_medium: getUtmValue("utm_medium") || null,
     utm_campaign: getUtmValue("utm_campaign") || null,
-    user_agent: navigator.userAgent,
+    user_agent: typeof navigator === "undefined" ? null : navigator.userAgent,
   });
 
   if (error) {

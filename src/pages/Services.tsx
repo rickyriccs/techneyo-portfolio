@@ -5,6 +5,9 @@ import {
   Globe, MapPin, MessageCircle, Brain, Palette, Megaphone, Server, Users, ArrowRight, CheckCircle2
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import PageMeta from "@/components/PageMeta";
+import { pageDescriptions } from "@/lib/business-info";
+import { organizationSchema } from "@/lib/schema";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -117,6 +120,7 @@ const Services = () => {
 
   return (
     <div className="public-premium min-h-screen overflow-hidden text-white">
+      <PageMeta title="Services | Techneyo Solutions Website, CRM & Automation" description={pageDescriptions.services} canonicalPath="/services" schema={organizationSchema} />
       {/* Hero */}
       <section className="premium-hero relative overflow-hidden pb-20 pt-32">
         <div className="premium-grid-bg" />
@@ -128,7 +132,7 @@ const Services = () => {
               Website, automation and digital tools built for business growth.
             </motion.h1>
             <motion.p variants={fadeUp} custom={2} className="max-w-2xl text-lg leading-8 text-white/68">
-              From starter websites to CRM dashboards, WhatsApp enquiry flows and custom software, Techneyo helps businesses across India look trusted and capture leads.
+              From starter websites to CRM dashboards, WhatsApp enquiry flows and custom software, Techneyo Solutions helps businesses across India look trusted and capture leads.
             </motion.p>
             <motion.div variants={fadeUp} custom={3} className="mt-8 flex flex-wrap gap-3">
               {["Website from Rs. 999", "Lead capture ready", "Admin controlled", "All India service"].map((item) => (

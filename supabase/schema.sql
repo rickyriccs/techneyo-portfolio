@@ -17,6 +17,11 @@ create table if not exists public.admin_profiles (
 create table if not exists public.app_settings (
   id uuid primary key default gen_random_uuid(),
   coverage_text text not null default 'We provide website development, digital presence setup, automation tools, and business growth solutions across India.',
+  business_name text not null default 'Techneyo Solutions',
+  business_email text not null default 'hello@techneyo.com',
+  business_phone text not null default '+91 99887 73122',
+  business_website text not null default 'https://techneyo.com',
+  whatsapp_url text not null default 'https://wa.me/919988773122',
   service_area text not null default 'All India',
   city_targets text[] not null default '{}',
   state_targets text[] not null default '{}',
@@ -307,8 +312,15 @@ grant select, insert, update, delete on public.services to authenticated;
 grant select, insert, update, delete on public.contact_enquiries to authenticated;
 grant select, insert on public.activity_logs to authenticated;
 
-insert into public.app_settings (coverage_text, service_area)
-select 'We provide website development, digital presence setup, automation tools, and business growth solutions across India.', 'All India'
+insert into public.app_settings (coverage_text, business_name, business_email, business_phone, business_website, whatsapp_url, service_area)
+select
+  'We provide website development, digital presence setup, CRM, admin dashboards, WhatsApp automation consultation, and business growth solutions across India.',
+  'Techneyo Solutions',
+  'hello@techneyo.com',
+  '+91 99887 73122',
+  'https://techneyo.com',
+  'https://wa.me/919988773122',
+  'All India'
 where not exists (select 1 from public.app_settings);
 
 insert into public.offers (

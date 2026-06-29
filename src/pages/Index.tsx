@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
+import PageMeta from "@/components/PageMeta";
+import { businessInfo, pageDescriptions } from "@/lib/business-info";
+import { organizationSchema } from "@/lib/schema";
 import {
   ArrowRight,
   BadgeCheck,
@@ -103,7 +106,7 @@ const showcases = [
 ];
 
 const testimonials = [
-  { name: "Business Owner", tag: "Website Launch", text: "Techneyo made our online presence clearer, faster and easier for customers to contact us." },
+  { name: "Business Owner", tag: "Website Launch", text: "Techneyo Solutions made our online presence clearer, faster and easier for customers to contact us." },
   { name: "Service Provider", tag: "Lead Flow", text: "The WhatsApp and contact flow helped us stop losing enquiries between calls and messages." },
   { name: "Growing Team", tag: "Automation", text: "They understood the business problem first, then built a practical digital system around it." },
 ];
@@ -202,6 +205,12 @@ const DashboardVisual = () => (
 const Index = () => {
   return (
     <div className="public-premium min-h-screen overflow-hidden bg-[#030711] text-white">
+      <PageMeta
+        title="Techneyo Solutions | Website, CRM & Business Automation Services"
+        description={pageDescriptions.home}
+        canonicalPath="/"
+        schema={organizationSchema}
+      />
       <HomePreloader />
 
       <section className="premium-hero relative flex min-h-screen items-center overflow-hidden pt-28">
@@ -221,7 +230,7 @@ const Index = () => {
               <Link to="/contact" className="premium-btn premium-btn-primary">
                 Start Website from Rs. 999 <ArrowRight size={18} />
               </Link>
-              <a href="https://wa.me/919988773122" target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn-ghost">
+              <a href={businessInfo.whatsappUrl} target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn-ghost">
                 <MessageCircle size={18} /> WhatsApp Free Consultation
               </a>
             </motion.div>
@@ -266,7 +275,7 @@ const Index = () => {
       <section className="premium-section pt-0">
         <div className="section-container">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
-            <SectionIntro eyebrow="The Techneyo system" title="A practical digital growth stack, not just a pretty website." />
+            <SectionIntro eyebrow="The Techneyo Solutions system" title="A practical digital growth stack, not just a pretty website." />
             <div className="grid gap-5 lg:grid-cols-4">
               {solutions.map((solution, index) => (
                 <motion.div key={solution.title} variants={fadeUp} custom={index + 1} className="premium-card premium-card-hover p-6">

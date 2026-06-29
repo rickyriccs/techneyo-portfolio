@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, MessageCircle, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { businessInfo } from "@/lib/business-info";
 
 const navLinks = [
   { label: "Home", path: "/" },
@@ -10,6 +11,7 @@ const navLinks = [
   { label: "Tools", path: "/tools" },
   { label: "About", path: "/about" },
   { label: "Contact Us", path: "/contact" },
+  { label: "Support", path: "/support" },
 ];
 
 const Header = () => {
@@ -43,7 +45,7 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <div className="flex h-11 w-36 items-center justify-center rounded-md bg-white px-2 py-1 shadow-sm shadow-cyan-400/10">
-              <img src="/logo.png" alt="Techneyo Solutions" className="h-full w-full object-contain" />
+              <img src="/logo.png" alt="Techneyo Solutions Logo" className="h-full w-full object-contain" />
             </div>
           </Link>
 
@@ -67,13 +69,13 @@ const Header = () => {
           {/* CTA */}
           <div className="hidden md:flex items-center gap-3">
             <a
-              href="https://wa.me/919988773122"
+              href={businessInfo.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-lg border border-cyan-200/20 bg-white/10 px-5 py-2.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-200 hover:bg-cyan-300/15"
             >
               <MessageCircle size={16} />
-              Free Audit
+              Chat on WhatsApp
             </a>
           </div>
 
@@ -111,13 +113,13 @@ const Header = () => {
                 </Link>
               ))}
               <a
-                href="https://wa.me/919988773122"
+                href={businessInfo.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="premium-btn premium-btn-primary mt-3 w-full"
               >
                 <MessageCircle size={16} className="inline mr-2" />
-                Request Free Audit
+                Chat on WhatsApp
               </a>
             </div>
           </motion.div>

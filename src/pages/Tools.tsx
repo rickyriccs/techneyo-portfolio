@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Bot, CheckCircle2, LayoutDashboard, MessageCircle, Workflow, Wrench } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import PageMeta from "@/components/PageMeta";
+import { businessInfo } from "@/lib/business-info";
+import { organizationSchema } from "@/lib/schema";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -50,7 +53,7 @@ const formatPrice = (price: number | null) => {
 };
 
 const ctaHref = (tool: Tool) => {
-  if (tool.cta_type === "WhatsApp") return "https://wa.me/919988773122";
+  if (tool.cta_type === "WhatsApp") return businessInfo.whatsappUrl;
   if (tool.cta_type === "Call") return "tel:+919988773122";
   if (tool.cta_type === "Custom Link" && tool.cta_url) return tool.cta_url;
   return "/contact";
@@ -84,6 +87,7 @@ const Tools = () => {
 
   return (
     <div className="public-premium min-h-screen overflow-hidden text-white">
+      <PageMeta title="Digital Business Tools | Techneyo Solutions" description="Techneyo Solutions digital tools for lead capture, WhatsApp enquiries, booking flows, CRM dashboards, reports, and business automation." canonicalPath="/tools" schema={organizationSchema} />
       <section className="premium-hero relative overflow-hidden pb-20 pt-32">
         <div className="premium-grid-bg" />
         <div className="premium-orbit premium-orbit-a" />

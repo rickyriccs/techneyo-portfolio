@@ -11,6 +11,10 @@ type Enquiry = {
   state: string | null;
   service_required: string | null;
   budget_range: string | null;
+  message: string;
+  source_page: string | null;
+  user_agent: string | null;
+  admin_notes: string | null;
   lead_status: string;
   follow_up_date: string | null;
   created_at: string;
@@ -32,7 +36,7 @@ const AdminEnquiries = () => {
     setError("");
     let query = supabase
       .from("contact_enquiries")
-      .select("id,name,phone,email,business_name,city,state,service_required,budget_range,lead_status,follow_up_date,created_at")
+      .select("id,name,phone,email,business_name,city,state,service_required,budget_range,message,source_page,user_agent,admin_notes,lead_status,follow_up_date,created_at")
       .order("created_at", { ascending: false });
 
     if (statusFilter) {
@@ -64,8 +68,18 @@ const AdminEnquiries = () => {
     setRows((current) => current.map((row) => (row.id === id ? { ...row, lead_status: leadStatus } : row)));
   };
 
+  const updateNotes = async (id: string, adminNotes: string) => {
+    if (!supabase) return;
+
+    setRows((current) => current.map((row) => (row.id === id ? { ...row, admin_notes: adminNotes } : row)));
+    const { error: updateError } = await supabase.from("contact_enquiries").update({ admin_notes: adminNotes }).eq("id", id);
+    if (updateError) {
+      setError(updateError.message);
+    }
+  };
+
   const filteredRows = rows.filter((row) => {
-    const value = `${row.name} ${row.phone} ${row.email ?? ""} ${row.business_name ?? ""} ${row.city ?? ""} ${row.state ?? ""} ${row.service_required ?? ""}`.toLowerCase();
+    const value = `${row.name} ${row.phone} ${row.email ?? ""} ${row.business_name ?? ""} ${row.city ?? ""} ${row.state ?? ""} ${row.service_required ?? ""} ${row.message ?? ""}`.toLowerCase();
     return value.includes(search.toLowerCase());
   });
 
@@ -106,15 +120,17 @@ const AdminEnquiries = () => {
                 <th className="px-4 py-3 font-semibold">Location</th>
                 <th className="px-4 py-3 font-semibold">Service</th>
                 <th className="px-4 py-3 font-semibold">Budget</th>
+                <th className="px-4 py-3 font-semibold">Message & notes</th>
                 <th className="px-4 py-3 font-semibold">Status</th>
+                <th className="px-4 py-3 font-semibold">Source</th>
                 <th className="px-4 py-3 font-semibold">Submitted</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {isLoading ? (
-                <tr><td colSpan={6} className="px-4 py-6 text-muted-foreground">Loading...</td></tr>
+                <tr><td colSpan={8} className="px-4 py-6 text-muted-foreground">Loading...</td></tr>
               ) : filteredRows.length === 0 ? (
-                <tr><td colSpan={6} className="px-4 py-6 text-muted-foreground">No enquiries found.</td></tr>
+                <tr><td colSpan={8} className="px-4 py-6 text-muted-foreground">No enquiries found.</td></tr>
               ) : (
                 filteredRows.map((row) => (
                   <tr key={row.id} className="align-top">
@@ -127,6 +143,15 @@ const AdminEnquiries = () => {
                     <td className="px-4 py-3 text-foreground">{row.service_required || "-"}</td>
                     <td className="px-4 py-3 text-foreground">{row.budget_range || "-"}</td>
                     <td className="px-4 py-3">
+                      <p className="mb-2 max-w-[260px] whitespace-pre-line text-xs leading-5 text-muted-foreground">{row.message}</p>
+                      <textarea
+                        value={row.admin_notes || ""}
+                        onChange={(event) => updateNotes(row.id, event.target.value)}
+                        className="min-h-16 w-full rounded-md border border-border bg-background px-2 py-2 text-xs text-foreground outline-none"
+                        placeholder="Admin notes"
+                      />
+                    </td>
+                    <td className="px-4 py-3">
                       <select
                         value={row.lead_status}
                         onChange={(event) => updateStatus(row.id, event.target.value)}
@@ -136,6 +161,10 @@ const AdminEnquiries = () => {
                           <option key={status} value={status}>{status}</option>
                         ))}
                       </select>
+                    </td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      <p>{row.source_page || "-"}</p>
+                      <p className="mt-1 max-w-[220px] truncate text-xs">{row.user_agent || "No user agent"}</p>
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">{new Date(row.created_at).toLocaleString()}</td>
                   </tr>

@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, BadgeCheck, Eye, Heart, MapPin, Target, Users, Workflow, Zap } from "lucide-react";
+import PageMeta from "@/components/PageMeta";
+import { businessInfo, pageDescriptions } from "@/lib/business-info";
+import { organizationSchema } from "@/lib/schema";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -35,6 +38,7 @@ const timeline = [
 const About = () => {
   return (
     <div className="public-premium min-h-screen overflow-hidden text-white">
+      <PageMeta title="About Techneyo Solutions | Digital Growth & Business Automation" description={pageDescriptions.about} canonicalPath="/about" schema={organizationSchema} />
       <section className="premium-hero relative overflow-hidden pb-20 pt-32">
         <div className="premium-grid-bg" />
         <div className="premium-orbit premium-orbit-a" />
@@ -117,6 +121,30 @@ const About = () => {
 
       <section className="premium-section">
         <div className="section-container">
+          <div className="premium-card p-6 sm:p-8">
+            <p className="premium-eyebrow">What we provide</p>
+            <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+              <div>
+                <h2 className="font-display text-3xl font-bold text-white sm:text-5xl">Business-ready digital services under one brand.</h2>
+                <p className="mt-4 leading-7 text-white/62">
+                  {businessInfo.name} supports local businesses, service providers, startups, and growing teams with practical digital systems that customers can understand and owners can manage.
+                </p>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {businessInfo.services.map((service) => (
+                  <div key={service} className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.045] p-3 text-sm text-white/68">
+                    <BadgeCheck size={16} className="shrink-0 text-cyan-200" />
+                    {service}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="premium-section">
+        <div className="section-container">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
             <div className="mx-auto mb-12 max-w-3xl text-center">
               <p className="premium-eyebrow">What drives us</p>
@@ -166,6 +194,23 @@ const About = () => {
               </div>
             </div>
             <Link to="/contact" className="premium-btn premium-btn-primary">Start a Project</Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="premium-section pt-0">
+        <div className="section-container">
+          <div className="premium-card p-6 sm:p-8">
+            <p className="premium-eyebrow">Official communication</p>
+            <h2 className="font-display text-2xl font-bold text-white">Verification-supporting business information</h2>
+            <p className="mt-3 max-w-4xl leading-7 text-white/62">
+              Techneyo Solutions uses official business communication channels for client enquiries, project discussions, and support. For service-related communication, customers can contact us through our website, email, phone, or WhatsApp.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3 text-sm text-white/68">
+              <a href={businessInfo.website} className="premium-badge">{businessInfo.displayWebsite}</a>
+              <a href={`mailto:${businessInfo.email}`} className="premium-badge">{businessInfo.email}</a>
+              <a href={businessInfo.phoneHref} className="premium-badge">{businessInfo.phoneDisplay}</a>
+            </div>
           </div>
         </div>
       </section>

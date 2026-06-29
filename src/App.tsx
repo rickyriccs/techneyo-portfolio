@@ -15,6 +15,7 @@ import Services from "./pages/Services";
 import Offers from "./pages/Offers";
 import Tools from "./pages/Tools";
 import Contact from "./pages/Contact";
+import PolicyPage from "./pages/PolicyPage";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -41,6 +42,10 @@ const AppRoutes = () => {
           <Route path="/offers" element={<Offers />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/privacy-policy" element={<PolicyPage type="privacy" />} />
+          <Route path="/terms-and-conditions" element={<PolicyPage type="terms" />} />
+          <Route path="/refund-cancellation-policy" element={<PolicyPage type="refund" />} />
+          <Route path="/support" element={<PolicyPage type="support" />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route element={<AdminGuard />}>
             <Route path="/admin" element={<AdminLayout />}>

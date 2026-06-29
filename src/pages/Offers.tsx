@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle2, Gift, MessageCircle, Sparkles } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import PageMeta from "@/components/PageMeta";
+import { businessInfo } from "@/lib/business-info";
+import { organizationSchema } from "@/lib/schema";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -49,7 +52,7 @@ const formatPrice = (price: number | null) => {
 };
 
 const actionHref = (offer: Offer) => {
-  if (offer.button_action === "WhatsApp") return "https://wa.me/919988773122";
+  if (offer.button_action === "WhatsApp") return businessInfo.whatsappUrl;
   if (offer.button_action === "Call") return "tel:+919988773122";
   if (offer.button_action === "Custom Link" && offer.button_url) return offer.button_url;
   return "/contact";
@@ -81,6 +84,7 @@ const Offers = () => {
 
   return (
     <div className="public-premium min-h-screen overflow-hidden text-white">
+      <PageMeta title="Website Offers | Techneyo Solutions" description="Affordable Techneyo Solutions website, landing page, WhatsApp enquiry, CRM, and custom business tool offers for businesses across India." canonicalPath="/offers" schema={organizationSchema} />
       <section className="premium-hero relative overflow-hidden pb-20 pt-32">
         <div className="premium-grid-bg" />
         <div className="premium-orbit premium-orbit-a" />
@@ -158,7 +162,7 @@ const Offers = () => {
               <p className="premium-eyebrow">Not sure which offer fits?</p>
               <h2 className="font-display text-3xl font-bold text-white sm:text-5xl">Tell us your business goal. We’ll suggest the right setup.</h2>
             </div>
-            <a href="https://wa.me/919988773122" target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn-ghost">
+            <a href={businessInfo.whatsappUrl} target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn-ghost">
               <MessageCircle size={18} /> WhatsApp Consultation
             </a>
           </div>

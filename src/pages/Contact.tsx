@@ -2,6 +2,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Phone, Mail, MapPin, Clock, MessageCircle, Send } from "lucide-react";
 import { createContactEnquiry } from "@/lib/contact-enquiries";
+import PageMeta from "@/components/PageMeta";
+import { businessInfo, pageDescriptions } from "@/lib/business-info";
+import { organizationSchema } from "@/lib/schema";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -12,9 +15,9 @@ const fadeUp = {
 };
 
 const contactInfo = [
-  { icon: Phone, title: "Phone", detail: "+91 99887 73122", href: "tel:+919988773122" },
-  { icon: Mail, title: "Email", detail: "hello@techneyo.com", href: "mailto:hello@techneyo.com" },
-  { icon: MapPin, title: "Address", detail: "Ludhiana, Punjab", href: "#" },
+  { icon: Phone, title: "Call/WhatsApp", detail: businessInfo.phoneDisplay, href: businessInfo.phoneHref },
+  { icon: Mail, title: "Email", detail: businessInfo.email, href: `mailto:${businessInfo.email}` },
+  { icon: MapPin, title: "Service Area", detail: `${businessInfo.location} | Serving India`, href: businessInfo.website },
   { icon: Clock, title: "Business Hours", detail: "Mon - Sat: 9:00 AM - 7:00 PM", href: "#" },
 ];
 
@@ -101,6 +104,7 @@ const Contact = () => {
 
   return (
     <div className="public-premium min-h-screen overflow-hidden text-white">
+      <PageMeta title="Contact Techneyo Solutions | Discuss Your Digital Requirement" description={pageDescriptions.contact} canonicalPath="/contact" schema={organizationSchema} />
       {/* Hero */}
       <section className="premium-hero relative overflow-hidden pb-20 pt-32">
         <div className="premium-grid-bg" />
@@ -109,10 +113,10 @@ const Contact = () => {
           <motion.div initial="hidden" animate="visible" className="max-w-3xl">
             <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">Contact Us</motion.p>
             <motion.h1 variants={fadeUp} custom={1} className="mb-6 font-display text-4xl font-bold leading-tight text-white sm:text-6xl">
-              Request a Free Digital Business Audit
+              Discuss Your Digital Requirement
             </motion.h1>
             <motion.p variants={fadeUp} custom={2} className="max-w-2xl text-lg leading-8 text-white/68">
-              Tell us about your business. We will review your website, Google visibility, WhatsApp enquiry flow, lead capture, and automation opportunities.
+              Contact Techneyo Solutions for website development, CRM systems, admin dashboards, business automation, SEO setup, WhatsApp automation consultation, and custom web-based software.
             </motion.p>
           </motion.div>
         </div>
@@ -125,7 +129,7 @@ const Contact = () => {
             {/* Form */}
             <motion.div variants={fadeUp} custom={0} className="premium-card lg:col-span-3 p-6 sm:p-8">
               <p className="premium-eyebrow">Lead form</p>
-              <h2 className="mb-6 font-display text-2xl font-bold text-white">Business Audit Form</h2>
+              <h2 className="mb-6 font-display text-2xl font-bold text-white">Service Enquiry Form</h2>
               {submitted && (
                 <div className="mb-6 rounded-lg border border-emerald-300/20 bg-emerald-300/10 p-4 text-sm font-medium text-emerald-100">
                   Thank you. Our team will review your business requirements and contact you with practical improvement suggestions.
@@ -170,7 +174,7 @@ const Contact = () => {
                       value={form.phone}
                       onChange={(e) => setForm({ ...form, phone: e.target.value })}
                       className={fieldClass}
-                      placeholder="+91 98765 43210"
+                      placeholder="+91 99887 73122"
                     />
                   </div>
                   <div>
@@ -180,7 +184,7 @@ const Contact = () => {
                       value={form.email}
                       onChange={(e) => setForm({ ...form, email: e.target.value })}
                       className={fieldClass}
-                      placeholder="you@example.com"
+                      placeholder="name@business.com"
                     />
                   </div>
                 </div>
@@ -287,7 +291,7 @@ const Contact = () => {
                   />
                 </div>
                 <button type="submit" className="premium-btn premium-btn-primary" disabled={isSubmitting}>
-                  <Send size={16} /> {isSubmitting ? "Submitting..." : "Request Free Audit"}
+                  <Send size={16} /> {isSubmitting ? "Submitting..." : "Discuss Your Digital Requirement"}
                 </button>
               </form>
             </motion.div>
@@ -295,6 +299,14 @@ const Contact = () => {
             {/* Contact Info */}
             <motion.div variants={fadeUp} custom={1} className="lg:col-span-2 space-y-5">
               <h2 className="mb-6 font-display text-2xl font-bold text-white">Contact Information</h2>
+              <div className="premium-card p-5">
+                <p className="premium-eyebrow">Business name</p>
+                <h3 className="font-display text-2xl font-bold text-white">{businessInfo.name}</h3>
+                <p className="mt-2 text-sm leading-6 text-white/60">{businessInfo.tagline}</p>
+                <a href={businessInfo.website} className="mt-3 inline-block text-sm font-semibold text-cyan-100 hover:text-white">
+                  {businessInfo.displayWebsite}
+                </a>
+              </div>
               {contactInfo.map((c) => (
                 <a key={c.title} href={c.href} className="premium-card premium-card-hover p-5 flex items-start gap-4 group">
                   <div className="w-10 h-10 rounded-lg bg-cyan-300/10 flex items-center justify-center shrink-0 text-cyan-100">
@@ -309,7 +321,7 @@ const Contact = () => {
 
               {/* WhatsApp */}
               <a
-                href="https://wa.me/919988773122"
+                href={businessInfo.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="premium-card premium-card-hover p-5 flex items-center gap-4 border-accent/30 group"
@@ -319,9 +331,16 @@ const Contact = () => {
                 </div>
                 <div>
                   <h3 className="font-display font-semibold text-white text-sm">WhatsApp</h3>
-                  <p className="text-white/58 text-sm mt-0.5">Quick connect on WhatsApp</p>
+                  <p className="text-white/58 text-sm mt-0.5">Chat on WhatsApp for project or support queries</p>
                 </div>
               </a>
+
+              <div className="premium-card p-5">
+                <p className="premium-eyebrow">Official channels</p>
+                <p className="text-sm leading-6 text-white/60">
+                  Techneyo Solutions uses official business communication channels for client enquiries, project discussions, and support. Customers can contact us through our website, email, phone, or WhatsApp.
+                </p>
+              </div>
             </motion.div>
           </motion.div>
         </div>

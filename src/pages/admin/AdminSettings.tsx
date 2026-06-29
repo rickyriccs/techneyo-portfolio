@@ -4,6 +4,11 @@ import { supabase } from "@/lib/supabase";
 type SettingsRow = {
   id: string;
   coverage_text: string;
+  business_name: string;
+  business_email: string;
+  business_phone: string;
+  business_website: string;
+  whatsapp_url: string;
   service_area: string;
   location_based_offers_enabled: boolean;
   updated_at: string;
@@ -20,7 +25,7 @@ const AdminSettings = () => {
 
       const { data, error: loadError } = await supabase
         .from("app_settings")
-        .select("id,coverage_text,service_area,location_based_offers_enabled,updated_at")
+        .select("id,coverage_text,business_name,business_email,business_phone,business_website,whatsapp_url,service_area,location_based_offers_enabled,updated_at")
         .order("created_at", { ascending: true })
         .limit(1)
         .single();
@@ -49,6 +54,16 @@ const AdminSettings = () => {
           <p className="text-sm text-muted-foreground">No settings row found.</p>
         ) : (
           <div className="grid gap-5">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Business identity</p>
+              <div className="mt-2 grid gap-2 text-sm text-foreground md:grid-cols-2">
+                <p><span className="font-semibold">Name:</span> {settings.business_name}</p>
+                <p><span className="font-semibold">Email:</span> {settings.business_email}</p>
+                <p><span className="font-semibold">Phone/WhatsApp:</span> {settings.business_phone}</p>
+                <p><span className="font-semibold">Website:</span> {settings.business_website}</p>
+                <p className="md:col-span-2"><span className="font-semibold">WhatsApp URL:</span> {settings.whatsapp_url}</p>
+              </div>
+            </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Service area</p>
               <p className="mt-1 text-lg font-semibold text-foreground">{settings.service_area}</p>
