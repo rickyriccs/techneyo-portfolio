@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { ArrowRight, CheckCircle2, HelpCircle } from "lucide-react";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -6,6 +7,7 @@ import SeoCta from "@/components/SeoCta";
 import { businessInfo } from "@/lib/business-info";
 import { getServicePage, servicePages, servicePath } from "@/lib/seo-content";
 import { breadcrumbSchema, faqSchema, graphSchema, serviceSchema } from "@/lib/schema";
+import { trackEvent } from "@/lib/analytics";
 
 const Section = ({ title, items }: { title: string; items: string[] }) => (
   <section className="premium-card p-6 sm:p-8">
@@ -24,6 +26,15 @@ const Section = ({ title, items }: { title: string; items: string[] }) => (
 const ServiceDetail = () => {
   const { slug } = useParams();
   const service = getServicePage(slug);
+
+  useEffect(() => {
+    if (!service) return;
+    window.setTimeout(() => {
+      trackEvent("service_page_view", {
+        service_name: service.title,
+      });
+    }, 0);
+  }, [service]);
 
   if (!service) return <Navigate to="/services" replace />;
 

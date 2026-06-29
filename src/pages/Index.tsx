@@ -228,10 +228,10 @@ const Index = () => {
               Techneyo Solutions is based in Ludhiana and serves businesses across India with website development, CRM, SEO, WhatsApp automation, admin dashboards, and custom software solutions.
             </motion.p>
             <motion.div variants={fadeUp} custom={3} className="mt-8 flex flex-wrap gap-4">
-              <Link to="/contact" className="premium-btn premium-btn-primary">
+              <Link to="/contact" className="premium-btn premium-btn-primary" data-offer-name="Starter website consultation" data-cta-location="home_hero">
                 Start Website from Rs. 999 <ArrowRight size={18} />
               </Link>
-              <a href={businessInfo.whatsappUrl} target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn-ghost">
+              <a href={businessInfo.whatsappUrl} target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn-ghost" data-cta-location="home_hero">
                 <MessageCircle size={18} /> WhatsApp Free Consultation
               </a>
             </motion.div>
@@ -309,7 +309,7 @@ const Index = () => {
                       </div>
                     ))}
                   </div>
-                  <Link to="/contact" className="premium-link mt-6">
+                  <Link to="/contact" className="premium-link mt-6" data-offer-name={offer.title} data-cta-location="home_offers">
                     View offer <ArrowRight size={16} />
                   </Link>
                 </motion.div>
@@ -440,8 +440,8 @@ const Index = () => {
               </h2>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Link to="/contact" className="premium-btn premium-btn-primary">Get Free Consultation</Link>
-              <a href="tel:+919988773122" className="premium-btn premium-btn-ghost">Call Now</a>
+              <Link to="/contact" className="premium-btn premium-btn-primary" data-cta-location="home_final_cta">Get Free Consultation</Link>
+              <a href="tel:+919988773122" className="premium-btn premium-btn-ghost" data-cta-location="home_final_cta">Call Now</a>
             </div>
           </div>
         </div>

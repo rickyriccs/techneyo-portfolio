@@ -32,7 +32,7 @@ const CompanyProfile = () => (
         <div className="premium-card grid gap-8 p-6 sm:p-8 lg:grid-cols-[320px_1fr]">
           <div>
             <div className="rounded-lg bg-white p-4">
-              <img src="/logo.png" alt="Techneyo Solutions Logo" loading="lazy" className="h-auto w-full" />
+              <img src="/logo.png" alt="Techneyo Solutions Logo" width={640} height={220} loading="lazy" className="h-auto w-full" />
             </div>
             <p className="mt-3 text-sm text-white/55">Logo usage: use the official logo clearly on light or uncluttered backgrounds. Do not distort, crop, or imply certifications.</p>
           </div>

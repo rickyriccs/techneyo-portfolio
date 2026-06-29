@@ -21,7 +21,9 @@ import LocalSeoPage from "./pages/LocalSeoPage";
 import Resources from "./pages/Resources";
 import ResourcePost from "./pages/ResourcePost";
 import CompanyProfile from "./pages/CompanyProfile";
+import ThankYou from "./pages/ThankYou";
 import NotFound from "./pages/NotFound";
+import AnalyticsRouteTracker from "./components/AnalyticsRouteTracker";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminResourceList from "./pages/admin/AdminResourceList";
@@ -52,6 +54,7 @@ const AppRoutes = () => {
           <Route path="/resources" element={<Resources />} />
           <Route path="/resources/:slug" element={<ResourcePost />} />
           <Route path="/company-profile" element={<CompanyProfile />} />
+          <Route path="/thank-you" element={<ThankYou />} />
           <Route path="/privacy-policy" element={<PolicyPage type="privacy" />} />
           <Route path="/terms-and-conditions" element={<PolicyPage type="terms" />} />
           <Route path="/refund-cancellation-policy" element={<PolicyPage type="refund" />} />
@@ -86,6 +89,7 @@ const App = () => (
       <Sonner />
       <AdminAuthProvider>
         <BrowserRouter>
+          <AnalyticsRouteTracker />
           <AppRoutes />
         </BrowserRouter>
       </AdminAuthProvider>

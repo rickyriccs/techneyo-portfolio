@@ -135,11 +135,11 @@ const Tools = () => {
                   )}
                   <p className="mt-5 font-display text-2xl font-bold text-orange-200">{formatPrice(tool.starting_price)}</p>
                   {isExternal ? (
-                    <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noopener noreferrer" : undefined} className="premium-btn premium-btn-primary mt-6">
+                    <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noopener noreferrer" : undefined} className="premium-btn premium-btn-primary mt-6" data-offer-name={tool.name} data-cta-location="tools_grid">
                       Discuss Tool <ArrowRight size={16} />
                     </a>
                   ) : (
-                    <Link to={href} className="premium-btn premium-btn-primary mt-6">
+                    <Link to={href} className="premium-btn premium-btn-primary mt-6" data-offer-name={tool.name} data-cta-location="tools_grid">
                       Discuss Tool <ArrowRight size={16} />
                     </Link>
                   )}
@@ -157,7 +157,7 @@ const Tools = () => {
               <p className="premium-eyebrow">Need a custom workflow?</p>
               <h2 className="font-display text-3xl font-bold text-white sm:text-5xl">We can plan a tool around your business process.</h2>
             </div>
-            <Link to="/contact" className="premium-btn premium-btn-primary">Get Free Consultation</Link>
+            <Link to="/contact" className="premium-btn premium-btn-primary" data-cta-location="tools_final_cta">Get Free Consultation</Link>
           </div>
         </div>
       </section>

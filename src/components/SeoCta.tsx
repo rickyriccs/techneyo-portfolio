@@ -10,10 +10,10 @@ const SeoCta = ({ title = "Ready to discuss your digital requirement?", text = "
       <p className="mt-3 max-w-2xl text-white/62">{text}</p>
     </div>
     <div className="flex flex-wrap gap-3">
-      <Link to="/contact" className="premium-btn premium-btn-primary">
+      <Link to="/contact" className="premium-btn premium-btn-primary" data-cta-location="final_cta">
         Discuss Your Requirement <ArrowRight size={18} />
       </Link>
-      <a href={businessInfo.whatsappUrl} target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn-ghost">
+      <a href={businessInfo.whatsappUrl} target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn-ghost" data-cta-location="final_cta">
         <MessageCircle size={18} /> Chat on WhatsApp
       </a>
     </div>

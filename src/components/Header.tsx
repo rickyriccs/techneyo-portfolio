@@ -21,7 +21,7 @@ const Header = () => {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
@@ -45,7 +45,7 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <div className="flex h-11 w-36 items-center justify-center rounded-md bg-white px-2 py-1 shadow-sm shadow-cyan-400/10">
-              <img src="/logo.png" alt="Techneyo Solutions Logo" className="h-full w-full object-contain" />
+              <img src="/logo.png" alt="Techneyo Solutions Logo" width={144} height={44} className="h-full w-full object-contain" />
             </div>
           </Link>
 
@@ -72,6 +72,7 @@ const Header = () => {
               href={businessInfo.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
+              data-cta-location="header"
               className="inline-flex items-center gap-2 rounded-lg border border-cyan-200/20 bg-white/10 px-5 py-2.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-200 hover:bg-cyan-300/15"
             >
               <MessageCircle size={16} />
@@ -116,6 +117,7 @@ const Header = () => {
                 href={businessInfo.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                data-cta-location="mobile_menu"
                 className="premium-btn premium-btn-primary mt-3 w-full"
               >
                 <MessageCircle size={16} className="inline mr-2" />

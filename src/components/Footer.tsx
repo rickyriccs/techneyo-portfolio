@@ -35,7 +35,7 @@ const Footer = () => {
             <p className="premium-eyebrow">{businessInfo.name}</p>
             <h2 className="font-display text-3xl font-bold text-white">Ready to grow digitally?</h2>
           </div>
-          <Link to="/contact" className="premium-btn premium-btn-primary">Discuss Your Digital Requirement</Link>
+          <Link to="/contact" className="premium-btn premium-btn-primary" data-cta-location="footer_final_cta">Discuss Your Digital Requirement</Link>
         </div>
       </div>
       <div className="section-container py-16">
@@ -44,7 +44,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="h-12 w-40 rounded-md bg-white px-2 py-1 flex items-center justify-center">
-                <img src="/logo.png" alt="Techneyo Solutions Logo" className="h-full w-full object-contain" />
+                <img src="/logo.png" alt="Techneyo Solutions Logo" width={160} height={48} loading="lazy" className="h-full w-full object-contain" />
               </div>
             </div>
             <p className="text-white/60 text-sm leading-relaxed mb-5">
@@ -110,15 +110,15 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3 text-sm text-white/60">
                 <Phone size={16} className="shrink-0 text-accent" />
-                <a href={businessInfo.phoneHref} className="hover:text-white transition-colors">Call/WhatsApp: {businessInfo.phoneDisplay}</a>
+                <a href={businessInfo.phoneHref} className="hover:text-white transition-colors" data-cta-location="footer_contact">Call/WhatsApp: {businessInfo.phoneDisplay}</a>
               </li>
               <li className="flex items-center gap-3 text-sm text-white/60">
                 <Mail size={16} className="shrink-0 text-accent" />
-                <a href={`mailto:${businessInfo.email}`} className="hover:text-white transition-colors">Email: {businessInfo.email}</a>
+                <a href={`mailto:${businessInfo.email}`} className="hover:text-white transition-colors" data-cta-location="footer_contact">Email: {businessInfo.email}</a>
               </li>
               <li className="flex items-center gap-3 text-sm text-white/60">
                 <MessageCircle size={16} className="shrink-0 text-accent" />
-                <a href={businessInfo.whatsappUrl} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Chat on WhatsApp</a>
+                <a href={businessInfo.whatsappUrl} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors" data-cta-location="footer_contact">Chat on WhatsApp</a>
               </li>
             </ul>
           </div>

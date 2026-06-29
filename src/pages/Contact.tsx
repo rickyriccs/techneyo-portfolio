@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Phone, Mail, MapPin, Clock, MessageCircle, Send } from "lucide-react";
 import { createContactEnquiry } from "@/lib/contact-enquiries";
 import PageMeta from "@/components/PageMeta";
 import { businessInfo, pageDescriptions } from "@/lib/business-info";
 import { organizationSchema } from "@/lib/schema";
+import { trackEvent } from "@/lib/analytics";
+import { setLeadContext } from "@/lib/utm";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -19,7 +21,7 @@ const contactInfo = [
   { icon: Phone, title: "Call/WhatsApp", detail: businessInfo.phoneDisplay, href: businessInfo.phoneHref },
   { icon: Mail, title: "Email", detail: businessInfo.email, href: `mailto:${businessInfo.email}` },
   { icon: MapPin, title: "Service Area", detail: `${businessInfo.location} | Serving India`, href: businessInfo.website },
-  { icon: Clock, title: "Business Hours", detail: "Mon - Sat: 9:00 AM - 7:00 PM", href: "#" },
+  { icon: Clock, title: "Business Hours", detail: "Mon - Sat: 9:00 AM - 7:00 PM" },
 ];
 
 const needOptions = [
@@ -35,6 +37,7 @@ const needOptions = [
 ];
 
 const Contact = () => {
+  const navigate = useNavigate();
   const fieldClass = "w-full rounded-lg border border-white/10 bg-white/[0.055] px-4 py-3 text-sm text-white outline-none transition-colors placeholder:text-white/35 focus:border-cyan-200/50 focus:ring-2 focus:ring-cyan-300/15";
   const labelClass = "mb-1.5 block text-sm font-medium text-white/82";
   const [form, setForm] = useState({
@@ -77,10 +80,22 @@ const Contact = () => {
           `Has Google Business Profile: ${form.hasGoogleProfile}`,
         ].join("\n"),
         sourcePage: "/contact",
+        serviceInterested: form.need,
       });
 
+      trackEvent("contact_form_submit", {
+        service_name: form.need,
+        cta_location: "contact_form",
+      });
+      trackEvent("service_enquiry_submit", {
+        service_name: form.need,
+        cta_location: "contact_form",
+      });
+      setLeadContext({
+        service_name: form.need,
+        source_page_url: window.location.href,
+      });
       setSubmitted(true);
-      setTimeout(() => setSubmitted(false), 4000);
       setForm({
         name: "",
         businessName: "",
@@ -95,6 +110,7 @@ const Contact = () => {
         budgetRange: "",
         message: "",
       });
+      navigate(`/thank-you?service=${encodeURIComponent(form.need || "general")}`, { replace: false });
     } catch (error) {
       console.error("Contact enquiry submission failed", error);
       setSubmitError("We could not save your enquiry right now. Please try again or message us on WhatsApp.");
@@ -299,6 +315,9 @@ const Contact = () => {
                 <button type="submit" className="premium-btn premium-btn-primary" disabled={isSubmitting}>
                   <Send size={16} /> {isSubmitting ? "Submitting..." : "Discuss Your Digital Requirement"}
                 </button>
+                <p className="text-xs leading-5 text-white/45">
+                  By submitting this form, you agree that Techneyo Solutions may contact you by phone, WhatsApp, or email regarding your enquiry.
+                </p>
               </form>
             </motion.div>
 
@@ -313,8 +332,10 @@ const Contact = () => {
                   {businessInfo.displayWebsite}
                 </a>
               </div>
-              {contactInfo.map((c) => (
-                <a key={c.title} href={c.href} className="premium-card premium-card-hover p-5 flex items-start gap-4 group">
+              {contactInfo.map((c) => {
+                const CardTag = c.href ? "a" : "div";
+                return (
+                <CardTag key={c.title} href={c.href} data-cta-location="contact_info" className="premium-card premium-card-hover p-5 flex items-start gap-4 group">
                   <div className="w-10 h-10 rounded-lg bg-cyan-300/10 flex items-center justify-center shrink-0 text-cyan-100">
                     <c.icon size={18} />
                   </div>
@@ -322,14 +343,16 @@ const Contact = () => {
                     <h3 className="font-display font-semibold text-white text-sm">{c.title}</h3>
                     <p className="text-white/58 text-sm mt-0.5">{c.detail}</p>
                   </div>
-                </a>
-              ))}
+                </CardTag>
+              );
+              })}
 
               {/* WhatsApp */}
               <a
                 href={businessInfo.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                data-cta-location="contact_info"
                 className="premium-card premium-card-hover p-5 flex items-center gap-4 border-accent/30 group"
               >
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{ background: "#25D366" }}>

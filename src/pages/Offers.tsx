@@ -140,11 +140,11 @@ const Offers = () => {
                     </div>
                   )}
                   {isExternal ? (
-                    <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noopener noreferrer" : undefined} className="premium-btn premium-btn-primary mt-6">
+                    <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noopener noreferrer" : undefined} className="premium-btn premium-btn-primary mt-6" data-offer-name={offer.title} data-cta-location="offers_grid">
                       {offer.button_text || "Enquire Now"} <ArrowRight size={16} />
                     </a>
                   ) : (
-                    <Link to={href} className="premium-btn premium-btn-primary mt-6">
+                    <Link to={href} className="premium-btn premium-btn-primary mt-6" data-offer-name={offer.title} data-cta-location="offers_grid">
                       {offer.button_text || "Enquire Now"} <ArrowRight size={16} />
                     </Link>
                   )}
@@ -162,7 +162,7 @@ const Offers = () => {
               <p className="premium-eyebrow">Not sure which offer fits?</p>
               <h2 className="font-display text-3xl font-bold text-white sm:text-5xl">Tell us your business goal. We’ll suggest the right setup.</h2>
             </div>
-            <a href={businessInfo.whatsappUrl} target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn-ghost">
+            <a href={businessInfo.whatsappUrl} target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn-ghost" data-cta-location="offers_final_cta">
               <MessageCircle size={18} /> WhatsApp Consultation
             </a>
           </div>

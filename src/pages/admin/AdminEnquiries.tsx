@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 type Enquiry = {
@@ -13,6 +13,16 @@ type Enquiry = {
   budget_range: string | null;
   message: string;
   source_page: string | null;
+  source_page_url: string | null;
+  landing_page_url: string | null;
+  initial_referrer: string | null;
+  referrer: string | null;
+  utm_source: string | null;
+  utm_medium: string | null;
+  utm_campaign: string | null;
+  utm_term: string | null;
+  utm_content: string | null;
+  device_type: string | null;
   user_agent: string | null;
   admin_notes: string | null;
   lead_status: string;
@@ -20,41 +30,96 @@ type Enquiry = {
   created_at: string;
 };
 
-const statuses = ["New", "Contacted", "Follow-up", "Converted", "Rejected", "Closed"];
+const statuses = ["new", "contacted", "follow_up", "converted", "lost", "rejected", "closed"];
+const statusLabel = (status: string) => status.replace("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+const legacyColumns = "id,name,phone,email,business_name,city,state,service_required,budget_range,message,source_page,user_agent,admin_notes,lead_status,follow_up_date,created_at";
+const utmColumns = "utm_source,utm_medium,utm_campaign";
+const leadTrackingColumns = "source_page_url,landing_page_url,initial_referrer,referrer,utm_term,utm_content,device_type";
+const missingOptionalColumnPattern = /column .*contact_enquiries\.(utm_source|utm_medium|utm_campaign|source_page_url|landing_page_url|initial_referrer|referrer|utm_term|utm_content|device_type).* does not exist|utm_source|utm_medium|utm_campaign|source_page_url|landing_page_url|initial_referrer|referrer|utm_term|utm_content|device_type/i;
+
+const isMissingOptionalColumnError = (error: { code?: string; message?: string } | null) =>
+  Boolean(error?.message && (error.code === "PGRST204" || /does not exist/i.test(error.message)) && missingOptionalColumnPattern.test(error.message));
+
+const normalizeEnquiry = (row: Partial<Enquiry>): Enquiry => ({
+  id: row.id ?? "",
+  name: row.name ?? "",
+  phone: row.phone ?? "",
+  email: row.email ?? null,
+  business_name: row.business_name ?? null,
+  city: row.city ?? null,
+  state: row.state ?? null,
+  service_required: row.service_required ?? null,
+  budget_range: row.budget_range ?? null,
+  message: row.message ?? "",
+  source_page: row.source_page ?? null,
+  source_page_url: row.source_page_url ?? null,
+  landing_page_url: row.landing_page_url ?? null,
+  initial_referrer: row.initial_referrer ?? null,
+  referrer: row.referrer ?? null,
+  utm_source: row.utm_source ?? null,
+  utm_medium: row.utm_medium ?? null,
+  utm_campaign: row.utm_campaign ?? null,
+  utm_term: row.utm_term ?? null,
+  utm_content: row.utm_content ?? null,
+  device_type: row.device_type ?? null,
+  user_agent: row.user_agent ?? null,
+  admin_notes: row.admin_notes ?? null,
+  lead_status: row.lead_status ?? "new",
+  follow_up_date: row.follow_up_date ?? null,
+  created_at: row.created_at ?? new Date().toISOString(),
+});
 
 const AdminEnquiries = () => {
   const [rows, setRows] = useState<Enquiry[]>([]);
   const [statusFilter, setStatusFilter] = useState("");
+  const [sourceFilter, setSourceFilter] = useState("");
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const loadRows = async () => {
+  const loadRows = useCallback(async () => {
     if (!supabase) return;
 
     setIsLoading(true);
     setError("");
-    let query = supabase
-      .from("contact_enquiries")
-      .select("id,name,phone,email,business_name,city,state,service_required,budget_range,message,source_page,user_agent,admin_notes,lead_status,follow_up_date,created_at")
-      .order("created_at", { ascending: false });
+    const buildQuery = (columns: string) => {
+      let query = supabase
+        .from("contact_enquiries")
+        .select(columns)
+        .order("created_at", { ascending: false });
 
-    if (statusFilter) {
-      query = query.eq("lead_status", statusFilter);
+      if (statusFilter) {
+        query = query.eq("lead_status", statusFilter);
+      }
+
+      return query;
+    };
+
+    let { data, error: loadError } = await buildQuery(`${legacyColumns},${utmColumns},${leadTrackingColumns}`);
+
+    if (isMissingOptionalColumnError(loadError)) {
+      const fallback = await buildQuery(`${legacyColumns},${utmColumns}`);
+      data = fallback.data;
+      loadError = fallback.error;
     }
 
-    const { data, error: loadError } = await query;
+    if (isMissingOptionalColumnError(loadError)) {
+      const fallback = await buildQuery(legacyColumns);
+      data = fallback.data;
+      loadError = fallback.error;
+    }
+
     if (loadError) {
       setError(loadError.message);
     } else {
-      setRows((data ?? []) as Enquiry[]);
+      setRows((data ?? []).map((row) => normalizeEnquiry(row as Partial<Enquiry>)));
     }
     setIsLoading(false);
-  };
+  }, [statusFilter]);
 
   useEffect(() => {
     loadRows();
-  }, [statusFilter]);
+  }, [loadRows]);
 
   const updateStatus = async (id: string, leadStatus: string) => {
     if (!supabase) return;
@@ -79,7 +144,7 @@ const AdminEnquiries = () => {
   };
 
   const filteredRows = rows.filter((row) => {
-    const value = `${row.name} ${row.phone} ${row.email ?? ""} ${row.business_name ?? ""} ${row.city ?? ""} ${row.state ?? ""} ${row.service_required ?? ""} ${row.message ?? ""}`.toLowerCase();
+    const value = `${row.name} ${row.phone} ${row.email ?? ""} ${row.business_name ?? ""} ${row.city ?? ""} ${row.state ?? ""} ${row.service_required ?? ""} ${row.message ?? ""} ${row.utm_source ?? ""}`.toLowerCase();
     return value.includes(search.toLowerCase());
   });
 
@@ -92,7 +157,7 @@ const AdminEnquiries = () => {
 
       {error && <div className="rounded-md border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}
 
-      <div className="grid gap-3 rounded-lg border border-border bg-card p-4 md:grid-cols-[1fr_220px]">
+      <div className="grid gap-3 rounded-lg border border-border bg-card p-4 md:grid-cols-[1fr_180px_180px]">
         <input
           value={search}
           onChange={(event) => setSearch(event.target.value)}
@@ -106,9 +171,15 @@ const AdminEnquiries = () => {
         >
           <option value="">All statuses</option>
           {statuses.map((status) => (
-            <option key={status} value={status}>{status}</option>
+            <option key={status} value={status}>{statusLabel(status)}</option>
           ))}
         </select>
+        <input
+          value={sourceFilter}
+          onChange={(event) => setSourceFilter(event.target.value)}
+          className="h-10 rounded-md border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/20"
+          placeholder="Filter source/UTM"
+        />
       </div>
 
       <div className="overflow-hidden rounded-lg border border-border bg-card">
@@ -132,7 +203,13 @@ const AdminEnquiries = () => {
               ) : filteredRows.length === 0 ? (
                 <tr><td colSpan={8} className="px-4 py-6 text-muted-foreground">No enquiries found.</td></tr>
               ) : (
-                filteredRows.map((row) => (
+                filteredRows
+                  .filter((row) => {
+                    if (!sourceFilter) return true;
+                    const value = `${row.source_page ?? ""} ${row.source_page_url ?? ""} ${row.utm_source ?? ""} ${row.utm_medium ?? ""} ${row.utm_campaign ?? ""} ${row.referrer ?? ""}`.toLowerCase();
+                    return value.includes(sourceFilter.toLowerCase());
+                  })
+                  .map((row) => (
                   <tr key={row.id} className="align-top">
                     <td className="px-4 py-3">
                       <p className="font-semibold text-foreground">{row.name}</p>
@@ -158,12 +235,18 @@ const AdminEnquiries = () => {
                         className="h-9 rounded-md border border-border bg-background px-2 text-sm outline-none"
                       >
                         {statuses.map((status) => (
-                          <option key={status} value={status}>{status}</option>
+                          <option key={status} value={status}>{statusLabel(status)}</option>
                         ))}
                       </select>
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">
-                      <p>{row.source_page || "-"}</p>
+                      <p className="font-medium text-foreground">{row.source_page || "-"}</p>
+                      <p className="mt-1 max-w-[220px] truncate text-xs">{row.source_page_url || "No source URL"}</p>
+                      <p className="mt-1 text-xs">UTM: {[row.utm_source, row.utm_medium, row.utm_campaign].filter(Boolean).join(" / ") || "-"}</p>
+                      <p className="mt-1 text-xs">Term/content: {[row.utm_term, row.utm_content].filter(Boolean).join(" / ") || "-"}</p>
+                      <p className="mt-1 text-xs">Device: {row.device_type || "-"}</p>
+                      <p className="mt-1 max-w-[220px] truncate text-xs">Landing: {row.landing_page_url || "-"}</p>
+                      <p className="mt-1 max-w-[220px] truncate text-xs">Referrer: {row.referrer || row.initial_referrer || "-"}</p>
                       <p className="mt-1 max-w-[220px] truncate text-xs">{row.user_agent || "No user agent"}</p>
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">{new Date(row.created_at).toLocaleString()}</td>

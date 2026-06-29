@@ -89,9 +89,47 @@
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    scroll-behavior: smooth;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', sans-serif;
+  }
+}
+
+@media (max-width: 639px) {
+  body {
+    padding-bottom: 4.5rem;
+  }
+
+  .premium-orbit {
+    display: none;
+  }
+
+  .premium-grid-bg {
+    opacity: 0.22;
+  }
+
+  .premium-dashboard,
+  .premium-card,
+  .premium-showcase-card,
+  .premium-final-cta,
+  .premium-btn-ghost {
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
   }
 }
 
