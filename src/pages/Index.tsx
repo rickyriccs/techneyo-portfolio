@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import PageMeta from "@/components/PageMeta";
 import { businessInfo, pageDescriptions } from "@/lib/business-info";
 import { organizationSchema } from "@/lib/schema";
@@ -23,6 +24,15 @@ import {
   Workflow,
   Zap,
 } from "lucide-react";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 28 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.07, duration: 0.55, ease: "easeOut" as const },
+  }),
+};
 
 const trustItems = [
   "Serving businesses across India",
@@ -103,15 +113,15 @@ const Stat = ({ value, label }: { value: string; label: string }) => (
 );
 
 const SectionIntro = ({ eyebrow, title, text }: { eyebrow: string; title: string; text?: string }) => (
-  <div className="mx-auto mb-12 max-w-3xl text-center">
+  <motion.div variants={fadeUp} custom={0} className="mx-auto mb-12 max-w-3xl text-center">
     <p className="premium-eyebrow">{eyebrow}</p>
     <h2 className="font-display text-3xl font-bold leading-tight text-white sm:text-5xl">{title}</h2>
     {text && <p className="mt-4 text-base leading-7 text-white/62 sm:text-lg">{text}</p>}
-  </div>
+  </motion.div>
 );
 
 const DashboardVisual = () => (
-  <div className="premium-dashboard">
+  <motion.div className="premium-dashboard" variants={fadeUp} custom={3}>
     <div className="flex items-center justify-between border-b border-white/10 pb-4">
       <div>
         <p className="text-xs uppercase tracking-[0.2em] text-cyan-200/70">Growth Console</p>
@@ -140,7 +150,7 @@ const DashboardVisual = () => (
         </div>
       ))}
     </div>
-  </div>
+  </motion.div>
 );
 
 const Index = () => {
@@ -158,28 +168,28 @@ const Index = () => {
         <div className="premium-orbit premium-orbit-a" />
         <div className="premium-orbit premium-orbit-b" />
         <div className="section-container relative z-10 grid items-center gap-12 pb-20 pt-12 lg:grid-cols-[1.05fr_0.95fr]">
-          <div>
-            <p className="premium-eyebrow">Affordable digital growth across India</p>
-            <h1 className="font-display text-5xl font-bold leading-[0.96] tracking-[-0.03em] text-white sm:text-6xl lg:text-7xl">
+          <motion.div initial="hidden" animate="visible">
+            <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">Affordable digital growth across India</motion.p>
+            <motion.h1 variants={fadeUp} custom={1} className="font-display text-5xl font-bold leading-[0.96] tracking-[-0.03em] text-white sm:text-6xl lg:text-7xl">
               Website, CRM & Business Automation Solutions for Businesses Across India
-            </h1>
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-white/68 sm:text-xl">
+            </motion.h1>
+            <motion.p variants={fadeUp} custom={2} className="mt-6 max-w-3xl text-lg leading-8 text-white/68 sm:text-xl">
               Techneyo Solutions is based in Ludhiana and serves businesses across India with website development, CRM, SEO, WhatsApp automation, admin dashboards, and custom software solutions.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
+            </motion.p>
+            <motion.div variants={fadeUp} custom={3} className="mt-8 flex flex-wrap gap-4">
               <Link to="/contact" className="premium-btn premium-btn-primary" data-offer-name="Starter website consultation" data-cta-location="home_hero">
                 Start Website from Rs. 999 <ArrowRight size={18} />
               </Link>
               <a href={businessInfo.whatsappUrl} target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn-ghost" data-cta-location="home_hero">
                 <MessageCircle size={18} /> WhatsApp Free Consultation
               </a>
-            </div>
-            <div className="mt-8 flex flex-wrap gap-2">
+            </motion.div>
+            <motion.div variants={fadeUp} custom={4} className="mt-8 flex flex-wrap gap-2">
               {heroBadges.map((badge) => (
                 <span key={badge} className="premium-badge">{badge}</span>
               ))}
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
           <DashboardVisual />
         </div>
       </section>
@@ -194,50 +204,50 @@ const Index = () => {
 
       <section className="premium-section">
         <div className="section-container">
-          <div>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
             <SectionIntro
               eyebrow="The business gap"
               title="Your business may be good, but customers first check your online presence."
               text="If that first impression is weak, slow, or missing, your best customers may never reach you."
             />
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {problems.map((problem) => (
-                <div key={problem} className="premium-card p-5">
+              {problems.map((problem, index) => (
+                <motion.div key={problem} variants={fadeUp} custom={index + 1} className="premium-card p-5">
                   <Search size={20} className="mb-4 text-orange-200" />
                   <p className="text-sm leading-6 text-white/68">{problem}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       <section className="premium-section pt-0">
         <div className="section-container">
-          <div>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
             <SectionIntro eyebrow="The Techneyo Solutions system" title="A practical digital growth stack, not just a pretty website." />
             <div className="grid gap-5 lg:grid-cols-4">
-              {solutions.map((solution) => (
-                <div key={solution.title} className="premium-card premium-card-hover p-6">
+              {solutions.map((solution, index) => (
+                <motion.div key={solution.title} variants={fadeUp} custom={index + 1} className="premium-card premium-card-hover p-6">
                   <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-cyan-300/10 text-cyan-200">
                     <solution.icon size={23} />
                   </div>
                   <h3 className="font-display text-xl font-semibold text-white">{solution.title}</h3>
                   <p className="mt-3 text-sm leading-6 text-white/60">{solution.text}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       <section className="premium-section bg-white/[0.025]">
         <div className="section-container">
-          <div>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
             <SectionIntro eyebrow="Offers" title="Start small, launch fast, upgrade when the leads begin." text="Clear offer cards help business owners choose the next right step without confusion." />
             <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {offers.map((offer) => (
-                <div key={offer.title} className="premium-card premium-card-hover flex h-full flex-col p-6">
+              {offers.map((offer, index) => (
+                <motion.div key={offer.title} variants={fadeUp} custom={index + 1} className="premium-card premium-card-hover flex h-full flex-col p-6">
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">{offer.bestFor}</p>
                   <h3 className="mt-3 font-display text-2xl font-semibold text-white">{offer.title}</h3>
                   <p className="mt-2 text-2xl font-bold text-orange-200">{offer.price}</p>
@@ -251,22 +261,22 @@ const Index = () => {
                   <Link to="/contact" className="premium-link mt-6" data-offer-name={offer.title} data-cta-location="home_offers">
                     View offer <ArrowRight size={16} />
                   </Link>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       <section className="premium-section">
         <div className="section-container">
-          <div>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
             <SectionIntro eyebrow="Services" title="Everything a growing business needs to look trusted and capture leads." />
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-              {services.map((service) => (
-                <div key={service} className="premium-chip-card">
+              {services.map((service, index) => (
+                <motion.div key={service} variants={fadeUp} custom={index + 1} className="premium-chip-card">
                   <Zap size={16} /> {service}
-                </div>
+                </motion.div>
               ))}
             </div>
             <div className="mt-10 text-center">
@@ -274,21 +284,21 @@ const Index = () => {
                 Explore Services <ArrowRight size={18} />
               </Link>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       <section className="premium-section pt-0">
         <div className="section-container">
-          <div>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
             <SectionIntro
               eyebrow="Service pages"
               title="Detailed service pages for website, CRM, SEO, and automation needs."
               text="Use these pages to understand each service, compare related solutions, and move toward the right contact flow."
             />
             <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-              {servicePages.map((service) => (
-                <div key={service.slug}>
+              {servicePages.map((service, index) => (
+                <motion.div key={service.slug} variants={fadeUp} custom={index + 1}>
                   <Link to={servicePath(service.slug)} className="premium-card premium-card-hover block h-full p-5">
                     <h3 className="font-display text-xl font-semibold text-white">{service.title}</h3>
                     <p className="mt-3 text-sm leading-6 text-white/60">{service.metaDescription}</p>
@@ -296,7 +306,7 @@ const Index = () => {
                       Learn more <ArrowRight size={15} />
                     </span>
                   </Link>
-                </div>
+                </motion.div>
               ))}
             </div>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -304,17 +314,17 @@ const Index = () => {
               <Link to="/resources" className="premium-btn premium-btn-ghost">Read Resources</Link>
               <Link to="/company-profile" className="premium-btn premium-btn-ghost">Company Profile</Link>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       <section className="premium-section bg-white/[0.025]">
         <div className="section-container">
-          <div>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
             <SectionIntro eyebrow="Process" title="From business conversation to live lead system." />
             <div className="grid gap-5 lg:grid-cols-4">
               {process.map((step, index) => (
-                <div key={step.title} className="premium-card p-6">
+                <motion.div key={step.title} variants={fadeUp} custom={index + 1} className="premium-card p-6">
                   <div className="mb-5 flex items-center justify-between">
                     <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-purple-300/10 text-purple-100">
                       <step.icon size={21} />
@@ -323,37 +333,37 @@ const Index = () => {
                   </div>
                   <h3 className="font-display text-xl font-semibold text-white">{step.title}</h3>
                   <p className="mt-3 text-sm leading-6 text-white/60">{step.text}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       <section className="premium-section">
         <div className="section-container">
-          <div>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
             <SectionIntro eyebrow="What we can build" title="Conceptual demos for real Indian business workflows." />
             <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-              {showcases.map((item) => (
-                <div key={item.title} className="premium-showcase-card">
+              {showcases.map((item, index) => (
+                <motion.div key={item.title} variants={fadeUp} custom={index + 1} className="premium-showcase-card">
                   <item.icon size={24} className="text-cyan-200" />
                   <h3 className="mt-5 font-display text-xl font-semibold text-white">{item.title}</h3>
                   <p className="mt-3 text-sm leading-6 text-white/60">{item.text}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       <section className="premium-section bg-white/[0.025]">
         <div className="section-container">
-          <div>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
             <SectionIntro eyebrow="Social proof ready" title="Built around trust, clarity, and business outcomes." />
             <div className="grid gap-5 md:grid-cols-3">
-              {testimonials.map((testimonial) => (
-                <div key={testimonial.tag} className="premium-card p-6">
+              {testimonials.map((testimonial, index) => (
+                <motion.div key={testimonial.tag} variants={fadeUp} custom={index + 1} className="premium-card p-6">
                   <div className="mb-4 flex gap-1 text-orange-200">
                     {Array.from({ length: 5 }).map((_, i) => <Star key={i} size={16} className="fill-current" />)}
                   </div>
@@ -362,10 +372,10 @@ const Index = () => {
                     <p className="font-semibold text-white">{testimonial.name}</p>
                     <p className="text-xs uppercase tracking-[0.16em] text-cyan-200/70">{testimonial.tag}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 

@@ -1,8 +1,18 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { ArrowRight, BadgeCheck, Eye, Heart, MapPin, Target, Users, Workflow, Zap } from "lucide-react";
 import PageMeta from "@/components/PageMeta";
 import { businessInfo, pageDescriptions } from "@/lib/business-info";
 import { organizationSchema } from "@/lib/schema";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 28 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.08, duration: 0.5, ease: "easeOut" as const },
+  }),
+};
 
 const values = [
   { icon: Heart, title: "Business-first thinking", desc: "We design around trust, enquiries, follow-ups and real business outcomes." },
@@ -33,21 +43,21 @@ const About = () => {
         <div className="premium-grid-bg" />
         <div className="premium-orbit premium-orbit-a" />
         <div className="section-container relative z-10 grid items-center gap-12 lg:grid-cols-[1fr_0.85fr]">
-          <div>
-            <p className="premium-eyebrow">About Techneyo Solutions</p>
-            <h1 className="font-display text-4xl font-bold leading-tight text-white sm:text-6xl">
+          <motion.div initial="hidden" animate="visible">
+            <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">About Techneyo Solutions</motion.p>
+            <motion.h1 variants={fadeUp} custom={1} className="font-display text-4xl font-bold leading-tight text-white sm:text-6xl">
               We help businesses turn digital presence into trust, leads, and momentum.
-            </h1>
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-white/68">
+            </motion.h1>
+            <motion.p variants={fadeUp} custom={2} className="mt-6 max-w-3xl text-lg leading-8 text-white/68">
               Techneyo Solutions builds affordable websites, digital tools, automation systems, and business software for startups, local businesses, professionals, and growing companies across India.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            </motion.p>
+            <motion.div variants={fadeUp} custom={3} className="mt-8 flex flex-wrap gap-3">
               <Link to="/contact" className="premium-btn premium-btn-primary">Get Free Consultation <ArrowRight size={18} /></Link>
               <Link to="/services" className="premium-btn premium-btn-ghost">Explore Services</Link>
               <Link to="/company-profile" className="premium-btn premium-btn-ghost">Company Profile</Link>
-            </div>
-          </div>
-          <div className="premium-dashboard">
+            </motion.div>
+          </motion.div>
+          <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={3} className="premium-dashboard">
             <p className="premium-eyebrow">Operating philosophy</p>
             <div className="space-y-4">
               {["Affordable launch", "Lead capture", "Admin control", "Automation ready"].map((item, index) => (
@@ -57,35 +67,35 @@ const About = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       <section className="premium-section">
         <div className="section-container">
-          <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
             <div>
-              <p className="premium-eyebrow">Our story</p>
-              <h2 className="font-display text-3xl font-bold text-white sm:text-5xl">
+              <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">Our story</motion.p>
+              <motion.h2 variants={fadeUp} custom={1} className="font-display text-3xl font-bold text-white sm:text-5xl">
                 Practical technology for businesses that need results, not jargon.
-              </h2>
+              </motion.h2>
             </div>
-            <div className="premium-card p-6 sm:p-8">
+            <motion.div variants={fadeUp} custom={2} className="premium-card p-6 sm:p-8">
               <p className="text-lg leading-8 text-white/68">
                 Many businesses are good at what they do, but their online presence does not show it. We help fix that with websites, service pages, WhatsApp flows, CRM-style tracking, admin-managed offers, and custom tools that make customer enquiries easier to capture and follow up.
               </p>
               <p className="mt-5 text-lg leading-8 text-white/68">
                 The goal is simple: make your business look trusted, make it easier for customers to contact you, and give you a system that can grow over time.
               </p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {stats.map((stat) => (
-              <div key={stat.label} className="premium-stat">
+            {stats.map((stat, index) => (
+              <motion.div key={stat.label} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={index} className="premium-stat">
                 <div className="font-display text-3xl font-bold text-white">{stat.value}</div>
                 <p className="mt-1 text-xs uppercase tracking-[0.18em] text-white/50">{stat.label}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -93,20 +103,20 @@ const About = () => {
 
       <section className="premium-section bg-white/[0.025]">
         <div className="section-container">
-          <div className="grid gap-5 md:grid-cols-2">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="grid gap-5 md:grid-cols-2">
             {[
               { icon: Target, title: "Mission", desc: "Make premium websites, digital presence and business tools affordable and useful for Indian businesses." },
               { icon: Eye, title: "Vision", desc: "Become a trusted digital growth partner for businesses that want better leads, systems and customer experience." },
-            ].map((item) => (
-              <div key={item.title} className="premium-card premium-card-hover p-7">
+            ].map((item, index) => (
+              <motion.div key={item.title} variants={fadeUp} custom={index} className="premium-card premium-card-hover p-7">
                 <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-cyan-300/10 text-cyan-100">
                   <item.icon size={24} />
                 </div>
                 <h3 className="font-display text-2xl font-bold text-white">{item.title}</h3>
                 <p className="mt-3 leading-7 text-white/62">{item.desc}</p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -136,27 +146,27 @@ const About = () => {
 
       <section className="premium-section">
         <div className="section-container">
-          <div>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
             <div className="mx-auto mb-12 max-w-3xl text-center">
               <p className="premium-eyebrow">What drives us</p>
               <h2 className="font-display text-3xl font-bold text-white sm:text-5xl">A small set of principles for building better business systems.</h2>
             </div>
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {values.map((value) => (
-                <div key={value.title} className="premium-card premium-card-hover p-6">
+              {values.map((value, index) => (
+                <motion.div key={value.title} variants={fadeUp} custom={index} className="premium-card premium-card-hover p-6">
                   <value.icon size={24} className="mb-5 text-orange-200" />
                   <h3 className="font-display text-xl font-semibold text-white">{value.title}</h3>
                   <p className="mt-3 text-sm leading-6 text-white/60">{value.desc}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       <section className="premium-section bg-white/[0.025]">
         <div className="section-container">
-          <div className="premium-final-cta">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="premium-final-cta">
             <div>
               <p className="premium-eyebrow">How we work</p>
               <h2 className="font-display text-3xl font-bold text-white sm:text-5xl">A clear path from idea to digital growth system.</h2>
@@ -170,7 +180,7 @@ const About = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
