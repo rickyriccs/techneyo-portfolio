@@ -1,5 +1,5 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
-import { BarChart3, BriefcaseBusiness, FileText, Gift, LayoutDashboard, LogOut, Package, Settings, Shield, Wrench } from "lucide-react";
+import { BarChart3, BriefcaseBusiness, Building2, FileText, Gift, LayoutDashboard, LogOut, Package, Settings, Shield, Wrench } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAdminAuth } from "@/lib/admin-auth";
 
@@ -10,6 +10,7 @@ const adminLinks = [
   { label: "Offers", path: "/admin/offers", icon: Gift },
   { label: "Packages", path: "/admin/packages", icon: Package },
   { label: "Tools", path: "/admin/tools", icon: Wrench },
+  { label: "Portfolio", path: "/admin/portfolio", icon: Building2 },
   { label: "Logs", path: "/admin/logs", icon: BarChart3 },
   { label: "Settings", path: "/admin/settings", icon: Settings },
 ];

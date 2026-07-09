@@ -31,6 +31,7 @@ import AdminEnquiries from "./pages/admin/AdminEnquiries";
 import AdminLogs from "./pages/admin/AdminLogs";
 import AdminSettings from "./pages/admin/AdminSettings";
 import AdminServices from "./pages/admin/AdminServices";
+import AdminPortfolio from "./pages/admin/AdminPortfolio";
 
 const queryClient = new QueryClient();
 
@@ -69,6 +70,7 @@ const AppRoutes = () => {
               <Route path="offers" element={<AdminResourceList type="offers" />} />
               <Route path="packages" element={<AdminResourceList type="packages" />} />
               <Route path="tools" element={<AdminResourceList type="tools" />} />
+              <Route path="portfolio" element={<AdminPortfolio />} />
               <Route path="logs" element={<AdminLogs />} />
               <Route path="settings" element={<AdminSettings />} />
             </Route>

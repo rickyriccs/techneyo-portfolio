@@ -4,6 +4,7 @@ import PageMeta from "@/components/PageMeta";
 import { businessInfo, pageDescriptions } from "@/lib/business-info";
 import { organizationSchema } from "@/lib/schema";
 import { servicePages, servicePath } from "@/lib/seo-content";
+import ClientsSection from "@/components/ClientsSection";
 import {
   ArrowRight,
   BadgeCheck,
@@ -356,6 +357,8 @@ const Index = () => {
           </motion.div>
         </div>
       </section>
+
+      <ClientsSection />
 
       <section className="premium-section bg-white/[0.025]">
         <div className="section-container">
