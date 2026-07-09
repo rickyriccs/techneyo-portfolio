@@ -6,7 +6,7 @@ export const businessInfo = {
   email: "hello@techneyo.com",
   phoneDisplay: "+91 99887 73122",
   phoneHref: "tel:+919988773122",
-  ogImage: "https://techneyo.com/logo.png",
+  ogImage: "https://techneyo.com/banner.jpeg",
   whatsappUrl:
     "https://wa.me/919988773122?text=Hello%20Techneyo%20Solutions%2C%20I%20want%20to%20discuss%20a%20website%2Fsoftware%2Fdigital%20solution%20for%20my%20business.",
   areaServed: "India",
