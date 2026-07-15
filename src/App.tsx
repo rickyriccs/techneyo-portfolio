@@ -32,6 +32,8 @@ import AdminLogs from "./pages/admin/AdminLogs";
 import AdminSettings from "./pages/admin/AdminSettings";
 import AdminServices from "./pages/admin/AdminServices";
 import AdminPortfolio from "./pages/admin/AdminPortfolio";
+import AdminOffers from "./pages/admin/AdminOffers";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -67,7 +69,7 @@ const AppRoutes = () => {
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="enquiries" element={<AdminEnquiries />} />
               <Route path="services" element={<AdminServices />} />
-              <Route path="offers" element={<AdminResourceList type="offers" />} />
+              <Route path="offers" element={<AdminOffers />} />
               <Route path="packages" element={<AdminResourceList type="packages" />} />
               <Route path="tools" element={<AdminResourceList type="tools" />} />
               <Route path="portfolio" element={<AdminPortfolio />} />
@@ -91,6 +93,7 @@ const App = () => (
       <Sonner />
       <AdminAuthProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <AnalyticsRouteTracker />
           <AppRoutes />
         </BrowserRouter>

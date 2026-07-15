@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { supabase } from "@/lib/supabase";
 import { motion } from "framer-motion";
 import PageMeta from "@/components/PageMeta";
 import { businessInfo, pageDescriptions } from "@/lib/business-info";
@@ -17,7 +19,7 @@ import {
   LayoutDashboard,
   MessageCircle,
   MousePointerClick,
-  Search,
+  HelpCircle,
   ShoppingBag,
   Sparkles,
   Star,
@@ -64,14 +66,79 @@ const solutions = [
   { icon: Bot, title: "Automation", text: "Custom workflows, dashboards, CRM tools and AI-ready business systems." },
 ];
 
-const offers = [
-  { title: "Starter Website", bestFor: "New shops, freelancers, local services", price: "From Rs. 999", features: ["One-page launch", "Mobile responsive", "WhatsApp CTA", "Basic SEO"] },
-  { title: "Business Website", bestFor: "Growing teams and service brands", price: "From Rs. 7,999", features: ["Up to 5 pages", "Lead form", "Trust sections", "Google-ready structure"] },
-  { title: "Campaign Landing Page", bestFor: "Ads, offers, launches", price: "Custom", features: ["Fast funnel", "Offer blocks", "Lead capture", "Tracking-ready"] },
-  { title: "Website + WhatsApp Flow", bestFor: "Businesses needing quick enquiries", price: "Custom", features: ["Form + WhatsApp", "Auto message", "Lead source data", "Follow-up ready"] },
-  { title: "Digital Presence Setup", bestFor: "Businesses starting online", price: "Custom", features: ["Website", "Google profile", "Review QR", "Business content"] },
-  { title: "Custom Business Tool", bestFor: "CRM, booking, operations", price: "Consultation", features: ["Dashboard", "Database", "Roles", "Reports"] },
-];
+type Offer = {
+  id: string;
+  title: string;
+  short_description: string;
+  detailed_description: string | null;
+  offer_type: string;
+  starting_price: number | null;
+  discount_price: number | null;
+  button_text: string;
+  button_action: string;
+  button_url: string | null;
+  is_featured: boolean;
+  valid_from?: string | null;
+  valid_till?: string | null;
+};
+
+
+const actionHref = (offer: Offer) => {
+  if (offer.button_action === "WhatsApp") return businessInfo.whatsappUrl;
+  if (offer.button_action === "Call") return "tel:+919988773122";
+  if (offer.button_action === "Custom Link" && offer.button_url) return offer.button_url;
+  return "/contact";
+};
+
+const formatPriceVal = (price: number | null) => {
+  if (!price) return "";
+  return `Rs. ${Number(price).toLocaleString("en-IN")}`;
+};
+
+const CountdownTimer = ({ validTill }: { validTill: string }) => {
+  const [timeLeft, setTimeLeft] = useState<string>("");
+
+  useEffect(() => {
+    const targetDate = new Date(`${validTill}T23:59:59`);
+
+    const updateTimer = () => {
+      const now = new Date();
+      const difference = targetDate.getTime() - now.getTime();
+
+      if (difference <= 0) {
+        setTimeLeft("Expired");
+        return;
+      }
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      const parts = [];
+      if (days > 0) parts.push(`${days}d`);
+      if (hours > 0 || days > 0) parts.push(`${hours}h`);
+      parts.push(`${minutes}m`);
+      parts.push(`${seconds}s`);
+
+      setTimeLeft(parts.join(" "));
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+
+    return () => clearInterval(interval);
+  }, [validTill]);
+
+  if (!timeLeft || timeLeft === "Expired") return null;
+
+  return (
+    <div className="mt-4 rounded-md border border-orange-500/20 bg-orange-500/5 px-3 py-2 text-center text-xs font-semibold text-orange-300 flex items-center justify-center gap-1.5 animate-pulse">
+      <span className="h-1.5 w-1.5 rounded-full bg-orange-400" />
+      Ends in: {timeLeft}
+    </div>
+  );
+};
 
 const services = [
   "Website Development",
@@ -155,6 +222,41 @@ const DashboardVisual = () => (
 );
 
 const Index = () => {
+  const [dbOffers, setDbOffers] = useState<Offer[]>([]);
+
+  useEffect(() => {
+    const loadOffers = async () => {
+      if (!supabase) return;
+      const { data, error } = await supabase
+        .from("offers")
+        .select("id,title,short_description,detailed_description,offer_type,starting_price,discount_price,button_text,button_action,button_url,is_featured,valid_from,valid_till")
+        .eq("status", "Active")
+        .eq("is_featured", true)
+        .order("display_order", { ascending: true });
+
+      if (error) {
+        console.error("Failed to load offers from DB", error);
+        return;
+      }
+      if (data) {
+        const d = new Date();
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        const todayStr = `${year}-${month}-${day}`;
+
+        const activeOffers = (data as Offer[]).filter((offer) => {
+          if (offer.valid_from && offer.valid_from > todayStr) return false;
+          if (offer.valid_till && offer.valid_till < todayStr) return false;
+          return true;
+        });
+
+        setDbOffers(activeOffers);
+      }
+    };
+    loadOffers();
+  }, []);
+
   return (
     <div className="public-premium min-h-screen overflow-hidden bg-[#030711] text-white">
       <PageMeta
@@ -214,7 +316,7 @@ const Index = () => {
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {problems.map((problem, index) => (
                 <motion.div key={problem} variants={fadeUp} custom={index + 1} className="premium-card p-5">
-                  <Search size={20} className="mb-4 text-orange-200" />
+                  <HelpCircle size={20} className="mb-4 text-orange-200" />
                   <p className="text-sm leading-6 text-white/68">{problem}</p>
                 </motion.div>
               ))}
@@ -242,32 +344,69 @@ const Index = () => {
         </div>
       </section>
 
-      <section className="premium-section bg-white/[0.025]">
-        <div className="section-container">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
-            <SectionIntro eyebrow="Offers" title="Start small, launch fast, upgrade when the leads begin." text="Clear offer cards help business owners choose the next right step without confusion." />
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {offers.map((offer, index) => (
-                <motion.div key={offer.title} variants={fadeUp} custom={index + 1} className="premium-card premium-card-hover flex h-full flex-col p-6">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">{offer.bestFor}</p>
-                  <h3 className="mt-3 font-display text-2xl font-semibold text-white">{offer.title}</h3>
-                  <p className="mt-2 text-2xl font-bold text-orange-200">{offer.price}</p>
-                  <div className="mt-5 space-y-2">
-                    {offer.features.map((feature) => (
-                      <div key={feature} className="flex items-center gap-2 text-sm text-white/64">
-                        <CheckCircle2 size={15} className="text-emerald-200" /> {feature}
+      {dbOffers.length > 0 && (
+        <section className="premium-section bg-white/[0.025]">
+          <div className="section-container">
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
+              <SectionIntro eyebrow="Offers" title="Start small, launch fast, upgrade when the leads begin." text="Clear offer cards help business owners choose the next right step without confusion." />
+              <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                {dbOffers.map((offer, index) => {
+                  const href = actionHref(offer);
+                  const isExternal = href.startsWith("http") || href.startsWith("tel:");
+                  const features = offer.detailed_description
+                    ? offer.detailed_description.split("\n").map((f) => f.trim()).filter(Boolean)
+                    : [];
+
+                  return (
+                    <motion.div key={offer.id} variants={fadeUp} custom={index + 1} className="premium-card premium-card-hover flex h-full flex-col p-6">
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">{offer.offer_type}</p>
+                      <h3 className="mt-3 font-display text-2xl font-semibold text-white">{offer.title}</h3>
+                      <div className="mt-2 flex items-end gap-3 min-h-[2rem]">
+                        {offer.discount_price || offer.starting_price ? (
+                          <>
+                            <span className="font-display text-2xl font-bold text-orange-200">
+                              {offer.discount_price && offer.starting_price ? "" : "From "}
+                              {formatPriceVal(offer.discount_price || offer.starting_price)}
+                            </span>
+                            {offer.discount_price && offer.starting_price && (
+                              <span className="pb-1 text-sm text-white/35 line-through">{formatPriceVal(offer.starting_price)}</span>
+                            )}
+                          </>
+                        ) : (
+                          <span className="font-display text-2xl font-bold text-orange-200">
+                            {offer.id === "custom-tool" ? "Consultation" : "Custom"}
+                          </span>
+                        )}
                       </div>
-                    ))}
-                  </div>
-                  <Link to="/contact" className="premium-link mt-6" data-offer-name={offer.title} data-cta-location="home_offers">
-                    View offer <ArrowRight size={16} />
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
+                      {offer.short_description && (
+                        <p className="mt-3 text-sm leading-6 text-white/60">{offer.short_description}</p>
+                      )}
+                      <div className="mt-5 space-y-2 flex-grow">
+                        {features.map((feature) => (
+                          <div key={feature} className="flex items-center gap-2 text-sm text-white/64">
+                            <CheckCircle2 size={15} className="text-emerald-200 shrink-0" />
+                            <span>{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+                      {offer.valid_till && <CountdownTimer validTill={offer.valid_till} />}
+                      {isExternal ? (
+                        <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noopener noreferrer" : undefined} className="premium-link mt-6" data-offer-name={offer.title} data-cta-location="home_offers">
+                          {offer.button_text || "View offer"} <ArrowRight size={16} />
+                        </a>
+                      ) : (
+                        <Link to={href} className="premium-link mt-6" data-offer-name={offer.title} data-cta-location="home_offers">
+                          {offer.button_text || "View offer"} <ArrowRight size={16} />
+                        </Link>
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
 
       <section className="premium-section">
         <div className="section-container">
