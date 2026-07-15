@@ -5,7 +5,7 @@ import { ArrowRight, CheckCircle2, Gift, MessageCircle, Sparkles } from "lucide-
 import { supabase } from "@/lib/supabase";
 import PageMeta from "@/components/PageMeta";
 import { businessInfo } from "@/lib/business-info";
-import { organizationSchema } from "@/lib/schema";
+import { organizationSchema, offersSchema, graphSchema } from "@/lib/schema";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -128,9 +128,11 @@ const Offers = () => {
     loadOffers();
   }, []);
 
+  const pageSchema = graphSchema(organizationSchema, offersSchema(offers));
+
   return (
     <div className="public-premium min-h-screen overflow-hidden text-white">
-      <PageMeta title="Website Offers | Techneyo Solutions" description="Affordable Techneyo Solutions website, landing page, WhatsApp enquiry, CRM, and custom business tool offers for businesses across India." canonicalPath="/offers" schema={organizationSchema} />
+      <PageMeta title="Website Offers | Techneyo Solutions" description="Affordable Techneyo Solutions website, landing page, WhatsApp enquiry, CRM, and custom business tool offers for businesses across India." canonicalPath="/offers" schema={pageSchema} />
       <section className="premium-hero relative overflow-hidden pb-20 pt-32">
         <div className="premium-grid-bg" />
         <div className="premium-orbit premium-orbit-a" />

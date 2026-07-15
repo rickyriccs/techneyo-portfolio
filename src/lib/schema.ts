@@ -114,6 +114,29 @@ export const articleSchema = (post: BlogPost) => ({
   },
 });
 
+export const offersSchema = (offers: any[]) => ({
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  numberOfItems: offers.length,
+  itemListElement: offers.map((offer, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    item: {
+      "@type": "Product",
+      name: offer.title,
+      description: offer.short_description || offer.detailed_description || "",
+      offers: {
+        "@type": "Offer",
+        priceCurrency: "INR",
+        price: offer.discount_price || offer.starting_price || 0,
+        availability: "https://schema.org/InStock",
+        ...(offer.valid_from ? { validFrom: offer.valid_from } : {}),
+        ...(offer.valid_till ? { priceValidUntil: offer.valid_till } : {}),
+      },
+    },
+  })),
+});
+
 export const graphSchema = (...schemas: Record<string, unknown>[]) => ({
   "@context": "https://schema.org",
   "@graph": schemas,

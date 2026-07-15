@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { motion } from "framer-motion";
 import PageMeta from "@/components/PageMeta";
 import { businessInfo, pageDescriptions } from "@/lib/business-info";
-import { organizationSchema } from "@/lib/schema";
+import { organizationSchema, offersSchema, graphSchema } from "@/lib/schema";
 import { servicePages, servicePath } from "@/lib/seo-content";
 import ClientsSection from "@/components/ClientsSection";
 import {
@@ -257,13 +257,15 @@ const Index = () => {
     loadOffers();
   }, []);
 
+  const pageSchema = graphSchema(organizationSchema, offersSchema(dbOffers));
+
   return (
     <div className="public-premium min-h-screen overflow-hidden bg-[#030711] text-white">
       <PageMeta
         title="Techneyo Solutions | Website, CRM & Business Automation Services in India"
         description={pageDescriptions.home}
         canonicalPath="/"
-        schema={organizationSchema}
+        schema={pageSchema}
       />
 
       <section className="premium-hero relative flex min-h-screen items-center overflow-hidden pt-28">
