@@ -8,6 +8,7 @@ import { businessInfo } from "@/lib/business-info";
 import { organizationSchema, offersSchema, graphSchema } from "@/lib/schema";
 import type { Offer } from "@/types/offer";
 import { BookingModal } from "@/components/BookingModal";
+import { useAppSettings } from "@/hooks/use-app-settings";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -27,6 +28,7 @@ export const Offers = () => {
   const [offers, setOffers] = useState<Offer[]>([]);
   const [selectedOfferForBooking, setSelectedOfferForBooking] = useState<Offer | null>(null);
   const navigate = useNavigate();
+  const { settings } = useAppSettings();
 
   useEffect(() => {
     const loadOffers = async () => {
@@ -161,9 +163,21 @@ export const Offers = () => {
                     <div className="mt-6 pt-4 border-t border-white/10 space-y-2.5">
                       <button
                         onClick={() => setSelectedOfferForBooking(offer)}
-                        className="w-full h-11 rounded-xl bg-orange-500 hover:bg-orange-400 font-semibold text-xs text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-orange-500/10"
+                        className={`w-full h-11 rounded-xl font-semibold text-xs text-white transition-all flex items-center justify-center gap-2 shadow-lg ${
+                          settings.payment_required
+                            ? "bg-orange-500 hover:bg-orange-400 shadow-orange-500/10"
+                            : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/10"
+                        }`}
                       >
-                        <CreditCard size={15} /> Book with Rs. {advanceAmount.toLocaleString("en-IN")} Advance
+                        {settings.payment_required ? (
+                          <>
+                            <CreditCard size={15} /> Book with Rs. {advanceAmount.toLocaleString("en-IN")} Advance
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles size={15} /> Book Now — Free
+                          </>
+                        )}
                       </button>
 
                       <Link
@@ -201,6 +215,7 @@ export const Offers = () => {
           offer={selectedOfferForBooking}
           isOpen={!!selectedOfferForBooking}
           onClose={() => setSelectedOfferForBooking(null)}
+          paymentRequired={settings.payment_required}
           onSuccess={(bookingId) => {
             navigate(`/onboarding?booking_id=${bookingId}`);
           }}

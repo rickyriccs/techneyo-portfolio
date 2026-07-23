@@ -17,6 +17,7 @@ type SettingsForm = {
   razorpay_test_key_secret: string;
   razorpay_live_key_id: string;
   razorpay_live_key_secret: string;
+  payment_required: boolean;
   smtp_enabled: boolean;
   smtp_host: string;
   smtp_port: string;
@@ -39,6 +40,7 @@ const defaultForm: SettingsForm = {
   razorpay_test_key_secret: "",
   razorpay_live_key_id: "",
   razorpay_live_key_secret: "",
+  payment_required: true,
   smtp_enabled: true,
   smtp_host: "smtp.hostinger.com",
   smtp_port: "587",
@@ -88,6 +90,7 @@ export const AdminSettings = () => {
         razorpay_test_key_secret: data.razorpay_test_key_secret || "",
         razorpay_live_key_id: data.razorpay_live_key_id || "",
         razorpay_live_key_secret: data.razorpay_live_key_secret || "",
+        payment_required: data.payment_required ?? true,
         smtp_enabled: data.smtp_enabled ?? true,
         smtp_host: data.smtp_host || defaultForm.smtp_host,
         smtp_port: data.smtp_port ? String(data.smtp_port) : defaultForm.smtp_port,
@@ -125,6 +128,7 @@ export const AdminSettings = () => {
       razorpay_test_key_secret: form.razorpay_test_key_secret.trim() || null,
       razorpay_live_key_id: form.razorpay_live_key_id.trim() || null,
       razorpay_live_key_secret: form.razorpay_live_key_secret.trim() || null,
+      payment_required: form.payment_required,
       smtp_enabled: form.smtp_enabled,
       smtp_host: form.smtp_host.trim() || null,
       smtp_port: Number(form.smtp_port) || 587,
@@ -174,6 +178,65 @@ export const AdminSettings = () => {
       {success && <div className="rounded-md border border-emerald-500/20 bg-emerald-500/10 p-3 text-sm text-emerald-400">{success}</div>}
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Payment Gateway Toggle */}
+        <section className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <div className="flex items-center gap-2.5">
+            <CreditCard size={20} className="text-primary" />
+            <div>
+              <h2 className="font-display text-lg font-semibold text-foreground">Order & Payment Mode</h2>
+              <p className="text-xs text-muted-foreground">Choose whether customers must pay an advance to book, or can book for free.</p>
+            </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            {/* Payment Required ON */}
+            <button
+              type="button"
+              onClick={() => setForm({ ...form, payment_required: true })}
+              className={`flex items-start gap-3 rounded-lg border p-4 text-left transition-all ${
+                form.payment_required
+                  ? "border-orange-500/60 bg-orange-500/10 ring-1 ring-orange-500/40"
+                  : "border-border bg-muted/20 hover:border-border/80"
+              }`}
+            >
+              <CreditCard size={18} className={form.payment_required ? "text-orange-400 mt-0.5 shrink-0" : "text-muted-foreground mt-0.5 shrink-0"} />
+              <div>
+                <p className={`text-sm font-semibold ${form.payment_required ? "text-orange-300" : "text-foreground"}`}>
+                  Advance Payment Required
+                  {form.payment_required && <span className="ml-2 text-[10px] font-bold uppercase tracking-wider bg-orange-500/20 text-orange-400 px-1.5 py-0.5 rounded">Active</span>}
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5">Customers must pay an advance via Razorpay to confirm booking.</p>
+              </div>
+            </button>
+
+            {/* Payment Required OFF */}
+            <button
+              type="button"
+              onClick={() => setForm({ ...form, payment_required: false })}
+              className={`flex items-start gap-3 rounded-lg border p-4 text-left transition-all ${
+                !form.payment_required
+                  ? "border-emerald-500/60 bg-emerald-500/10 ring-1 ring-emerald-500/40"
+                  : "border-border bg-muted/20 hover:border-border/80"
+              }`}
+            >
+              <Server size={18} className={!form.payment_required ? "text-emerald-400 mt-0.5 shrink-0" : "text-muted-foreground mt-0.5 shrink-0"} />
+              <div>
+                <p className={`text-sm font-semibold ${!form.payment_required ? "text-emerald-300" : "text-foreground"}`}>
+                  Free Booking — No Payment
+                  {!form.payment_required && <span className="ml-2 text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded">Active</span>}
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5">Customers fill their details and book without paying. You contact them to proceed.</p>
+              </div>
+            </button>
+          </div>
+
+          {!form.payment_required && (
+            <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 text-xs text-amber-300">
+              ⚠️ Razorpay keys below will be ignored while free booking mode is active. Bookings will be saved with ₹0 advance.
+            </div>
+          )}
+        </section>
+
         {/* Razorpay Gateway Keys Card */}
         <section className="rounded-lg border border-primary/20 bg-card p-6 space-y-5">
           <div className="flex items-center justify-between border-b border-border pb-4">

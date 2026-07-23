@@ -165,9 +165,9 @@ export const Onboarding = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-white/80 mb-1.5">Phone / WhatsApp Number *</label>
+                  <label className="block text-xs font-medium text-white/80 mb-1.5">Phone / WhatsApp *</label>
                   <input
                     type="tel"
                     required
@@ -178,7 +178,18 @@ export const Onboarding = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-white/80 mb-1.5">Preferred Domain Name (.com / .in)</label>
+                  <label className="block text-xs font-medium text-white/80 mb-1.5">Email Address *</label>
+                  <input
+                    type="email"
+                    required
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    className="w-full h-11 rounded-lg border border-white/10 bg-white/5 px-3.5 text-sm text-white outline-none focus:border-cyan-400"
+                    placeholder="email@example.com"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-white/80 mb-1.5">Preferred Domain (.com / .in)</label>
                   <input
                     type="text"
                     value={form.domainPreference}

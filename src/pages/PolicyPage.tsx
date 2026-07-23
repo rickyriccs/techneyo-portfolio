@@ -83,29 +83,21 @@ const pageContent = {
     description:
       "Understand the refund and cancellation policy for Techneyo Solutions website, software, CRM, and digital service projects.",
     eyebrow: "Refund & Cancellation Policy",
-    heading: "A practical refund and cancellation policy for custom digital work.",
+    heading: "A clear refund and cancellation policy for our digital services.",
     intro:
-      "This policy explains how cancellation and refund requests are reviewed for Techneyo Solutions service projects, including websites, landing pages, CRM tools, automation, SEO setup, and custom software.",
+      "At Techneyo Solutions, we strive to deliver high-quality digital services. Once a project has commenced or a digital service has been delivered, payments are generally non-refundable.",
     sections: [
       {
-        title: "Refund eligibility",
-        body: "Refund eligibility depends on the service stage, approved scope, work already completed, third-party costs, and resources allocated to the project.",
+        title: "Cancellation before work starts",
+        body: "Customers may request cancellation before work has started. If approved, eligible refunds (after deducting any applicable processing or administrative charges) will be processed within 7–10 business days to the original payment method.",
       },
       {
-        title: "Custom work",
-        body: "Custom software, website design, development, CRM, dashboard, automation, content, SEO setup, and configuration work may not be refundable after work has started or deliverables have been shared.",
+        title: "Subscription-based services",
+        body: "For subscription-based services, cancellation requests must be submitted before the next billing cycle to avoid future charges. No partial refunds are provided for the current billing period.",
       },
       {
-        title: "Cancellation process",
-        body: "To request cancellation, contact us through email, phone, or WhatsApp with your name, business name, service booked, payment details, and reason for cancellation.",
-      },
-      {
-        title: "Review and response",
-        body: "We review cancellation or refund requests case by case and respond through official communication channels. Approved refunds, if any, are processed using a mutually agreed method.",
-      },
-      {
-        title: "Contact",
-        body: `For refund or cancellation support, email ${businessInfo.email} or call/WhatsApp ${businessInfo.phoneDisplay}.`,
+        title: "Contact us",
+        body: `For any refund or cancellation requests, please contact us at ${businessInfo.email}.`,
       },
     ],
   },

@@ -20,6 +20,7 @@ import { businessInfo } from "@/lib/business-info";
 import { organizationSchema, singleOfferSchema, graphSchema } from "@/lib/schema";
 import type { Offer } from "@/types/offer";
 import { BookingModal } from "@/components/BookingModal";
+import { useAppSettings } from "@/hooks/use-app-settings";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -36,6 +37,7 @@ export const OfferDetails = () => {
   const [offer, setOffer] = useState<Offer | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const { settings } = useAppSettings();
 
   useEffect(() => {
     const fetchOffer = async () => {
@@ -150,9 +152,19 @@ export const OfferDetails = () => {
 
               <button
                 onClick={() => setIsBookingOpen(true)}
-                className="premium-btn premium-btn-primary ml-auto"
+                className={`premium-btn ml-auto ${
+                  settings.payment_required ? "premium-btn-primary" : "bg-emerald-600 hover:bg-emerald-500 text-white"
+                }`}
               >
-                <CreditCard size={18} /> Book with Rs. {advanceAmount.toLocaleString("en-IN")} Advance
+                {settings.payment_required ? (
+                  <>
+                    <CreditCard size={18} /> Book with Rs. {advanceAmount.toLocaleString("en-IN")} Advance
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={18} /> Book Now — Free
+                  </>
+                )}
               </button>
             </motion.div>
           </motion.div>
@@ -292,18 +304,32 @@ export const OfferDetails = () => {
             <a href={businessInfo.whatsappUrl} target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn-ghost text-xs px-3.5 py-2">
               <MessageCircle size={16} /> WhatsApp Inquiry
             </a>
-            <button onClick={() => setIsBookingOpen(true)} className="premium-btn premium-btn-primary text-xs px-4 py-2">
-              <CreditCard size={16} /> Book with Rs. {advanceAmount.toLocaleString("en-IN")} Advance
+            <button
+              onClick={() => setIsBookingOpen(true)}
+              className={`premium-btn text-xs px-4 py-2 ${
+                settings.payment_required ? "premium-btn-primary" : "bg-emerald-600 hover:bg-emerald-500 text-white"
+              }`}
+            >
+              {settings.payment_required ? (
+                <>
+                  <CreditCard size={16} /> Book with Rs. {advanceAmount.toLocaleString("en-IN")} Advance
+                </>
+              ) : (
+                <>
+                  <Sparkles size={16} /> Book Now — Free
+                </>
+              )}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Razorpay Booking Modal */}
+      {/* Booking Modal */}
       <BookingModal
         offer={offer}
         isOpen={isBookingOpen}
         onClose={() => setIsBookingOpen(false)}
+        paymentRequired={settings.payment_required}
         onSuccess={(bookingId) => {
           navigate(`/onboarding?booking_id=${bookingId}`);
         }}

@@ -129,11 +129,11 @@ export const AdminBookings = () => {
                     </td>
 
                     <td className="px-4 py-3 whitespace-nowrap">
-                      <span className="font-display font-bold text-emerald-400">
+                      <span className={`font-display font-bold ${booking.advance_amount_paid > 0 ? "text-emerald-400" : "text-amber-400"}`}>
                         Rs. {booking.advance_amount_paid.toLocaleString("en-IN")}
                       </span>
-                      <span className="block text-[11px] text-emerald-500/80 uppercase font-semibold">
-                        {booking.payment_status}
+                      <span className={`block text-[11px] uppercase font-semibold ${booking.advance_amount_paid > 0 ? "text-emerald-500/80" : "text-amber-500/80"}`}>
+                        {booking.advance_amount_paid === 0 ? "Free Booking" : booking.payment_status}
                       </span>
                     </td>
 
