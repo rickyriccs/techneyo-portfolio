@@ -1,36 +1,28 @@
 import { FormEvent, useEffect, useState } from "react";
-import { Edit, Plus, Trash2, X } from "lucide-react";
+import { Edit, Plus, Trash2, X, Sparkles, ShieldAlert, CheckCircle2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAdminAuth } from "@/lib/admin-auth";
-
-type OfferRow = {
-  id: string;
-  title: string;
-  short_description: string;
-  detailed_description: string | null;
-  offer_type: "Website Presence" | "Business Tool" | "Automation" | "Digital Growth" | "Custom";
-  starting_price: number | null;
-  discount_price: number | null;
-  valid_from: string | null;
-  valid_till: string | null;
-  status: "Active" | "Inactive" | "Draft" | "Expired";
-  is_featured: boolean;
-  button_text: string;
-  button_action: "Contact Form" | "WhatsApp" | "Call" | "Custom Link";
-  button_url: string | null;
-  display_order: number;
-  seo_title: string | null;
-  seo_description: string | null;
-};
+import type { Offer } from "@/types/offer";
 
 type OfferForm = {
   id?: string;
   title: string;
+  slug: string;
   short_description: string;
   detailed_description: string;
   offer_type: "Website Presence" | "Business Tool" | "Automation" | "Digital Growth" | "Custom";
   starting_price: string;
   discount_price: string;
+  billing_period: "monthly" | "one-time" | "yearly";
+  setup_fee: string;
+  booking_amount: string;
+  target_audience: string;
+  whats_included: string;
+  whats_not_included: string;
+  update_policy: string;
+  ownership_policy: string;
+  terms: string;
+  target_keywords: string;
   valid_from: string;
   valid_till: string;
   status: "Active" | "Inactive" | "Draft" | "Expired";
@@ -45,11 +37,22 @@ type OfferForm = {
 
 const blankForm: OfferForm = {
   title: "",
+  slug: "",
   short_description: "",
   detailed_description: "",
   offer_type: "Website Presence",
   starting_price: "",
   discount_price: "",
+  billing_period: "monthly",
+  setup_fee: "",
+  booking_amount: "",
+  target_audience: "",
+  whats_included: "",
+  whats_not_included: "",
+  update_policy: "",
+  ownership_policy: "",
+  terms: "",
+  target_keywords: "",
   valid_from: "",
   valid_till: "",
   status: "Draft",
@@ -62,29 +65,48 @@ const blankForm: OfferForm = {
   seo_description: "",
 };
 
-const toForm = (offer: OfferRow): OfferForm => ({
+const toForm = (offer: Offer): OfferForm => ({
   id: offer.id,
-  title: offer.title,
-  short_description: offer.short_description,
-  detailed_description: offer.detailed_description ?? "",
-  offer_type: offer.offer_type,
-  starting_price: offer.starting_price !== null ? String(offer.starting_price) : "",
-  discount_price: offer.discount_price !== null ? String(offer.discount_price) : "",
+  title: offer.title || "",
+  slug: offer.slug || "",
+  short_description: offer.short_description || "",
+  detailed_description: offer.detailed_description || "",
+  offer_type: offer.offer_type || "Website Presence",
+  starting_price: offer.starting_price !== null && offer.starting_price !== undefined ? String(offer.starting_price) : "",
+  discount_price: offer.discount_price !== null && offer.discount_price !== undefined ? String(offer.discount_price) : "",
+  billing_period: offer.billing_period || "monthly",
+  setup_fee: offer.setup_fee !== null && offer.setup_fee !== undefined ? String(offer.setup_fee) : "",
+  booking_amount: offer.booking_amount !== null && offer.booking_amount !== undefined ? String(offer.booking_amount) : "999",
+  target_audience: offer.target_audience ? offer.target_audience.join(", ") : "",
+  whats_included: offer.whats_included ? offer.whats_included.join("\n") : "",
+  whats_not_included: offer.whats_not_included ? offer.whats_not_included.join("\n") : "",
+  update_policy: offer.update_policy || "",
+  ownership_policy: offer.ownership_policy || "",
+  terms: offer.terms ? offer.terms.join("\n") : "",
+  target_keywords: offer.target_keywords ? offer.target_keywords.join(", ") : "",
   valid_from: offer.valid_from ?? "",
   valid_till: offer.valid_till ?? "",
-  status: offer.status,
-  is_featured: offer.is_featured,
-  button_text: offer.button_text,
-  button_action: offer.button_action,
+  status: offer.status || "Draft",
+  is_featured: offer.is_featured || false,
+  button_text: offer.button_text || "Book with ₹999 Advance",
+  button_action: offer.button_action || "Contact Form",
   button_url: offer.button_url ?? "",
-  display_order: offer.display_order,
+  display_order: offer.display_order || 0,
   seo_title: offer.seo_title ?? "",
   seo_description: offer.seo_description ?? "",
 });
 
-const AdminOffers = () => {
+const generateSlug = (title: string) => {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-");
+};
+
+export const AdminOffers = () => {
   const { user } = useAdminAuth();
-  const [rows, setRows] = useState<OfferRow[]>([]);
+  const [rows, setRows] = useState<Offer[]>([]);
   const [form, setForm] = useState<OfferForm>(blankForm);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -105,7 +127,7 @@ const AdminOffers = () => {
     if (loadError) {
       setError(loadError.message);
     } else {
-      setRows((data ?? []) as OfferRow[]);
+      setRows((data ?? []) as Offer[]);
     }
     setIsLoading(false);
   };
@@ -121,6 +143,14 @@ const AdminOffers = () => {
     setSuccess("");
   };
 
+  const handleTitleChange = (val: string) => {
+    setForm((prev) => ({
+      ...prev,
+      title: val,
+      slug: !prev.id ? generateSlug(val) : prev.slug,
+    }));
+  };
+
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (!supabase) return;
@@ -131,11 +161,22 @@ const AdminOffers = () => {
 
     const payload: Record<string, unknown> = {
       title: form.title.trim(),
+      slug: form.slug.trim() || generateSlug(form.title),
       short_description: form.short_description.trim(),
       detailed_description: form.detailed_description.trim() || null,
       offer_type: form.offer_type,
       starting_price: form.starting_price.trim() ? Number(form.starting_price) : null,
       discount_price: form.discount_price.trim() ? Number(form.discount_price) : null,
+      billing_period: form.billing_period,
+      setup_fee: form.setup_fee.trim() ? Number(form.setup_fee) : null,
+      booking_amount: form.booking_amount.trim() ? Number(form.booking_amount) : 999,
+      target_audience: form.target_audience ? form.target_audience.split(",").map((s) => s.trim()).filter(Boolean) : [],
+      whats_included: form.whats_included ? form.whats_included.split("\n").map((s) => s.trim()).filter(Boolean) : [],
+      whats_not_included: form.whats_not_included ? form.whats_not_included.split("\n").map((s) => s.trim()).filter(Boolean) : [],
+      update_policy: form.update_policy.trim() || null,
+      ownership_policy: form.ownership_policy.trim() || null,
+      terms: form.terms ? form.terms.split("\n").map((s) => s.trim()).filter(Boolean) : [],
+      target_keywords: form.target_keywords ? form.target_keywords.split(",").map((s) => s.trim()).filter(Boolean) : [],
       valid_from: form.valid_from.trim() || null,
       valid_till: form.valid_till.trim() || null,
       status: form.status,
@@ -170,7 +211,7 @@ const AdminOffers = () => {
     setIsSaving(false);
   };
 
-  const deleteOffer = async (offer: OfferRow) => {
+  const deleteOffer = async (offer: Offer) => {
     if (!supabase) return;
     const shouldDelete = window.confirm(`Delete "${offer.title}"?`);
     if (!shouldDelete) return;
@@ -191,8 +232,10 @@ const AdminOffers = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-3xl font-bold text-foreground">Offers</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Manage dynamic website offers and promotional campaign CTAs.</p>
+          <h1 className="font-display text-3xl font-bold text-foreground">Offers & Promotions Manager</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Manage high-conversion SEO landing offers, Razorpay advance deposits, and explicit Update/Ownership disclaimers.
+          </p>
         </div>
       </div>
 
@@ -201,7 +244,7 @@ const AdminOffers = () => {
 
       <section className="rounded-lg border border-border bg-card p-5">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-display text-lg font-semibold text-foreground">{isEditing ? "Edit offer" : "Add offer"}</h2>
+          <h2 className="font-display text-lg font-semibold text-foreground">{isEditing ? "Edit offer" : "Add new offer"}</h2>
           {isEditing && (
             <button type="button" onClick={resetForm} className="inline-flex items-center gap-2 rounded-md border border-border px-3 py-2 text-sm font-semibold hover:bg-muted">
               <X size={16} /> Cancel
@@ -209,120 +252,183 @@ const AdminOffers = () => {
           )}
         </div>
 
-        <form onSubmit={handleSubmit} className="grid gap-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <label className="block">
+        <form onSubmit={handleSubmit} className="grid gap-5">
+          {/* Title & Slug */}
+          <div className="grid gap-4 md:grid-cols-3">
+            <label className="block md:col-span-2">
               <span className="mb-1.5 block text-sm font-medium text-foreground">Offer Title *</span>
               <input
                 required
                 value={form.title}
-                onChange={(event) => setForm({ ...form, title: event.target.value })}
+                onChange={(e) => handleTitleChange(e.target.value)}
                 className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/20"
-                placeholder="e.g. Website starts from Rs. 999"
+                placeholder="e.g. ₹299/Month – Basic Business Website Plan"
               />
             </label>
+
             <label className="block">
-              <span className="mb-1.5 block text-sm font-medium text-foreground">Offer Type *</span>
-              <select
-                value={form.offer_type}
-                onChange={(event) => setForm({ ...form, offer_type: event.target.value as OfferForm["offer_type"] })}
-                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/20"
-              >
-                <option value="Website Presence">Website Presence</option>
-                <option value="Business Tool">Business Tool</option>
-                <option value="Automation">Automation</option>
-                <option value="Digital Growth">Digital Growth</option>
-                <option value="Custom">Custom</option>
-              </select>
+              <span className="mb-1.5 block text-sm font-medium text-foreground">URL Slug (SEO landing page) *</span>
+              <input
+                required
+                value={form.slug}
+                onChange={(e) => setForm({ ...form, slug: generateSlug(e.target.value) })}
+                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm font-mono outline-none focus:ring-2 focus:ring-primary/20"
+                placeholder="299-basic-business-website-plan"
+              />
             </label>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
+          {/* Pricing & Billing */}
+          <div className="grid gap-4 md:grid-cols-4 rounded-lg border border-border p-4 bg-muted/20">
             <label className="block">
-              <span className="mb-1.5 block text-sm font-medium text-foreground">Starting Price (Rs.)</span>
-              <input
-                type="number"
-                value={form.starting_price}
-                onChange={(event) => setForm({ ...form, starting_price: event.target.value })}
-                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/20"
-                placeholder="e.g. 1999"
-              />
+              <span className="mb-1.5 block text-sm font-medium text-foreground">Billing Frequency</span>
+              <select
+                value={form.billing_period}
+                onChange={(e) => setForm({ ...form, billing_period: e.target.value as any })}
+                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none"
+              >
+                <option value="monthly">Monthly Subscription (/mo)</option>
+                <option value="one-time">One-time Flat Fee</option>
+                <option value="yearly">Yearly Subscription (/yr)</option>
+              </select>
             </label>
+
             <label className="block">
-              <span className="mb-1.5 block text-sm font-medium text-foreground">Discounted/Offer Price (Rs.)</span>
+              <span className="mb-1.5 block text-sm font-medium text-foreground">Discounted Price (Rs.)</span>
               <input
                 type="number"
                 value={form.discount_price}
-                onChange={(event) => setForm({ ...form, discount_price: event.target.value })}
-                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/20"
-                placeholder="e.g. 999"
+                onChange={(e) => setForm({ ...form, discount_price: e.target.value })}
+                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm font-semibold text-emerald-400 outline-none"
+                placeholder="299"
+              />
+            </label>
+
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-foreground">One-time Setup Fee (Rs.)</span>
+              <input
+                type="number"
+                value={form.setup_fee}
+                onChange={(e) => setForm({ ...form, setup_fee: e.target.value })}
+                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none"
+                placeholder="999"
+              />
+            </label>
+
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-foreground">Razorpay Advance Deposit (Rs.) *</span>
+              <input
+                type="number"
+                required
+                value={form.booking_amount}
+                onChange={(e) => setForm({ ...form, booking_amount: e.target.value })}
+                className="h-10 w-full rounded-md border border-amber-500/40 bg-background px-3 text-sm font-bold text-amber-400 outline-none"
+                placeholder="999"
               />
             </label>
           </div>
 
           <label className="block">
-            <span className="mb-1.5 block text-sm font-medium text-foreground">Short Description *</span>
+            <span className="mb-1.5 block text-sm font-medium text-foreground">Short Summary Description *</span>
             <input
               required
               value={form.short_description}
-              onChange={(event) => setForm({ ...form, short_description: event.target.value })}
+              onChange={(e) => setForm({ ...form, short_description: e.target.value })}
               className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/20"
-              placeholder="e.g. Launch a clean, mobile-friendly business website at an affordable starter price."
+              placeholder="e.g. Perfect for visiting card websites, portfolios, business profiles, and local shops across India."
             />
           </label>
 
           <label className="block">
-            <span className="mb-1.5 block text-sm font-medium text-foreground">Detailed Features / Description (One feature per line, shown as checklist bullets)</span>
-            <textarea
-              rows={4}
-              value={form.detailed_description}
-              onChange={(event) => setForm({ ...form, detailed_description: event.target.value })}
-              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20"
-              placeholder="e.g.&#10;One-page launch&#10;Mobile responsive&#10;WhatsApp CTA&#10;Basic SEO"
+            <span className="mb-1.5 block text-sm font-medium text-foreground">Target Audience Tags (comma separated)</span>
+            <input
+              value={form.target_audience}
+              onChange={(e) => setForm({ ...form, target_audience: e.target.value })}
+              className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none"
+              placeholder="Visiting Card, Portfolio, Business Profile, Local Businesses, Startups"
             />
           </label>
 
-          <div className="grid gap-4 md:grid-cols-3">
+          {/* Side-by-side Inclusions & Exclusions */}
+          <div className="grid gap-4 md:grid-cols-2">
             <label className="block">
-              <span className="mb-1.5 block text-sm font-medium text-foreground">Button Text</span>
-              <input
-                value={form.button_text}
-                onChange={(event) => setForm({ ...form, button_text: event.target.value })}
-                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/20"
+              <span className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-emerald-400">
+                <CheckCircle2 size={16} /> What's INCLUDED (One item per line)
+              </span>
+              <textarea
+                rows={6}
+                value={form.whats_included}
+                onChange={(e) => setForm({ ...form, whats_included: e.target.value })}
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-emerald-500/20"
+                placeholder="Professional Website (up to 5 pages)&#10;Mobile Responsive&#10;Free Hosting&#10;Free SSL Certificate"
               />
             </label>
+
             <label className="block">
-              <span className="mb-1.5 block text-sm font-medium text-foreground">Button Action</span>
-              <select
-                value={form.button_action}
-                onChange={(event) => setForm({ ...form, button_action: event.target.value as OfferForm["button_action"] })}
-                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/20"
-              >
-                <option value="Contact Form">Contact Form</option>
-                <option value="WhatsApp">WhatsApp Link</option>
-                <option value="Call">Call Now</option>
-                <option value="Custom Link">Custom URL Link</option>
-              </select>
-            </label>
-            <label className="block">
-              <span className="mb-1.5 block text-sm font-medium text-foreground">Button URL (only for Custom Link)</span>
-              <input
-                value={form.button_url}
-                disabled={form.button_action !== "Custom Link"}
-                onChange={(event) => setForm({ ...form, button_url: event.target.value })}
-                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50 disabled:bg-muted/30"
-                placeholder="https://example.com/custom-promo"
+              <span className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-red-400">
+                <X size={16} /> What's NOT INCLUDED (One item per line)
+              </span>
+              <textarea
+                rows={6}
+                value={form.whats_not_included}
+                onChange={(e) => setForm({ ...form, whats_not_included: e.target.value })}
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-red-500/20"
+                placeholder="No Admin Panel&#10;No Login System&#10;No Free Content Updates&#10;All modifications are chargeable"
               />
             </label>
           </div>
+
+          {/* Policy Disclaimers */}
+          <div className="grid gap-4 md:grid-cols-2 rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-semibold text-amber-400">Update Policy Disclaimer *</span>
+              <textarea
+                rows={3}
+                value={form.update_policy}
+                onChange={(e) => setForm({ ...form, update_policy: e.target.value })}
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none"
+              />
+            </label>
+
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-semibold text-cyan-400">Ownership Policy Disclaimer *</span>
+              <textarea
+                rows={3}
+                value={form.ownership_policy}
+                onChange={(e) => setForm({ ...form, ownership_policy: e.target.value })}
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none"
+              />
+            </label>
+          </div>
+
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-medium text-foreground">Suggested Terms & Conditions (One per line)</span>
+            <textarea
+              rows={3}
+              value={form.terms}
+              onChange={(e) => setForm({ ...form, terms: e.target.value })}
+              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none"
+              placeholder="Minimum subscription: 12 months&#10;One-time setup fee: ₹999&#10;Advance payment only"
+            />
+          </label>
+
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-medium text-foreground">Target SEO Keywords (comma separated for SERP ranking)</span>
+            <input
+              value={form.target_keywords}
+              onChange={(e) => setForm({ ...form, target_keywords: e.target.value })}
+              className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none"
+              placeholder="299 per month website plan, basic business website India, low cost website offer"
+            />
+          </label>
 
           <div className="grid gap-4 md:grid-cols-4">
             <label className="block">
               <span className="mb-1.5 block text-sm font-medium text-foreground">Status</span>
               <select
                 value={form.status}
-                onChange={(event) => setForm({ ...form, status: event.target.value as OfferForm["status"] })}
-                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/20"
+                onChange={(e) => setForm({ ...form, status: e.target.value as any })}
+                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none"
               >
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
@@ -335,8 +441,8 @@ const AdminOffers = () => {
               <input
                 type="number"
                 value={form.display_order}
-                onChange={(event) => setForm({ ...form, display_order: Number(event.target.value) })}
-                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/20"
+                onChange={(e) => setForm({ ...form, display_order: Number(e.target.value) })}
+                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none"
               />
             </label>
             <label className="block">
@@ -344,8 +450,8 @@ const AdminOffers = () => {
               <input
                 type="date"
                 value={form.valid_from}
-                onChange={(event) => setForm({ ...form, valid_from: event.target.value })}
-                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/20"
+                onChange={(e) => setForm({ ...form, valid_from: e.target.value })}
+                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none"
               />
             </label>
             <label className="block">
@@ -353,111 +459,75 @@ const AdminOffers = () => {
               <input
                 type="date"
                 value={form.valid_till}
-                onChange={(event) => setForm({ ...form, valid_till: event.target.value })}
-                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/20"
+                onChange={(e) => setForm({ ...form, valid_till: e.target.value })}
+                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none"
               />
             </label>
           </div>
 
-          <div className="flex items-center gap-2 py-2">
+          <div className="flex items-center gap-2 py-1">
             <input
               type="checkbox"
               id="is_featured"
               checked={form.is_featured}
-              onChange={(event) => setForm({ ...form, is_featured: event.target.checked })}
-              className="h-4 w-4 rounded border-border text-primary focus:ring-primary/20"
+              onChange={(e) => setForm({ ...form, is_featured: e.target.checked })}
+              className="h-4 w-4 rounded border-border text-primary"
             />
             <label htmlFor="is_featured" className="text-sm font-medium text-foreground cursor-pointer select-none">
-              Featured (Show prominently on the homepage Offers Section)
+              Featured (Highlight on Homepage)
             </label>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 border-t border-border pt-4 mt-2">
-            <label className="block">
-              <span className="mb-1.5 block text-sm font-medium text-foreground">SEO Title Override</span>
-              <input
-                value={form.seo_title}
-                onChange={(event) => setForm({ ...form, seo_title: event.target.value })}
-                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/20"
-                placeholder="e.g. Special Discount on Custom Web Applications"
-              />
-            </label>
-            <label className="block">
-              <span className="mb-1.5 block text-sm font-medium text-foreground">SEO Description Override</span>
-              <input
-                value={form.seo_description}
-                onChange={(event) => setForm({ ...form, seo_description: event.target.value })}
-                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/20"
-                placeholder="e.g. Save 20% on custom admin panel or ecommerce setup today."
-              />
-            </label>
-          </div>
-
-          <button type="submit" disabled={isSaving} className="inline-flex w-fit items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60">
+          <button type="submit" disabled={isSaving} className="inline-flex w-fit items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60">
             <Plus size={16} />
             {isSaving ? "Saving..." : isEditing ? "Update Offer" : "Add Offer"}
           </button>
         </form>
       </section>
 
+      {/* Offers Table */}
       <section className="overflow-hidden rounded-lg border border-border bg-card">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[900px] text-left text-sm">
             <thead className="bg-muted/60 text-xs uppercase tracking-wide text-muted-foreground">
               <tr>
                 <th className="px-4 py-3 font-semibold">Offer Details</th>
-                <th className="px-4 py-3 font-semibold">Type</th>
+                <th className="px-4 py-3 font-semibold">Slug & URL</th>
                 <th className="px-4 py-3 font-semibold">Prices</th>
+                <th className="px-4 py-3 font-semibold">Razorpay Deposit</th>
                 <th className="px-4 py-3 font-semibold">Status</th>
-                <th className="px-4 py-3 font-semibold">Order</th>
-                <th className="px-4 py-3 font-semibold">Featured</th>
                 <th className="px-4 py-3 font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {isLoading ? (
-                <tr><td colSpan={7} className="px-4 py-6 text-muted-foreground">Loading...</td></tr>
+                <tr><td colSpan={6} className="px-4 py-6 text-muted-foreground">Loading offers...</td></tr>
               ) : rows.length === 0 ? (
-                <tr><td colSpan={7} className="px-4 py-6 text-muted-foreground">No offers found.</td></tr>
+                <tr><td colSpan={6} className="px-4 py-6 text-muted-foreground">No offers found.</td></tr>
               ) : (
                 rows.map((offer) => (
                   <tr key={offer.id} className="align-top">
                     <td className="px-4 py-3">
                       <p className="font-semibold text-foreground">{offer.title}</p>
-                      <p className="mt-1 max-w-md text-xs leading-5 text-muted-foreground">{offer.short_description}</p>
-                      {offer.detailed_description && (
-                        <div className="mt-2 text-xs text-muted-foreground bg-muted/30 p-2 rounded max-h-20 overflow-y-auto">
-                          <p className="font-medium mb-1">Features Checklist:</p>
-                          <ul className="list-disc pl-4 space-y-0.5">
-                            {offer.detailed_description.split("\n").map((f, i) => <li key={i}>{f.trim()}</li>)}
-                          </ul>
-                        </div>
-                      )}
+                      <p className="mt-1 max-w-xs text-xs text-muted-foreground line-clamp-2">{offer.short_description}</p>
                     </td>
-                    <td className="px-4 py-3 text-foreground whitespace-nowrap">{offer.offer_type}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-cyan-400">
+                      /offers/{offer.slug || offer.id}
+                    </td>
                     <td className="px-4 py-3 text-foreground whitespace-nowrap">
-                      {offer.discount_price ? (
-                        <div>
-                          <p className="font-semibold text-emerald-400">Rs. {offer.discount_price}</p>
-                          {offer.starting_price && <p className="text-xs text-muted-foreground line-through">Rs. {offer.starting_price}</p>}
-                        </div>
-                      ) : offer.starting_price ? (
-                        <p>Rs. {offer.starting_price}</p>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">Custom</span>
-                      )}
+                      <p className="font-semibold text-emerald-400">Rs. {offer.discount_price || offer.starting_price} {offer.billing_period === "monthly" ? "/mo" : ""}</p>
+                      {offer.setup_fee && <p className="text-xs text-muted-foreground">+ Rs. {offer.setup_fee} setup</p>}
+                    </td>
+                    <td className="px-4 py-3 font-bold text-amber-400 whitespace-nowrap">
+                      Rs. {offer.booking_amount || offer.setup_fee || 999}
                     </td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${
-                        offer.status === "Active" ? "bg-emerald-500/10 text-emerald-400" :
-                        offer.status === "Draft" ? "bg-amber-500/10 text-amber-400" :
-                        "bg-muted text-muted-foreground"
+                        offer.status === "Active" ? "bg-emerald-500/10 text-emerald-400" : "bg-muted text-muted-foreground"
                       }`}>
                         {offer.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-foreground">{offer.display_order}</td>
-                    <td className="px-4 py-3 text-foreground">{offer.is_featured ? "⭐ Yes" : "No"}</td>
                     <td className="px-4 py-3">
                       <div className="flex gap-2">
                         <button

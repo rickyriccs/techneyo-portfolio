@@ -137,7 +137,35 @@ export const offersSchema = (offers: any[]) => ({
   })),
 });
 
+export const singleOfferSchema = (offer: any) => ({
+  "@context": "https://schema.org",
+  "@type": "Product",
+  name: offer.seo_title || offer.title,
+  description: offer.seo_description || offer.short_description,
+  brand: {
+    "@type": "Brand",
+    name: businessInfo.name,
+  },
+  offers: {
+    "@type": "Offer",
+    priceCurrency: "INR",
+    price: offer.discount_price || offer.starting_price || 0,
+    priceValidUntil: offer.valid_till || "2030-12-31",
+    itemCondition: "https://schema.org/NewCondition",
+    availability: "https://schema.org/InStock",
+    seller: {
+      "@type": "Organization",
+      name: businessInfo.name,
+      url: businessInfo.website,
+    },
+  },
+  ...(offer.target_keywords?.length
+    ? { keywords: offer.target_keywords.join(", ") }
+    : {}),
+});
+
 export const graphSchema = (...schemas: Record<string, unknown>[]) => ({
   "@context": "https://schema.org",
   "@graph": schemas,
 });
+

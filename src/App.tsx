@@ -37,6 +37,10 @@ import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
+import OfferDetails from "./pages/OfferDetails";
+import Onboarding from "./pages/Onboarding";
+import AdminBookings from "./pages/admin/AdminBookings";
+
 const AppRoutes = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
@@ -51,6 +55,8 @@ const AppRoutes = () => {
           <Route path="/services" element={<Services />} />
           <Route path="/services/:slug" element={<ServiceDetail />} />
           <Route path="/offers" element={<Offers />} />
+          <Route path="/offers/:slug" element={<OfferDetails />} />
+          <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/website-development-company-ludhiana" element={<LocalSeoPage />} />
@@ -70,6 +76,7 @@ const AppRoutes = () => {
               <Route path="enquiries" element={<AdminEnquiries />} />
               <Route path="services" element={<AdminServices />} />
               <Route path="offers" element={<AdminOffers />} />
+              <Route path="bookings" element={<AdminBookings />} />
               <Route path="packages" element={<AdminResourceList type="packages" />} />
               <Route path="tools" element={<AdminResourceList type="tools" />} />
               <Route path="portfolio" element={<AdminPortfolio />} />
