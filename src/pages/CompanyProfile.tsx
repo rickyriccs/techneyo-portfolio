@@ -5,7 +5,7 @@ import SeoCta from "@/components/SeoCta";
 import { businessInfo } from "@/lib/business-info";
 import { organizationSchema } from "@/lib/schema";
 
-const shortDescription = "Techneyo Solutions provides website development, CRM systems, admin dashboards, business automation, WhatsApp automation consultation, SEO, and custom web-based software for businesses in Ludhiana, Punjab, and across India.";
+const shortDescription = "Techneyo Solutions provides website development, CRM systems, admin dashboards, business automation, WhatsApp automation consultation, SEO, and custom web-based software for businesses in Bharat and across Asia.";
 const longDescription = "Techneyo Solutions is a business-focused digital solutions company helping local businesses, service providers, startups, consultants, clinics, institutes, manufacturers, and growing teams build professional websites, lead capture systems, CRM dashboards, WhatsApp enquiry flows, SEO foundations, and custom web-based software. The company focuses on practical digital presence, clear communication, ethical SEO, and systems that make it easier for customers to discover, trust, and contact a business.";
 
 const CompanyProfile = () => (

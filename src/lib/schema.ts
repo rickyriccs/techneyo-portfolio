@@ -8,19 +8,19 @@ export const organizationSchema = {
   url: businessInfo.website,
   email: businessInfo.email,
   telephone: businessInfo.phoneDisplay,
-  areaServed: "India",
+  areaServed: "Bharat",
   location: {
     "@type": "Place",
-    name: "Ludhiana, Punjab, India",
+    name: "Bharat (India)",
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Ludhiana",
-      addressRegion: "Punjab",
+      addressLocality: "Bharat",
+      addressRegion: "Bharat",
       addressCountry: "IN",
     },
   },
   description:
-    "Techneyo Solutions is based in Ludhiana and provides website development, CRM development, SEO and digital presence, WhatsApp automation, admin dashboard development, business automation, and custom web-based software solutions for businesses across India.",
+    "Techneyo Solutions is based in Bharat and provides website development, CRM development, SEO and digital presence, WhatsApp automation, admin dashboard development, business automation, and custom web-based software solutions for businesses across India.",
   makesOffer: [
     "Website development",
     "CRM development",
@@ -52,7 +52,7 @@ export const organizationSchema = {
 export const localBusinessSchema = {
   ...organizationSchema,
   "@type": "LocalBusiness",
-  areaServed: ["Ludhiana", "Punjab", "India"],
+  areaServed: ["Bharat", "India"],
 };
 
 export const faqSchema = (faqs: FaqItem[]) => ({
@@ -92,7 +92,7 @@ export const serviceSchema = (service: ServicePage) => ({
     email: businessInfo.email,
     telephone: businessInfo.phoneDisplay,
   },
-  areaServed: ["Ludhiana", "Punjab", "India"],
+  areaServed: ["Bharat", "India"],
 });
 
 export const articleSchema = (post: BlogPost) => ({

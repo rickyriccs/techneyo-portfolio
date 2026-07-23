@@ -123,7 +123,7 @@ export const servicePages: ServicePage[] = [
       { question: "Can small businesses use automation?", answer: "Yes. Small businesses can benefit from simple lead capture, reminders, status tracking, and customer communication flows." },
       { question: "Can automation connect to WhatsApp?", answer: "Yes. We can plan ways to automate business enquiries with WhatsApp, CRM, dashboard, and follow-up workflows while respecting platform rules." },
       { question: "Do I need a CRM first?", answer: "Not always, but a CRM or dashboard often makes automation easier to manage and measure." },
-      { question: "Do you provide services across India?", answer: "Yes. Techneyo Solutions works with businesses across India while using Ludhiana as a local trust and base-location signal." },
+      { question: "Do you provide services across India?", answer: "Yes. Techneyo Solutions works with businesses across Bharat and all over Asia." }
     ],
   },
   {
@@ -153,7 +153,7 @@ export const servicePages: ServicePage[] = [
     metaDescription: "Improve your business visibility with SEO-ready websites, local SEO, Google Business Profile optimization, content structure, and digital presence setup.",
     h1: "SEO and Digital Presence Services for Small Businesses",
     intro: "SEO starts with a clean website foundation: useful pages, clear headings, metadata, internal links, fast loading, structured data, sitemap, robots file, and content that matches what customers search for. Techneyo Solutions provides SEO services for small businesses in India, digital presence services for small business, local SEO services, Google Business Profile optimization guidance, and SEO friendly website development structure. We focus on service clarity, helpful content, and technical SEO basics that make the website easier for search engines and customers to understand.",
-    forWhom: ["Local businesses in Ludhiana and Punjab", "Companies launching a new website", "Businesses with weak Google visibility", "Service providers planning long-term content growth"],
+    forWhom: ["Businesses in Bharat and across India", "Companies launching a new website", "Businesses with weak Google visibility", "Service providers planning long-term content growth"],
     problems: ["Pages lack titles and descriptions", "Services are not clearly explained", "No sitemap or schema", "Weak internal linking", "Local keywords are missing or unnatural"],
     features: ["SEO metadata", "Canonical URLs", "Open Graph and Twitter tags", "Local SEO services structure", "Google Business Profile optimization guidance", "Internal linking and content structure"],
     process: ["Audit the website", "Fix technical SEO gaps", "Plan service and location pages", "Improve headings and page copy", "Create a content and backlink-readiness roadmap"],
@@ -162,7 +162,7 @@ export const servicePages: ServicePage[] = [
     related: ["website-development", "business-website-design", "business-automation"],
     faqs: [
       { question: "Do you use black-hat SEO?", answer: "No. We avoid hidden keywords, fake backlinks, fake reviews, and spam tactics." },
-      { question: "Can you help local Ludhiana businesses?", answer: "Yes. Ludhiana is used naturally as local trust and local SEO proof while the main website targets businesses across India." },
+      { question: "Can you help businesses in Bharat?", answer: "Yes. Techneyo Solutions serves businesses across Bharat and all over India." },
       { question: "Is SEO a one-time task?", answer: "Technical setup is a strong start, but ongoing content, reputation, local profiles, and genuine backlinks improve long-term results." },
     ],
   },
@@ -204,10 +204,10 @@ export type BlogPost = {
 export const blogPosts: BlogPost[] = [
   {
     slug: "why-local-business-ludhiana-needs-website",
-    title: "Why every local business in Ludhiana needs a website",
-    seoTitle: "Why Local Businesses in Ludhiana Need a Website | Techneyo Solutions",
-    metaDescription: "A practical guide for Ludhiana local businesses on why a website, WhatsApp, CRM, and SEO foundation helps customers trust and contact them.",
-    intro: "Customers now check online before calling, visiting, or trusting a local business. A professional website gives Ludhiana businesses a clear place to show services, location, contact details, proof, and enquiry options.",
+    title: "Why every local business in Bharat needs a website",
+    seoTitle: "Why Local Businesses in Bharat Need a Website | Techneyo Solutions",
+    metaDescription: "A practical guide for businesses in Bharat on why a website, WhatsApp, CRM, and SEO foundation helps customers trust and contact them.",
+    intro: "Customers now check online before calling, visiting, or trusting a local business. A professional website gives businesses in Bharat a clear place to show services, location, contact details, proof, and enquiry options.",
     sections: [
       { heading: "Your website is your owned digital address", body: "Social platforms are useful, but a website gives your business a stable home that can appear in Google, be shared in WhatsApp, and support campaigns, QR codes, profiles, and directory listings." },
       { heading: "Local customers want quick clarity", body: "A good website tells customers what you offer, where you serve, how to contact you, and why your business is relevant. This matters for shops, clinics, institutes, consultants, manufacturers, and service providers." },

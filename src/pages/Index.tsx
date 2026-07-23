@@ -279,7 +279,7 @@ const Index = () => {
               Website, CRM & Business Automation Solutions for Businesses Across India
             </motion.h1>
             <motion.p variants={fadeUp} custom={2} className="mt-6 max-w-3xl text-lg leading-8 text-white/68 sm:text-xl">
-              Techneyo Solutions is based in Ludhiana and serves businesses across India with website development, CRM, SEO, WhatsApp automation, admin dashboards, and custom software solutions.
+              Techneyo Solutions is based in Bharat and serves businesses across Asia with website development, CRM, SEO, WhatsApp automation, admin dashboards, and custom software solutions.
             </motion.p>
             <motion.div variants={fadeUp} custom={3} className="mt-8 flex flex-wrap gap-4">
               <Link to="/contact" className="premium-btn premium-btn-primary" data-offer-name="Starter website consultation" data-cta-location="home_hero">
@@ -452,7 +452,7 @@ const Index = () => {
               ))}
             </div>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link to="/website-development-company-ludhiana" className="premium-btn premium-btn-ghost">Website Development in Ludhiana</Link>
+              <Link to="/website-development-company-ludhiana" className="premium-btn premium-btn-ghost">Website Development in Bharat</Link>
               <Link to="/resources" className="premium-btn premium-btn-ghost">Read Resources</Link>
               <Link to="/company-profile" className="premium-btn premium-btn-ghost">Company Profile</Link>
             </div>

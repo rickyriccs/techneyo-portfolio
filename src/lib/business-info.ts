@@ -9,8 +9,8 @@ export const businessInfo = {
   ogImage: "https://techneyo.com/banner.jpeg",
   whatsappUrl:
     "https://wa.me/919988773122?text=Hello%20Techneyo%20Solutions%2C%20I%20want%20to%20discuss%20a%20website%2Fsoftware%2Fdigital%20solution%20for%20my%20business.",
-  areaServed: "India",
-  location: "Ludhiana, Punjab, India",
+  areaServed: "Bharat",
+  location: "Bharat (India)",
   socialProfiles: [
     { label: "Facebook", url: "https://www.facebook.com/techneyo" },
     { label: "Instagram", url: "https://www.instagram.com/techneyo" },

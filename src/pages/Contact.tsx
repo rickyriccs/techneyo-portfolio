@@ -219,7 +219,7 @@ const Contact = () => {
                       value={form.city}
                       onChange={(e) => setForm({ ...form, city: e.target.value })}
                       className={fieldClass}
-                      placeholder="Ludhiana"
+                      placeholder="New Delhi / Mumbai"
                     />
                   </div>
                   <div>
@@ -387,7 +387,7 @@ const Contact = () => {
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Techneyo Solutions Location - Ludhiana, Punjab"
+              title="Techneyo Solutions Service Area - Bharat (India)"
             />
           </div>
         </div>

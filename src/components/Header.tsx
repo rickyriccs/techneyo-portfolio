@@ -7,7 +7,7 @@ import { businessInfo } from "@/lib/business-info";
 const navLinks = [
   { label: "Home", path: "/" },
   { label: "Services", path: "/services" },
-  { label: "Ludhiana", path: "/website-development-company-ludhiana" },
+  { label: "Bharat", path: "/website-development-company-ludhiana" },
   { label: "Resources", path: "/resources" },
   { label: "Offers", path: "/offers" },
   { label: "About", path: "/about" },
