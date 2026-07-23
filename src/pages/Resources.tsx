@@ -8,8 +8,9 @@ import { organizationSchema } from "@/lib/schema";
 const Resources = () => (
   <div className="public-premium min-h-screen overflow-hidden text-white">
     <PageMeta
-      title="Resources | Website, CRM, SEO & Automation Guides"
-      description="Read practical Techneyo Solutions resources about websites, CRM, WhatsApp automation, SEO, dashboards, and digital growth for local businesses."
+      title="Resources & Guides | Website, CRM, SEO & Automation | Techneyo Solutions"
+      description="Read practical Techneyo Solutions resources about websites, CRM, WhatsApp automation, SEO, dashboards, and digital growth for businesses across Bharat & Asia."
+      keywords="digital business guides Bharat, website development guide Asia, CRM setup tutorial, WhatsApp automation guide, business SEO tips Bharat"
       canonicalPath="/resources"
       schema={organizationSchema}
     />

@@ -10,6 +10,7 @@ export type ServicePage = {
   title: string;
   seoTitle: string;
   metaDescription: string;
+  keywords: string;
   h1: string;
   intro: string;
   forWhom: string[];
@@ -26,10 +27,11 @@ export const servicePages: ServicePage[] = [
   {
     slug: "website-development",
     title: "Website Development",
-    seoTitle: "Website Development Services in India | Techneyo Solutions",
-    metaDescription: "Techneyo Solutions provides professional website development services in India for small businesses, service providers, startups, shops, consultants, and growing companies.",
-    h1: "Website Development Services for Businesses Across India",
-    intro: "A business website should do more than look modern. It should explain what you do, make your business easy to trust, help customers contact you quickly, and support future SEO, CRM, WhatsApp, and automation workflows. Techneyo Solutions provides website development services in India for local businesses, startups, shops, consultants, clinics, institutes, manufacturers, and growing companies. We focus on business website development services India-wide, SEO friendly website development, website development for lead generation, and website with WhatsApp integration for business. Whether you need an affordable website development for small business India package or a more advanced website with CRM integration, the goal is to turn your online presence into a useful business asset.",
+    seoTitle: "Website Development Services in Bharat & Asia | Techneyo Solutions",
+    metaDescription: "Techneyo Solutions provides professional website development services in Bharat and Asia for small businesses, service providers, startups, shops, consultants, and growing companies.",
+    keywords: "website development company Bharat, business website development Asia, affordable web design Bharat, custom web design agency, responsive website development, SEO friendly website Bharat, lead generation website Asia",
+    h1: "Website Development Services for Businesses Across Bharat & Asia",
+    intro: "A business website should do more than look modern. It should explain what you do, make your business easy to trust, help customers contact you quickly, and support future SEO, CRM, WhatsApp, and automation workflows. Techneyo Solutions provides website development services in Bharat and Asia for local businesses, startups, shops, consultants, clinics, institutes, manufacturers, and growing companies. We focus on business website development services across Bharat & Asia, SEO friendly website development, website development for lead generation, and website with WhatsApp integration for business. Whether you need an affordable website development for small business in Bharat package or a more advanced website with CRM integration, the goal is to turn your online presence into a useful business asset.",
     forWhom: ["Local shops and service providers", "Clinics, institutes, consultants, and agencies", "Manufacturers and small businesses", "Startups and growing teams that need a professional digital presence"],
     problems: ["No clear online identity", "Customers cannot find trustworthy service details", "Website visitors leave without contacting the business", "Old websites are slow, confusing, or not mobile friendly"],
     features: ["Responsive website layout", "Service pages and enquiry sections", "SEO-friendly website development structure", "Website with WhatsApp integration for business", "Website with CRM integration planning", "Analytics-ready lead generation paths"],
@@ -38,8 +40,8 @@ export const servicePages: ServicePage[] = [
     whyChoose: "Techneyo Solutions keeps website development practical for business owners. We avoid unnecessary jargon and focus on the pages, content, calls to action, and systems that help customers understand and contact your business.",
     related: ["seo-digital-presence", "crm-development", "whatsapp-automation", "custom-software-development"],
     faqs: [
-      { question: "How much does website development cost in India?", answer: "Website development cost in India depends on pages, design, content, forms, SEO needs, WhatsApp integration, CRM integration, and whether custom dashboard features are required." },
-      { question: "Do you provide website development for small businesses?", answer: "Yes. Techneyo Solutions builds affordable website development for small business India projects, including websites for shops, consultants, clinics, institutes, service providers, and startups." },
+      { question: "How much does website development cost in Bharat?", answer: "Website development cost in Bharat depends on pages, design, content, forms, SEO needs, WhatsApp integration, CRM integration, and whether custom dashboard features are required." },
+      { question: "Do you provide website development for small businesses?", answer: "Yes. Techneyo Solutions builds affordable website development for small businesses across Bharat & Asia, including websites for shops, consultants, clinics, institutes, service providers, and startups." },
       { question: "Can you integrate WhatsApp with my website?", answer: "Yes. We can add website with WhatsApp integration for business, including click-to-chat buttons, default enquiry messages, and contact paths." },
       { question: "Do you provide SEO-friendly website development?", answer: "Yes. We include SEO-friendly page structure, metadata, headings, internal links, sitemap readiness, and content planning basics." },
     ],
@@ -49,6 +51,7 @@ export const servicePages: ServicePage[] = [
     title: "Business Website Design",
     seoTitle: "Business Website Design Services | Techneyo Solutions",
     metaDescription: "Business website design services for companies that need clear service pages, mobile-friendly layouts, enquiry CTAs, SEO structure, and trusted digital presence.",
+    keywords: "business website design Bharat, professional web design services Asia, company website design Bharat, service page design, mobile friendly business website, conversion focused web design Asia",
     h1: "Business website design that makes your company easier to trust and contact.",
     intro: "Business website design is about clarity, credibility, and conversion. A good business website should help visitors understand your services, see why your company is relevant, and contact you without friction. Techneyo Solutions designs business websites for service providers, local businesses, consultants, institutes, clinics, manufacturers, and growing teams. We structure pages around service clarity, customer questions, location relevance, trust signals, and strong contact paths. The result is a practical website that supports sales conversations, Google visibility, and professional brand identity.",
     forWhom: ["Small and medium businesses", "Local service companies", "Consultants and professional service providers", "Companies replacing outdated brochure websites"],
@@ -67,10 +70,11 @@ export const servicePages: ServicePage[] = [
   {
     slug: "crm-development",
     title: "CRM Development",
-    seoTitle: "CRM Development Company in India | Techneyo Solutions",
-    metaDescription: "Build a custom CRM for lead management, enquiry tracking, customer follow-up, sales workflow, and business reporting with Techneyo Solutions.",
-    h1: "Custom CRM Development for Business Lead Management",
-    intro: "Many businesses receive enquiries from calls, WhatsApp, forms, ads, and referrals, but lose track of follow-ups. A practical CRM helps centralize leads, customer details, enquiry source, status, notes, and next actions. Techneyo Solutions is a CRM development company in India for businesses that need custom CRM software development India-wide, CRM for managing customer enquiries, lead management CRM for small business, and website with CRM integration. Instead of forcing every business into the same generic software, we plan CRM workflows around how your team captures, qualifies, follows up, and closes enquiries.",
+    seoTitle: "CRM Development Company in Bharat & Asia | Techneyo Solutions",
+    metaDescription: "Build a custom CRM for managing customer enquiries, lead tracking, and follow-ups with Techneyo Solutions.",
+    keywords: "custom CRM development company Bharat, lead management CRM Asia, business CRM software, custom CRM software developer Bharat, sales lead tracking CRM Asia, website CRM integration",
+    h1: "CRM Development for Customer Enquiries and Lead Tracking",
+    intro: "Many businesses receive enquiries from calls, WhatsApp, forms, ads, and referrals, but lose track of follow-ups. A practical CRM helps centralize leads, customer details, enquiry source, status, notes, and next actions. Techneyo Solutions is a CRM development company in Bharat for businesses that need custom CRM software development across Bharat & Asia, CRM for managing customer enquiries, lead management CRM for small business, and website with CRM integration. Instead of forcing every business into the same generic software, we plan CRM workflows around how your team captures, qualifies, follows up, and closes enquiries.",
     forWhom: ["Sales teams and service businesses", "Institutes and consultants", "Clinics and appointment-based businesses", "Companies managing leads from websites, ads, and WhatsApp"],
     problems: ["Leads are scattered across phones and chats", "Follow-ups are missed", "No clear lead status or ownership", "Owners cannot see enquiry performance"],
     features: ["Lead capture and source tracking", "Status pipelines for lead management CRM", "Admin notes and follow-up dates", "Customer enquiry profiles", "Website with CRM integration", "Reports and business dashboards"],
@@ -88,10 +92,11 @@ export const servicePages: ServicePage[] = [
   {
     slug: "admin-dashboard-development",
     title: "Admin Dashboard Development",
-    seoTitle: "Admin Dashboard Development Company in India | Techneyo Solutions",
-    metaDescription: "Techneyo Solutions builds custom admin dashboards for business tracking, enquiry management, reports, users, orders, services, and internal operations.",
-    h1: "Custom Admin Dashboard Development for Businesses",
-    intro: "An admin dashboard gives business owners and teams a central place to manage information, tasks, leads, offers, reports, and customer activity. Techneyo Solutions is an admin dashboard development company India businesses can work with for custom admin dashboard for business, business dashboard development, analytics dashboard development, and reporting dashboard for business operations. Dashboards can support enquiry management, service updates, offer management, reports, internal workflows, and role-based access depending on project needs.",
+    seoTitle: "Admin Dashboard Development Company in Bharat & Asia | Techneyo Solutions",
+    metaDescription: "Custom admin dashboards for managing business data, leads, offers, reports, and service workflows with Techneyo Solutions.",
+    keywords: "admin dashboard development company Bharat, custom web dashboard design Asia, business analytics dashboard, reporting dashboard software, web portal development Bharat",
+    h1: "Admin Dashboard Development for Business Operations",
+    intro: "An admin dashboard gives business owners and teams a central place to manage information, tasks, leads, offers, reports, and customer activity. Techneyo Solutions is an admin dashboard development company businesses in Bharat & Asia can work with for custom admin dashboard for business, business dashboard development, analytics dashboard development, and reporting dashboard for business operations. Dashboards can support enquiry management, service updates, offer management, reports, internal workflows, and role-based access depending on project needs.",
     forWhom: ["Businesses managing leads or orders", "Teams that need internal tools", "Service providers with repeat processes", "Founders building MVPs or SaaS products"],
     problems: ["Important data lives in spreadsheets", "Owners cannot see real-time status", "Teams duplicate manual work", "No central place to manage website or business data"],
     features: ["Secure admin login", "Data tables and filters", "Status management", "Reports and summaries", "Analytics dashboard development", "Reporting dashboard for business workflows"],
@@ -108,10 +113,11 @@ export const servicePages: ServicePage[] = [
   {
     slug: "business-automation",
     title: "Business Automation",
-    seoTitle: "Business Automation Solutions in India | Techneyo Solutions",
-    metaDescription: "Techneyo Solutions helps businesses automate enquiries, follow-ups, workflows, dashboards, WhatsApp communication, and daily operations with custom automation tools.",
-    h1: "Business Automation Solutions for Growing Indian Businesses",
-    intro: "Business automation helps teams spend less time repeating manual tasks and more time serving customers. Techneyo Solutions provides business automation solutions India-wide around real processes such as enquiry capture, CRM updates, lead follow-up automation, reporting, customer communication, admin tasks, and workflow automation for small business. The goal is not to automate everything blindly. The goal is to automate business enquiries with WhatsApp and other practical tools where they save time and improve consistency.",
+    seoTitle: "Business Automation Solutions in Bharat & Asia | Techneyo Solutions",
+    metaDescription: "Automate enquiry capture, CRM updates, lead follow-ups, and business workflows with Techneyo Solutions.",
+    keywords: "business automation solutions Bharat, workflow automation software Asia, enquiry automation tools, lead follow up automation, WhatsApp business workflow automation Asia",
+    h1: "Business Automation Solutions for Growing Businesses",
+    intro: "Business automation helps teams spend less time repeating manual tasks and more time serving customers. Techneyo Solutions provides business automation solutions across Bharat & Asia around real processes such as enquiry capture, CRM updates, lead follow-up automation, reporting, customer communication, admin tasks, and workflow automation for small business. The goal is not to automate everything blindly. The goal is to automate business enquiries with WhatsApp and other practical tools where they save time and improve consistency.",
     forWhom: ["Businesses receiving regular enquiries", "Teams using manual spreadsheets", "Owners needing better process visibility", "Companies ready to connect website, CRM, and WhatsApp flows"],
     problems: ["Repeated manual data entry", "Slow customer response", "Missed reminders", "No consistent workflow", "Reports take too much time"],
     features: ["Workflow mapping", "Lead and task automation", "Enquiry automation", "Lead follow-up automation", "WhatsApp communication flows", "Dashboard and report automation"],
@@ -123,16 +129,17 @@ export const servicePages: ServicePage[] = [
       { question: "Can small businesses use automation?", answer: "Yes. Small businesses can benefit from simple lead capture, reminders, status tracking, and customer communication flows." },
       { question: "Can automation connect to WhatsApp?", answer: "Yes. We can plan ways to automate business enquiries with WhatsApp, CRM, dashboard, and follow-up workflows while respecting platform rules." },
       { question: "Do I need a CRM first?", answer: "Not always, but a CRM or dashboard often makes automation easier to manage and measure." },
-      { question: "Do you provide services across India?", answer: "Yes. Techneyo Solutions works with businesses across Bharat and all over Asia." }
+      { question: "Do you provide services across Bharat & Asia?", answer: "Yes. Techneyo Solutions works with businesses across Bharat and all over Asia." }
     ],
   },
   {
     slug: "whatsapp-automation",
     title: "WhatsApp Automation Consultation",
-    seoTitle: "WhatsApp Automation for Business in India | Techneyo Solutions",
+    seoTitle: "WhatsApp Automation for Business in Bharat & Asia | Techneyo Solutions",
     metaDescription: "Automate WhatsApp enquiries, customer follow-ups, lead capture, support replies, and CRM workflows with Techneyo Solutions.",
+    keywords: "WhatsApp automation consultation Bharat, WhatsApp business chatbot Asia, website WhatsApp integration, WhatsApp CRM workflow automation, lead capture WhatsApp API Asia",
     h1: "WhatsApp Automation for Business Enquiries and Follow-Ups",
-    intro: "WhatsApp is a primary communication channel for many Indian businesses. Customers often prefer quick chats instead of long forms. Techneyo Solutions helps businesses plan WhatsApp automation for business India-wide, WhatsApp chatbot for business enquiries, website with WhatsApp integration for business, WhatsApp CRM integration, and follow-up workflows. We do not make false platform claims or promise verification. We focus on clean, compliant, practical communication workflows that make it easier for customers to contact your business.",
+    intro: "WhatsApp is a primary communication channel for many businesses. Customers often prefer quick chats instead of long forms. Techneyo Solutions helps businesses plan WhatsApp automation for business across Bharat & Asia, WhatsApp chatbot for business enquiries, website with WhatsApp integration for business, WhatsApp CRM integration, and follow-up workflows. We do not make false platform claims or promise verification. We focus on clean, compliant, practical communication workflows that make it easier for customers to contact your business.",
     forWhom: ["Local businesses using WhatsApp daily", "Service providers handling enquiries manually", "Campaign landing pages needing quick chat CTAs", "Teams that need enquiry source tracking"],
     problems: ["Customers do not complete forms", "WhatsApp messages are hard to track", "No default enquiry message", "Follow-up is inconsistent"],
     features: ["Click-to-chat CTAs", "Default enquiry message", "Website with WhatsApp integration for business", "WhatsApp chatbot planning for business enquiries", "WhatsApp CRM integration structure", "Support and follow-up flow guidance"],
@@ -151,9 +158,10 @@ export const servicePages: ServicePage[] = [
     title: "SEO & Digital Presence Setup",
     seoTitle: "SEO & Digital Presence Services for Small Businesses | Techneyo Solutions",
     metaDescription: "Improve your business visibility with SEO-ready websites, local SEO, Google Business Profile optimization, content structure, and digital presence setup.",
+    keywords: "SEO services Bharat, digital presence setup Asia, local SEO services Bharat, Google Business Profile optimization, technical SEO audit, SEO friendly website setup Asia",
     h1: "SEO and Digital Presence Services for Small Businesses",
-    intro: "SEO starts with a clean website foundation: useful pages, clear headings, metadata, internal links, fast loading, structured data, sitemap, robots file, and content that matches what customers search for. Techneyo Solutions provides SEO services for small businesses in India, digital presence services for small business, local SEO services, Google Business Profile optimization guidance, and SEO friendly website development structure. We focus on service clarity, helpful content, and technical SEO basics that make the website easier for search engines and customers to understand.",
-    forWhom: ["Businesses in Bharat and across India", "Companies launching a new website", "Businesses with weak Google visibility", "Service providers planning long-term content growth"],
+    intro: "SEO starts with a clean website foundation: useful pages, clear headings, metadata, internal links, fast loading, structured data, sitemap, robots file, and content that matches what customers search for. Techneyo Solutions provides SEO services for small businesses in Bharat & Asia, digital presence services for small business, local SEO services, Google Business Profile optimization guidance, and SEO friendly website development structure. We focus on service clarity, helpful content, and technical SEO basics that make the website easier for search engines and customers to understand.",
+    forWhom: ["Businesses in Bharat and across Asia", "Companies launching a new website", "Businesses with weak Google visibility", "Service providers planning long-term content growth"],
     problems: ["Pages lack titles and descriptions", "Services are not clearly explained", "No sitemap or schema", "Weak internal linking", "Local keywords are missing or unnatural"],
     features: ["SEO metadata", "Canonical URLs", "Open Graph and Twitter tags", "Local SEO services structure", "Google Business Profile optimization guidance", "Internal linking and content structure"],
     process: ["Audit the website", "Fix technical SEO gaps", "Plan service and location pages", "Improve headings and page copy", "Create a content and backlink-readiness roadmap"],
@@ -162,17 +170,18 @@ export const servicePages: ServicePage[] = [
     related: ["website-development", "business-website-design", "business-automation"],
     faqs: [
       { question: "Do you use black-hat SEO?", answer: "No. We avoid hidden keywords, fake backlinks, fake reviews, and spam tactics." },
-      { question: "Can you help businesses in Bharat?", answer: "Yes. Techneyo Solutions serves businesses across Bharat and all over India." },
+      { question: "Can you help businesses in Bharat?", answer: "Yes. Techneyo Solutions serves businesses across Bharat and all over Asia." },
       { question: "Is SEO a one-time task?", answer: "Technical setup is a strong start, but ongoing content, reputation, local profiles, and genuine backlinks improve long-term results." },
     ],
   },
   {
     slug: "custom-software-development",
     title: "Custom Web-Based Software",
-    seoTitle: "Custom Software Development Company in India | Techneyo Solutions",
+    seoTitle: "Custom Software Development Company in Bharat & Asia | Techneyo Solutions",
     metaDescription: "Build custom web-based software, SaaS platforms, dashboards, automation tools, and business applications with Techneyo Solutions.",
+    keywords: "custom software development company Bharat, web-based software solutions Asia, SaaS product development company, custom business web application developer, internal tool builder Asia",
     h1: "Custom Software Development for Business Operations",
-    intro: "When a business outgrows spreadsheets, manual tracking, or disconnected tools, custom web-based software can create a cleaner workflow. Techneyo Solutions is a custom software development company in India for custom web application development for business, SaaS development support, business software development, web-based software solutions, CRM, dashboards, booking flows, customer portals, reporting, and internal tools. We begin with the business problem, not the technology buzzword, then build a system that supports daily work and future growth.",
+    intro: "When a business outgrows spreadsheets, manual tracking, or disconnected tools, custom web-based software can create a cleaner workflow. Techneyo Solutions is a custom software development company in Bharat serving businesses across Asia with custom web application development for business, SaaS development support, business software development, web-based software solutions, CRM, dashboards, booking flows, customer portals, reporting, and internal tools. We begin with the business problem, not the technology buzzword, then build a system that supports daily work and future growth.",
     forWhom: ["Small businesses with unique workflows", "Founders building MVPs or SaaS products", "Teams that need internal software", "Businesses replacing spreadsheets with web tools"],
     problems: ["Generic tools do not match the process", "Manual work slows growth", "No central database", "Reporting is difficult", "Teams need controlled access to business data"],
     features: ["Custom web application planning", "Database-backed workflows", "Admin panels and dashboards", "CRM or portal modules", "Reports and filters", "SaaS/product development support"],
@@ -306,9 +315,9 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "website-development-cost-small-business-india",
-    title: "Website development cost for small businesses in India",
-    seoTitle: "Website Development Cost for Small Business in India | Techneyo Solutions",
-    metaDescription: "Understand what affects website development cost for small businesses in India, including pages, design, content, forms, SEO, and dashboards.",
+    title: "Website development cost for small businesses in Bharat",
+    seoTitle: "Website Development Cost for Small Business in Bharat | Techneyo Solutions",
+    metaDescription: "Understand what affects website development cost for small businesses in Bharat and Asia, including pages, design, content, forms, SEO, and dashboards.",
     intro: "Website development cost depends on scope, pages, design complexity, content, forms, integrations, SEO needs, and whether backend or dashboard features are required.",
     sections: [
       { heading: "Simple websites cost less", body: "A focused one-page or starter website is usually faster to build because it has fewer pages and simpler content requirements." },
@@ -335,7 +344,7 @@ export const blogPosts: BlogPost[] = [
     relatedServices: ["website-development", "whatsapp-automation", "crm-development"],
     faqs: [
       { question: "Can website development help with lead generation?", answer: "Yes. Website development for lead generation focuses on clear services, trust sections, CTA placement, contact paths, and follow-up tracking." },
-      { question: "Should every website have WhatsApp integration?", answer: "For many Indian businesses, WhatsApp integration reduces friction and helps customers start conversations quickly." },
+      { question: "Should every website have WhatsApp integration?", answer: "For many businesses in Bharat and Asia, WhatsApp integration reduces friction and helps customers start conversations quickly." },
     ],
   },
   {

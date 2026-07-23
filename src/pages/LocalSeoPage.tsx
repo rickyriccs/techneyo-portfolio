@@ -31,8 +31,9 @@ const LocalSeoPage = () => {
   return (
     <div className="public-premium min-h-screen overflow-hidden text-white">
       <PageMeta
-        title="Website Development Company in Bharat | Techneyo Solutions"
-        description="Techneyo Solutions is a Bharat-based website development company serving businesses across asia with websites, CRM, SEO, automation, and software solutions."
+        title="Website Development Company in Bharat & Asia | Techneyo Solutions"
+        description="Techneyo Solutions is a Bharat-based website development agency serving businesses across Asia with websites, CRM, SEO, automation, and software solutions."
+        keywords="website development company Bharat, business website design Asia, CRM development Bharat, software company Bharat, SEO services Asia"
         canonicalPath="/website-development-company-ludhiana"
         schema={schema}
       />

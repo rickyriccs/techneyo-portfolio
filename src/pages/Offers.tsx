@@ -70,8 +70,9 @@ export const Offers = () => {
   return (
     <div className="public-premium min-h-screen overflow-hidden text-white">
       <PageMeta
-        title="Website Offers & Packages | Techneyo Solutions"
-        description="Affordable Techneyo Solutions website subscription offers, ₹299/month basic business plans, landing page offers, and online Razorpay advance booking."
+        title="Website Offers & Packages in Bharat & Asia | Techneyo Solutions"
+        description="Affordable Techneyo Solutions website subscription offers, ₹299/month basic business plans, landing page offers, and online booking across Bharat & Asia."
+        keywords="website offers Bharat, affordable website packages Asia, ₹299 website plan, business website subscription Bharat, landing page offer Asia, digital presence packages"
         canonicalPath="/offers"
         schema={pageSchema}
       />

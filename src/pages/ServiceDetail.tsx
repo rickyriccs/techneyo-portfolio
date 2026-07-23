@@ -54,7 +54,7 @@ const ServiceDetail = () => {
 
   return (
     <div className="public-premium min-h-screen overflow-hidden text-white">
-      <PageMeta title={service.seoTitle} description={service.metaDescription} canonicalPath={servicePath(service.slug)} schema={schema} />
+      <PageMeta title={service.seoTitle} description={service.metaDescription} keywords={service.keywords} canonicalPath={servicePath(service.slug)} schema={schema} />
       <section className="premium-hero relative overflow-hidden pb-16 pt-32">
         <div className="premium-grid-bg" />
         <div className="section-container relative z-10">

@@ -87,7 +87,13 @@ const Tools = () => {
 
   return (
     <div className="public-premium min-h-screen overflow-hidden text-white">
-      <PageMeta title="Digital Business Tools | Techneyo Solutions" description="Techneyo Solutions digital tools for lead capture, WhatsApp enquiries, booking flows, CRM dashboards, reports, and business automation." canonicalPath="/tools" schema={organizationSchema} />
+      <PageMeta
+        title="Digital Business Tools & Automation | Techneyo Solutions"
+        description="Techneyo Solutions digital tools for lead capture, WhatsApp enquiries, booking flows, CRM dashboards, reports, and business automation in Bharat & Asia."
+        keywords="digital business tools Bharat, lead capture software Asia, WhatsApp enquiry tools, business CRM tools, admin dashboard tools, workflow automation tools Asia"
+        canonicalPath="/tools"
+        schema={organizationSchema}
+      />
       <section className="premium-hero relative overflow-hidden pb-20 pt-32">
         <div className="premium-grid-bg" />
         <div className="premium-orbit premium-orbit-a" />

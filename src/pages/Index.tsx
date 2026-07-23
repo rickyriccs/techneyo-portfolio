@@ -38,7 +38,7 @@ const fadeUp = {
 };
 
 const trustItems = [
-  "Serving businesses across India",
+  "Serving businesses across Bharat & Asia",
   "Affordable digital presence",
   "Admin-controlled website tools",
   "Lead capture ready",
@@ -46,7 +46,7 @@ const trustItems = [
   "WhatsApp-ready enquiry flow",
 ];
 
-const heroBadges = ["Website from Rs. 999", "All India Service", "Fast Delivery", "SEO Friendly", "WhatsApp Ready", "Business-Focused UI"];
+const heroBadges = ["Website from Rs. 999", "Bharat & Asia Coverage", "Fast Delivery", "SEO Friendly", "WhatsApp Ready", "Business-Focused UI"];
 
 const problems = [
   "No professional website",
@@ -262,7 +262,7 @@ const Index = () => {
   return (
     <div className="public-premium min-h-screen overflow-hidden bg-[#030711] text-white">
       <PageMeta
-        title="Techneyo Solutions | Website, CRM & Business Automation Services in India"
+        title="Techneyo Solutions | Website, CRM & Business Automation Services in Bharat & Asia"
         description={pageDescriptions.home}
         canonicalPath="/"
         schema={pageSchema}
@@ -274,9 +274,9 @@ const Index = () => {
         <div className="premium-orbit premium-orbit-b" />
         <div className="section-container relative z-10 grid items-center gap-12 pb-20 pt-12 lg:grid-cols-[1.05fr_0.95fr]">
           <motion.div initial="hidden" animate="visible">
-            <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">Affordable digital growth across India</motion.p>
+            <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">Affordable digital growth across Bharat & Asia</motion.p>
             <motion.h1 variants={fadeUp} custom={1} className="font-display text-5xl font-bold leading-[0.96] tracking-[-0.03em] text-white sm:text-6xl lg:text-7xl">
-              Website, CRM & Business Automation Solutions for Businesses Across India
+              Website, CRM & Business Automation Solutions for Businesses Across Bharat & Asia
             </motion.h1>
             <motion.p variants={fadeUp} custom={2} className="mt-6 max-w-3xl text-lg leading-8 text-white/68 sm:text-xl">
               Techneyo Solutions is based in Bharat and serves businesses across Asia with website development, CRM, SEO, WhatsApp automation, admin dashboards, and custom software solutions.
@@ -485,7 +485,7 @@ const Index = () => {
       <section className="premium-section">
         <div className="section-container">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
-            <SectionIntro eyebrow="What we can build" title="Conceptual demos for real Indian business workflows." />
+            <SectionIntro eyebrow="What we can build" title="Conceptual demos for real business workflows in Bharat & Asia." />
             <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
               {showcases.map((item, index) => (
                 <motion.div key={item.title} variants={fadeUp} custom={index + 1} className="premium-showcase-card">

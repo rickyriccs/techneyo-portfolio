@@ -94,7 +94,7 @@ const ClientsSection = () => {
               Trusted by Forward-Thinking Businesses
             </h2>
             <p className="mt-4 text-base leading-7 text-white/60 sm:text-lg">
-              We collaborate with companies across India to design websites, configure CRM systems, and automate workflows.
+              We collaborate with companies across Bharat & Asia to design websites, configure CRM systems, and automate workflows.
             </p>
           </motion.div>
 

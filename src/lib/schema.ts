@@ -11,7 +11,7 @@ export const organizationSchema = {
   areaServed: "Bharat",
   location: {
     "@type": "Place",
-    name: "Bharat (India)",
+    name: "Bharat",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Bharat",
@@ -20,7 +20,7 @@ export const organizationSchema = {
     },
   },
   description:
-    "Techneyo Solutions is based in Bharat and provides website development, CRM development, SEO and digital presence, WhatsApp automation, admin dashboard development, business automation, and custom web-based software solutions for businesses across India.",
+    "Techneyo Solutions is based in Bharat and provides website development, CRM development, SEO and digital presence, WhatsApp automation, admin dashboard development, business automation, and custom web-based software solutions for businesses across Bharat & Asia.",
   makesOffer: [
     "Website development",
     "CRM development",
@@ -52,7 +52,7 @@ export const organizationSchema = {
 export const localBusinessSchema = {
   ...organizationSchema,
   "@type": "LocalBusiness",
-  areaServed: ["Bharat", "India"],
+  areaServed: ["Bharat", "Asia"],
 };
 
 export const faqSchema = (faqs: FaqItem[]) => ({
@@ -92,7 +92,7 @@ export const serviceSchema = (service: ServicePage) => ({
     email: businessInfo.email,
     telephone: businessInfo.phoneDisplay,
   },
-  areaServed: ["Bharat", "India"],
+  areaServed: ["Bharat", "Asia"],
 });
 
 export const articleSchema = (post: BlogPost) => ({

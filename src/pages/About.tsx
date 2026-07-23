@@ -22,8 +22,8 @@ const values = [
 ];
 
 const stats = [
-  { value: "Rs. 999", label: "Starter website offer" },
-  { value: "All India", label: "Remote service coverage" },
+  { value: "Rs. 299/Month", label: "Starter website offer" },
+  { value: "Bharat & Asia", label: "Remote service coverage" },
   { value: "24/7", label: "Website enquiry capture" },
   { value: "Admin", label: "Controlled website modules" },
 ];
@@ -49,7 +49,7 @@ const About = () => {
               We help businesses turn digital presence into trust, leads, and momentum.
             </motion.h1>
             <motion.p variants={fadeUp} custom={2} className="mt-6 max-w-3xl text-lg leading-8 text-white/68">
-              Techneyo Solutions builds affordable websites, digital tools, automation systems, and business software for startups, local businesses, professionals, and growing companies across India.
+              Techneyo Solutions builds affordable websites, digital tools, automation systems, and business software for startups, local businesses, professionals, and growing companies across Bharat & Asia.
             </motion.p>
             <motion.div variants={fadeUp} custom={3} className="mt-8 flex flex-wrap gap-3">
               <Link to="/contact" className="premium-btn premium-btn-primary">Get Free Consultation <ArrowRight size={18} /></Link>
@@ -105,7 +105,7 @@ const About = () => {
         <div className="section-container">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="grid gap-5 md:grid-cols-2">
             {[
-              { icon: Target, title: "Mission", desc: "Make premium websites, digital presence and business tools affordable and useful for Indian businesses." },
+              { icon: Target, title: "Mission", desc: "Make premium websites, digital presence and business tools affordable and useful for businesses in Bharat and across Asia." },
               { icon: Eye, title: "Vision", desc: "Become a trusted digital growth partner for businesses that want better leads, systems and customer experience." },
             ].map((item, index) => (
               <motion.div key={item.title} variants={fadeUp} custom={index} className="premium-card premium-card-hover p-7">
@@ -190,8 +190,8 @@ const About = () => {
             <div className="flex items-start gap-4">
               <MapPin className="mt-1 text-cyan-200" />
               <div>
-                <h2 className="font-display text-2xl font-bold text-white">Serving businesses across India</h2>
-                <p className="mt-2 text-white/60">Based from Punjab, built for remote collaboration, fast launches, and India-wide service delivery.</p>
+                <h2 className="font-display text-2xl font-bold text-white">Serving businesses across Bharat & Asia</h2>
+                <p className="mt-2 text-white/60">Built for remote collaboration, fast launches, and wide service delivery across Bharat & Asia.</p>
               </div>
             </div>
             <Link to="/contact" className="premium-btn premium-btn-primary">Start a Project</Link>

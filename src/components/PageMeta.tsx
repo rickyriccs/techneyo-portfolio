@@ -5,6 +5,7 @@ import { businessInfo } from "@/lib/business-info";
 type PageMetaProps = {
   title: string;
   description: string;
+  keywords?: string;
   canonicalPath?: string;
   ogImage?: string;
   robots?: string;
@@ -16,13 +17,16 @@ const setMeta = (selector: string, attr: "content" | "href", value: string) => {
   if (element) element.setAttribute(attr, value);
 };
 
-const PageMeta = ({ title, description, canonicalPath, ogImage = businessInfo.ogImage, robots = "index, follow", schema }: PageMetaProps) => {
+const PageMeta = ({ title, description, keywords, canonicalPath, ogImage = businessInfo.ogImage, robots = "index, follow", schema }: PageMetaProps) => {
   const location = useLocation();
   const canonicalUrl = `${businessInfo.website}${canonicalPath ?? location.pathname}`;
 
   useEffect(() => {
     document.title = title;
     setMeta('meta[name="description"]', "content", description);
+    if (keywords) {
+      setMeta('meta[name="keywords"]', "content", keywords);
+    }
     setMeta('meta[name="robots"]', "content", robots);
     setMeta('meta[property="og:title"]', "content", title);
     setMeta('meta[property="og:description"]', "content", description);
@@ -54,7 +58,7 @@ const PageMeta = ({ title, description, canonicalPath, ogImage = businessInfo.og
     return () => {
       document.getElementById("techneyo-page-schema")?.remove();
     };
-  }, [canonicalUrl, description, ogImage, robots, schema, title]);
+  }, [canonicalUrl, description, keywords, ogImage, robots, schema, title]);
 
   return null;
 };

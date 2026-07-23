@@ -20,7 +20,7 @@ const fadeUp = {
 const contactInfo = [
   { icon: Phone, title: "Call/WhatsApp", detail: businessInfo.phoneDisplay, href: businessInfo.phoneHref },
   { icon: Mail, title: "Email", detail: businessInfo.email, href: `mailto:${businessInfo.email}` },
-  { icon: MapPin, title: "Service Area", detail: `${businessInfo.location} | Serving India`, href: businessInfo.website },
+  { icon: MapPin, title: "Service Area", detail: `${businessInfo.location} | Serving Bharat & Asia`, href: businessInfo.website },
   { icon: Clock, title: "Business Hours", detail: "Mon - Sat: 9:00 AM - 7:00 PM" },
 ];
 
@@ -136,9 +136,9 @@ const Contact = () => {
               Contact Techneyo Solutions for website development, CRM systems, admin dashboards, business automation, SEO setup, WhatsApp automation consultation, and custom web-based software.
             </motion.p>
             <motion.div variants={fadeUp} custom={3} className="mt-6 flex flex-wrap gap-3">
-              <Link to="/services/website-development" className="premium-badge">website development company in India</Link>
-              <Link to="/services/crm-development" className="premium-badge">CRM development company in India</Link>
-              <Link to="/services/business-automation" className="premium-badge">business automation solutions India</Link>
+              <Link to="/services/website-development" className="premium-badge">website development company in Bharat</Link>
+              <Link to="/services/crm-development" className="premium-badge">CRM development company in Bharat</Link>
+              <Link to="/services/business-automation" className="premium-badge">business automation solutions Bharat</Link>
             </motion.div>
           </motion.div>
         </div>
