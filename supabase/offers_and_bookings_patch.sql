@@ -61,12 +61,16 @@ drop policy if exists "Public can create offer bookings" on public.offer_booking
 create policy "Public can create offer bookings" on public.offer_bookings
 for insert with check (true);
 
+drop policy if exists "Public can read offer bookings" on public.offer_bookings;
+create policy "Public can read offer bookings" on public.offer_bookings
+for select using (true);
+
 drop policy if exists "Admins can manage offer bookings" on public.offer_bookings;
 create policy "Admins can manage offer bookings" on public.offer_bookings
 for all using (public.is_active_admin()) with check (public.is_active_admin());
 
 -- Permissions
-grant select, insert on public.offer_bookings to anon;
+grant select, insert, update on public.offer_bookings to anon;
 grant select, insert, update, delete on public.offer_bookings to authenticated;
 
 -- Step 4: Safely Insert the default ₹299/Month Business Website Plan offer via dynamic execution
