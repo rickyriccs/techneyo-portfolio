@@ -9,6 +9,7 @@ import { organizationSchema, offersSchema, graphSchema } from "@/lib/schema";
 import type { Offer } from "@/types/offer";
 import { BookingModal } from "@/components/BookingModal";
 import { useAppSettings } from "@/hooks/use-app-settings";
+import { isInstagramLead } from "@/lib/utm";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -218,7 +219,11 @@ export const Offers = () => {
           onClose={() => setSelectedOfferForBooking(null)}
           paymentRequired={settings.payment_required}
           onSuccess={(bookingId) => {
-            navigate(`/onboarding?booking_id=${bookingId}`);
+            if (isInstagramLead()) {
+              navigate("/thank-you");
+            } else {
+              navigate(`/onboarding?booking_id=${bookingId}`);
+            }
           }}
         />
       )}

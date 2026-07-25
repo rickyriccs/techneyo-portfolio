@@ -1,10 +1,12 @@
 import { useState, useEffect, FormEvent } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { CheckCircle, Send, ArrowRight, Sparkles, Building, Phone, Mail } from "lucide-react";
 import PageMeta from "@/components/PageMeta";
 import { supabase } from "@/lib/supabase";
+import { isInstagramLead } from "@/lib/utm";
 
 export const Onboarding = () => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const bookingId = searchParams.get("booking_id");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -25,6 +27,12 @@ export const Onboarding = () => {
   // Load existing booking prefill info
   useEffect(() => {
     const loadBookingPrefill = async () => {
+      // If user session is from Instagram, skip onboarding and go straight to thank you page
+      if (isInstagramLead()) {
+        navigate("/thank-you");
+        return;
+      }
+
       if (!supabase || !bookingId) return;
       setIsLoadingBooking(true);
 
@@ -40,6 +48,11 @@ export const Onboarding = () => {
       const { data } = await query.maybeSingle();
 
       if (data) {
+        if (isInstagramLead(data.utm_source)) {
+          navigate("/thank-you");
+          return;
+        }
+
         setForm((prev) => ({
           ...prev,
           businessName: data.business_name || prev.businessName,
@@ -52,7 +65,7 @@ export const Onboarding = () => {
     };
 
     loadBookingPrefill();
-  }, [bookingId]);
+  }, [bookingId, navigate]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();

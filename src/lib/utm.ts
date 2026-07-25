@@ -106,3 +106,11 @@ export const getLeadContext = () => {
   if (typeof window === "undefined") return {};
   return safeParse(sessionStorage.getItem(LEAD_CONTEXT_KEY));
 };
+
+export const isInstagramLead = (bookingUtmSource?: string | null): boolean => {
+  if (bookingUtmSource?.toLowerCase() === "instagram") return true;
+  const source = getSourceData();
+  const src = (source.utm_source || "").toLowerCase();
+  const ref = (source.referrer || source.initial_referrer || "").toLowerCase();
+  return src === "instagram" || ref.includes("instagram.com");
+};
