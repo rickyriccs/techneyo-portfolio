@@ -1,7 +1,7 @@
 import { supabase } from "./supabase";
 import { businessInfo } from "./business-info";
 import type { Offer } from "@/types/offer";
-
+import { getSourceData } from "./utm";
 
 interface RazorpayResponse {
   razorpay_payment_id: string;
@@ -103,6 +103,7 @@ export const initiateOfferBookingPayment = async ({
       try {
         // Record successful booking in Supabase
         if (supabase) {
+          const source = getSourceData();
           const { data, error } = await supabase.from("offer_bookings").insert({
             offer_id: offer.id,
             customer_name: customer.customer_name,
@@ -116,6 +117,16 @@ export const initiateOfferBookingPayment = async ({
             razorpay_signature: response.razorpay_signature || null,
             payment_status: "paid",
             onboarding_status: "pending",
+            utm_source: source.utm_source || null,
+            utm_medium: source.utm_medium || null,
+            utm_campaign: source.utm_campaign || null,
+            utm_term: source.utm_term || null,
+            utm_content: source.utm_content || null,
+            source_page_url: source.current_page_url || window.location.href,
+            landing_page_url: source.landing_page_url || null,
+            initial_referrer: source.initial_referrer || null,
+            referrer: source.referrer || null,
+            device_type: source.device_type || null,
           }).select("id").single();
 
           if (error) {

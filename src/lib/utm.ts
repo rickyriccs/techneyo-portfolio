@@ -58,6 +58,24 @@ export const captureUtmData = () => {
     }
   });
 
+  // Auto-detect source/medium from ad click IDs or referrer if utm_source is missing
+  if (!next.utm_source) {
+    const ref = (next.initial_referrer || next.referrer || "").toLowerCase();
+    const hasFbclid = params.has("fbclid");
+    const hasGclid = params.has("gclid") || params.has("gbraid") || params.has("wbraid");
+
+    if (hasFbclid || ref.includes("facebook.com") || ref.includes("fb.com")) {
+      next.utm_source = "facebook";
+      if (!next.utm_medium) next.utm_medium = hasFbclid ? "cpc" : "social";
+    } else if (ref.includes("instagram.com")) {
+      next.utm_source = "instagram";
+      if (!next.utm_medium) next.utm_medium = hasFbclid ? "cpc" : "social";
+    } else if (hasGclid || ref.includes("google.com") || ref.includes("google.co.in")) {
+      next.utm_source = "google";
+      if (!next.utm_medium) next.utm_medium = hasGclid ? "cpc" : "organic";
+    }
+  }
+
   sessionStorage.setItem(UTM_STORAGE_KEY, JSON.stringify(next));
 };
 

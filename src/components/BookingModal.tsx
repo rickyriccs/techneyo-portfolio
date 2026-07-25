@@ -3,6 +3,7 @@ import { X, ShieldCheck, CreditCard, Lock, CheckCircle2, MessageCircle } from "l
 import type { Offer } from "@/types/offer";
 import { initiateOfferBookingPayment, BookingCustomerDetails } from "@/lib/razorpay";
 import { supabase } from "@/lib/supabase";
+import { getSourceData } from "@/lib/utm";
 
 interface BookingModalProps {
   offer: Offer;
@@ -35,6 +36,7 @@ export const BookingModal = ({
   // Save a free booking lead to offer_bookings table (no payment)
   const saveFreeLead = async () => {
     if (!supabase) return crypto.randomUUID();
+    const source = getSourceData();
     const { data, error } = await supabase
       .from("offer_bookings")
       .insert({
@@ -48,6 +50,16 @@ export const BookingModal = ({
         razorpay_payment_id: null,
         payment_status: "pending",
         onboarding_status: "pending",
+        utm_source: source.utm_source || null,
+        utm_medium: source.utm_medium || null,
+        utm_campaign: source.utm_campaign || null,
+        utm_term: source.utm_term || null,
+        utm_content: source.utm_content || null,
+        source_page_url: source.current_page_url || window.location.href,
+        landing_page_url: source.landing_page_url || null,
+        initial_referrer: source.initial_referrer || null,
+        referrer: source.referrer || null,
+        device_type: source.device_type || null,
       })
       .select("id")
       .single();

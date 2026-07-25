@@ -63,6 +63,16 @@ export interface OfferBooking {
     designNotes?: string;
     submittedAt?: string;
   } | null;
+  utm_source?: string | null;
+  utm_medium?: string | null;
+  utm_campaign?: string | null;
+  utm_term?: string | null;
+  utm_content?: string | null;
+  source_page_url?: string | null;
+  landing_page_url?: string | null;
+  initial_referrer?: string | null;
+  referrer?: string | null;
+  device_type?: string | null;
   created_at: string;
   offer?: Offer;
 }

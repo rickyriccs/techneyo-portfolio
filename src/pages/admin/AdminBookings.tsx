@@ -8,6 +8,7 @@ export const AdminBookings = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedBooking, setSelectedBooking] = useState<OfferBooking | null>(null);
+  const [channelFilter, setChannelFilter] = useState<string>("all");
 
   const fetchBookings = async () => {
     if (!supabase) return;
@@ -48,21 +49,82 @@ export const AdminBookings = () => {
     }
   };
 
+  const getSourceBadge = (booking: OfferBooking) => {
+    const src = (booking.utm_source || "").toLowerCase();
+    const medium = (booking.utm_medium || "").toLowerCase();
+    const ref = (booking.initial_referrer || booking.referrer || "").toLowerCase();
+
+    if (src === "facebook" || ref.includes("facebook.com") || ref.includes("fb.com")) {
+      return {
+        label: medium === "cpc" ? "Meta Ads (FB)" : "Facebook",
+        bg: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+      };
+    }
+    if (src === "instagram" || ref.includes("instagram.com")) {
+      return {
+        label: medium === "cpc" ? "Meta Ads (IG)" : "Instagram",
+        bg: "bg-pink-500/10 text-pink-400 border-pink-500/20",
+      };
+    }
+    if (src === "google" || ref.includes("google.com")) {
+      return {
+        label: medium === "cpc" ? "Google Ads" : "Google Search",
+        bg: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+      };
+    }
+    if (src) {
+      return {
+        label: `${src.toUpperCase()} ${medium ? `(${medium})` : ""}`,
+        bg: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+      };
+    }
+    return {
+      label: ref ? "Referral" : "Direct / Organic",
+      bg: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20",
+    };
+  };
+
+  const filteredBookings = bookings.filter((b) => {
+    if (channelFilter === "all") return true;
+    const src = (b.utm_source || "").toLowerCase();
+    const ref = (b.initial_referrer || b.referrer || "").toLowerCase();
+
+    if (channelFilter === "facebook") return src === "facebook" || ref.includes("facebook.com") || ref.includes("fb.com");
+    if (channelFilter === "instagram") return src === "instagram" || ref.includes("instagram.com");
+    if (channelFilter === "google") return src === "google" || ref.includes("google.com");
+    if (channelFilter === "direct") return !src && !ref;
+    return true;
+  });
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-display text-3xl font-bold text-foreground">Razorpay Online Bookings</h1>
+          <h1 className="font-display text-3xl font-bold text-foreground">Bookings</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            All customer details captured before, during (Razorpay), and after payment (Onboarding form).
+            All customer details and lead source analytics captured before, during, and after payment.
           </p>
         </div>
-        <button
-          onClick={fetchBookings}
-          className="inline-flex items-center gap-2 rounded-md border border-border px-3.5 py-2 text-sm font-semibold hover:bg-muted"
-        >
-          <RefreshCw size={16} /> Refresh
-        </button>
+        <div className="flex items-center gap-3">
+          <select
+            value={channelFilter}
+            onChange={(e) => setChannelFilter(e.target.value)}
+            className="h-9 rounded-md border border-border bg-background px-3 text-xs font-semibold text-foreground outline-none focus:ring-1 focus:ring-primary"
+          >
+            <option value="all">🎯 All Lead Sources</option>
+            <option value="facebook">📘 Facebook Ads / Meta</option>
+            <option value="instagram">📸 Instagram Ads</option>
+            <option value="google">🔍 Google Ads / Search</option>
+            <option value="direct">🌐 Direct / Organic</option>
+          </select>
+
+          <button
+            onClick={fetchBookings}
+            className="inline-flex items-center gap-2 rounded-md border border-border px-3.5 py-2 text-sm font-semibold hover:bg-muted"
+          >
+            <RefreshCw size={16} /> Refresh
+          </button>
+        </div>
       </div>
 
       {error && (
@@ -78,6 +140,7 @@ export const AdminBookings = () => {
               <tr>
                 <th className="px-4 py-3 font-semibold">Customer Contact</th>
                 <th className="px-4 py-3 font-semibold">Offer Plan</th>
+                <th className="px-4 py-3 font-semibold">Lead Source</th>
                 <th className="px-4 py-3 font-semibold">Advance Paid</th>
                 <th className="px-4 py-3 font-semibold">Razorpay Payment ID</th>
                 <th className="px-4 py-3 font-semibold">Onboarding</th>
@@ -87,94 +150,113 @@ export const AdminBookings = () => {
             <tbody className="divide-y divide-border">
               {isLoading ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-6 text-center text-muted-foreground">
+                  <td colSpan={7} className="px-4 py-6 text-center text-muted-foreground">
                     Loading customer bookings...
                   </td>
                 </tr>
-              ) : bookings.length === 0 ? (
+              ) : filteredBookings.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-6 text-center text-muted-foreground">
-                    No online bookings recorded yet.
+                  <td colSpan={7} className="px-4 py-6 text-center text-muted-foreground">
+                    No online bookings recorded matching this filter.
                   </td>
                 </tr>
               ) : (
-                bookings.map((booking) => (
-                  <tr key={booking.id} className="align-top hover:bg-muted/20">
-                    <td className="px-4 py-3">
-                      <p className="font-semibold text-foreground">{booking.customer_name}</p>
-                      <div className="mt-1 space-y-0.5 text-xs text-muted-foreground">
-                        <p className="flex items-center gap-1">
-                          <Phone size={12} /> {booking.customer_phone}
+                filteredBookings.map((booking) => {
+                  const badge = getSourceBadge(booking);
+                  return (
+                    <tr key={booking.id} className="align-top hover:bg-muted/20">
+                      <td className="px-4 py-3">
+                        <p className="font-semibold text-foreground">{booking.customer_name}</p>
+                        <div className="mt-1 space-y-0.5 text-xs text-muted-foreground">
+                          <p className="flex items-center gap-1">
+                            <Phone size={12} /> {booking.customer_phone}
+                          </p>
+                          <p className="flex items-center gap-1">
+                            <Mail size={12} /> {booking.customer_email}
+                          </p>
+                          {booking.business_name && (
+                            <p className="flex items-center gap-1 font-medium text-foreground">
+                              <Building size={12} /> {booking.business_name}
+                            </p>
+                          )}
+                        </div>
+                      </td>
+
+                      <td className="px-4 py-3">
+                        <p className="font-semibold text-foreground">
+                          {booking.offer?.title || "Custom Website Offer"}
                         </p>
-                        <p className="flex items-center gap-1">
-                          <Mail size={12} /> {booking.customer_email}
-                        </p>
-                        {booking.business_name && (
-                          <p className="flex items-center gap-1 font-medium text-foreground">
-                            <Building size={12} /> {booking.business_name}
+                        {booking.total_plan_price && (
+                          <p className="text-xs text-muted-foreground">
+                            Plan: Rs. {booking.total_plan_price.toLocaleString("en-IN")}
                           </p>
                         )}
-                      </div>
-                    </td>
+                      </td>
 
-                    <td className="px-4 py-3">
-                      <p className="font-semibold text-foreground">
-                        {booking.offer?.title || "Custom Website Offer"}
-                      </p>
-                      {booking.total_plan_price && (
-                        <p className="text-xs text-muted-foreground">
-                          Plan: Rs. {booking.total_plan_price.toLocaleString("en-IN")}
+                      <td className="px-4 py-3">
+                        <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${badge.bg}`}>
+                          <Globe size={11} /> {badge.label}
+                        </span>
+                        {booking.utm_campaign && (
+                          <p className="text-[11px] text-muted-foreground mt-1 truncate max-w-[140px]">
+                            Campaign: {booking.utm_campaign}
+                          </p>
+                        )}
+                        {booking.device_type && (
+                          <p className="text-[11px] text-muted-foreground capitalize">
+                            Device: {booking.device_type}
+                          </p>
+                        )}
+                      </td>
+
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <span className={`font-display font-bold ${booking.advance_amount_paid > 0 ? "text-emerald-400" : "text-amber-400"}`}>
+                          Rs. {booking.advance_amount_paid.toLocaleString("en-IN")}
+                        </span>
+                        <span className={`block text-[11px] uppercase font-semibold ${booking.advance_amount_paid > 0 ? "text-emerald-500/80" : "text-amber-500/80"}`}>
+                          {booking.advance_amount_paid === 0 ? "Free Booking" : booking.payment_status}
+                        </span>
+                      </td>
+
+                      <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
+                        <p className="font-semibold text-foreground">
+                          {booking.razorpay_payment_id || "N/A"}
                         </p>
-                      )}
-                    </td>
+                        <p className="text-[11px]">
+                          {new Date(booking.created_at).toLocaleDateString("en-IN", {
+                            day: "numeric",
+                            month: "short",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </p>
+                      </td>
 
-                    <td className="px-4 py-3 whitespace-nowrap">
-                      <span className={`font-display font-bold ${booking.advance_amount_paid > 0 ? "text-emerald-400" : "text-amber-400"}`}>
-                        Rs. {booking.advance_amount_paid.toLocaleString("en-IN")}
-                      </span>
-                      <span className={`block text-[11px] uppercase font-semibold ${booking.advance_amount_paid > 0 ? "text-emerald-500/80" : "text-amber-500/80"}`}>
-                        {booking.advance_amount_paid === 0 ? "Free Booking" : booking.payment_status}
-                      </span>
-                    </td>
+                      <td className="px-4 py-3">
+                        <select
+                          value={booking.onboarding_status}
+                          onChange={(e) =>
+                            updateStatus(booking.id, e.target.value as any)
+                          }
+                          className="h-8 rounded border border-border bg-background px-2 text-xs font-semibold outline-none focus:ring-1 focus:ring-primary"
+                        >
+                          <option value="pending">⏳ Pending Onboarding</option>
+                          <option value="in_progress">⚙️ Work In Progress</option>
+                          <option value="completed">✅ Completed</option>
+                        </select>
+                      </td>
 
-                    <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
-                      <p className="font-semibold text-foreground">
-                        {booking.razorpay_payment_id || "N/A"}
-                      </p>
-                      <p className="text-[11px]">
-                        {new Date(booking.created_at).toLocaleDateString("en-IN", {
-                          day: "numeric",
-                          month: "short",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </p>
-                    </td>
-
-                    <td className="px-4 py-3">
-                      <select
-                        value={booking.onboarding_status}
-                        onChange={(e) =>
-                          updateStatus(booking.id, e.target.value as any)
-                        }
-                        className="h-8 rounded border border-border bg-background px-2 text-xs font-semibold outline-none focus:ring-1 focus:ring-primary"
-                      >
-                        <option value="pending">⏳ Pending Onboarding</option>
-                        <option value="in_progress">⚙️ Work In Progress</option>
-                        <option value="completed">✅ Completed</option>
-                      </select>
-                    </td>
-
-                    <td className="px-4 py-3">
-                      <button
-                        onClick={() => setSelectedBooking(booking)}
-                        className="inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-muted"
-                      >
-                        <Eye size={14} /> Full Details
-                      </button>
-                    </td>
-                  </tr>
-                ))
+                      <td className="px-4 py-3">
+                        <button
+                          onClick={() => setSelectedBooking(booking)}
+                          className="inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-muted"
+                        >
+                          <Eye size={14} /> Full Details
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
@@ -184,7 +266,7 @@ export const AdminBookings = () => {
       {/* Customer Booking Details Modal */}
       {selectedBooking && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 overflow-y-auto">
-          <div className="relative w-full max-w-2xl rounded-xl border border-border bg-card p-6 sm:p-8 shadow-2xl text-foreground space-y-6">
+          <div className="relative w-full max-w-2xl rounded-xl border border-border bg-card p-6 sm:p-8 shadow-2xl text-foreground space-y-6 max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setSelectedBooking(null)}
               className="absolute right-4 top-4 text-muted-foreground hover:text-foreground"
@@ -203,7 +285,7 @@ export const AdminBookings = () => {
             {/* Section 1: Pre-Payment & Razorpay Details */}
             <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-3">
               <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-                <CreditCard size={15} /> Payment & Contact Info (Captured During Checkout)
+                <CreditCard size={15} /> Payment & Contact Info
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div>
@@ -243,10 +325,51 @@ export const AdminBookings = () => {
               </div>
             </div>
 
-            {/* Section 2: Post-Payment Onboarding Answers */}
+            {/* Section 2: Lead Traffic Source Analytics */}
+            <div className="rounded-lg border border-cyan-500/20 bg-cyan-500/5 p-4 space-y-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-2">
+                <Globe size={15} /> Lead Source & Traffic Analytics
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div>
+                  <span className="text-muted-foreground block">Primary Source:</span>
+                  <span className="font-semibold text-foreground uppercase">{selectedBooking.utm_source || "Direct / Unspecified"}</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block">Medium / Channel:</span>
+                  <span className="font-semibold text-foreground">{selectedBooking.utm_medium || "N/A"}</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block">Ad Campaign Name:</span>
+                  <span className="font-semibold text-foreground">{selectedBooking.utm_campaign || "N/A"}</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block">Device & Screen:</span>
+                  <span className="font-semibold text-foreground capitalize">{selectedBooking.device_type || "N/A"}</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block">UTM Term / Content:</span>
+                  <span className="font-mono text-foreground">{[selectedBooking.utm_term, selectedBooking.utm_content].filter(Boolean).join(" / ") || "N/A"}</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block">Initial Referrer Domain:</span>
+                  <span className="font-mono text-foreground truncate block">{selectedBooking.initial_referrer || selectedBooking.referrer || "Direct Visit"}</span>
+                </div>
+              </div>
+              {selectedBooking.landing_page_url && (
+                <div className="text-xs pt-1 border-t border-cyan-500/10">
+                  <span className="text-muted-foreground block">Landing Page URL:</span>
+                  <a href={selectedBooking.landing_page_url} target="_blank" rel="noreferrer" className="font-mono text-[11px] text-cyan-400 hover:underline break-all">
+                    {selectedBooking.landing_page_url}
+                  </a>
+                </div>
+              )}
+            </div>
+
+            {/* Section 3: Post-Payment Onboarding Answers */}
             <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-3">
               <h3 className="text-xs font-bold uppercase tracking-wider text-primary flex items-center gap-2">
-                <Sparkles size={15} /> Project Onboarding Answers (Captured Post-Payment)
+                <Sparkles size={15} /> Project Onboarding Answers
               </h3>
 
               {selectedBooking.onboarding_details ? (
@@ -291,7 +414,7 @@ export const AdminBookings = () => {
                 </div>
               ) : (
                 <div className="p-3 text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded">
-                  ⏳ Customer has not filled out the post-payment onboarding form yet. (Sent to `/onboarding?booking_id=${selectedBooking.id}`)
+                  ⏳ Customer has not filled out the post-payment onboarding form yet.
                 </div>
               )}
             </div>
