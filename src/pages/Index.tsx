@@ -46,7 +46,7 @@ const trustItems = [
   "WhatsApp-ready enquiry flow",
 ];
 
-const heroBadges = ["Website from Rs. 999", "Bharat & Asia Coverage", "Fast Delivery", "SEO Friendly", "WhatsApp Ready", "Business-Focused UI"];
+const heroBadges = ["Website from Rs. 499/month", "Bharat & Asia Coverage", "Fast Delivery", "SEO Friendly", "WhatsApp Ready", "Business-Focused UI"];
 
 const problems = [
   "No professional website",
@@ -283,7 +283,7 @@ const Index = () => {
             </motion.p>
             <motion.div variants={fadeUp} custom={3} className="mt-8 flex flex-wrap gap-4">
               <Link to="/contact" className="premium-btn premium-btn-primary" data-offer-name="Starter website consultation" data-cta-location="home_hero">
-                Start Website from Rs. 999 <ArrowRight size={18} />
+                Start Website from Rs. 499/month <ArrowRight size={18} />
               </Link>
               <a href={businessInfo.whatsappUrl} target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn-ghost" data-cta-location="home_hero">
                 <MessageCircle size={18} /> WhatsApp Free Consultation

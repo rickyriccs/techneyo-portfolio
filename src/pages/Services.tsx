@@ -142,7 +142,7 @@ const Services = () => {
               From starter websites to CRM dashboards, WhatsApp enquiry flows and custom software, Techneyo Solutions helps businesses across Bharat & Asia look trusted and capture leads.
             </motion.p>
             <motion.div variants={fadeUp} custom={3} className="mt-8 flex flex-wrap gap-3">
-              {["Website from Rs. 999", "Lead capture ready", "Admin controlled", "Bharat & Asia service"].map((item) => (
+              {["Website from Rs. 499/month", "Lead capture ready", "Admin controlled", "Bharat & Asia service"].map((item) => (
                 <span key={item} className="premium-badge">{item}</span>
               ))}
             </motion.div>

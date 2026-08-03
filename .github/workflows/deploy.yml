@@ -51,8 +51,8 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
           REMOTE_HOST: ${{ secrets.HOSTINGER_HOST }}
           REMOTE_USER: ${{ secrets.HOSTINGER_USER }}
-          REMOTE_PORT: ${{ secrets.HOSTINGER_PORT }}
+          REMOTE_PORT: ${{ secrets.HOSTINGER_PORT || '65002' }}
           SOURCE: "dist/"
-          TARGET: ${{ secrets.HOSTINGER_DEPLOY_PATH }}
+          TARGET: ${{ secrets.HOSTINGER_DEPLOY_PATH || 'public_html/' }}
           ARGS: "-rlgoDzvc --delete"
           EXCLUDE: "/subdomains/, /.well-known/"
