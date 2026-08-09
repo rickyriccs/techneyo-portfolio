@@ -44,6 +44,9 @@ import AdminBookings from "./pages/admin/AdminBookings";
 import { PersonalizationProvider } from "@/context/PersonalizationContext";
 import SmartProposalModal from "@/components/interactive/SmartProposalModal";
 
+import Industries from "./pages/Industries";
+import IndustryDetail from "./pages/IndustryDetail";
+
 const AppRoutes = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
@@ -57,6 +60,8 @@ const AppRoutes = () => {
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
           <Route path="/services/:slug" element={<ServiceDetail />} />
+          <Route path="/industries" element={<Industries />} />
+          <Route path="/industries/:slug" element={<IndustryDetail />} />
           <Route path="/offers" element={<Offers />} />
           <Route path="/offers/:slug" element={<OfferDetails />} />
           <Route path="/onboarding" element={<Onboarding />} />

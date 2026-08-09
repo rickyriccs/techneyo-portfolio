@@ -25,6 +25,12 @@ import {
   Star,
   Users,
   Workflow,
+  Stethoscope,
+  GraduationCap,
+  Utensils,
+  Scissors,
+  Smartphone,
+  TrendingUp,
   Zap,
 } from "lucide-react";
 
@@ -435,6 +441,54 @@ const Index = () => {
 
       {/* Interactive Service Matrix Hub */}
       <ServiceMatrix />
+
+      {/* Industry Solutions Showcase */}
+      <section className="premium-section bg-white/[0.02]">
+        <div className="section-container">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
+            <SectionIntro
+              eyebrow="Solutions by Industry"
+              title="Tailored Websites, Mobile Apps & Digital Ads for Your Specific Industry"
+              text="Explore custom solutions, industry pain points solved, and pricing packages built for your business category."
+            />
+            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {[
+                { slug: "healthcare-clinics", title: "Healthcare & Clinics", desc: "Patient appointment booking, doctor profiles & Google Map #1 ranking", icon: Stethoscope },
+                { slug: "ecommerce-retail", title: "E-Commerce & Retail Stores", desc: "Online shopping store, UPI payment gateway & instant WhatsApp orders", icon: ShoppingBag },
+                { slug: "real-estate", title: "Real Estate & Builders", desc: "High-converting property landing pages & Meta buyer lead ads", icon: Building2 },
+                { slug: "education-coaching", title: "Coaching & Institutes", desc: "Course portals, student demo class registration & result showcases", icon: GraduationCap },
+                { slug: "restaurants-food", title: "Restaurants & Cafes", desc: "QR digital food menus, direct WhatsApp orders & 5-star Google review stands", icon: Utensils },
+                { slug: "local-services", title: "Salons & Local Services", desc: "Local service catalog, appointment slot booking & instant phone call leads", icon: Scissors },
+              ].map((ind, index) => {
+                const IconComp = ind.icon;
+                return (
+                  <motion.div key={ind.slug} variants={fadeUp} custom={index + 1}>
+                    <Link to={`/industries/${ind.slug}`} className="premium-card premium-card-hover block h-full p-6 group">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="p-3 rounded-xl bg-cyan-500/10 text-cyan-300 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
+                          <IconComp size={24} />
+                        </div>
+                        <span className="text-xs font-semibold text-cyan-300 bg-cyan-500/10 px-2.5 py-1 rounded-full border border-cyan-500/20">
+                          View Solution →
+                        </span>
+                      </div>
+                      <h3 className="font-display text-xl font-bold text-white group-hover:text-cyan-300 transition-colors">
+                        {ind.title}
+                      </h3>
+                      <p className="mt-2 text-sm leading-6 text-white/60">{ind.desc}</p>
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </div>
+            <div className="mt-8 text-center">
+              <Link to="/industries" className="premium-btn premium-btn-ghost inline-flex items-center gap-2">
+                Explore All 6 Industry Solutions <ArrowRight size={16} />
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
 
       <section className="premium-section pt-0">
         <div className="section-container">

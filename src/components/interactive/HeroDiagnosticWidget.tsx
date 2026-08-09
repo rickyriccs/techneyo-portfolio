@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Globe,
@@ -15,6 +16,7 @@ import {
   ShieldCheck,
   Zap,
   Gift,
+  ExternalLink,
 } from "lucide-react";
 import {
   usePersonalization,
@@ -61,11 +63,11 @@ const goals: { id: PrimaryGoal; title: string; desc: string; icon: React.Element
   },
 ];
 
-const businessTypes: { id: BusinessType; title: string; icon: React.ElementType }[] = [
-  { id: "startup", title: "New Startup / Founder", icon: Rocket },
-  { id: "ecommerce", title: "E-Commerce & Retail", icon: ShoppingBag },
-  { id: "local_business", title: "Local Business / Services", icon: Building2 },
-  { id: "enterprise", title: "Established Scale-Up / Agency", icon: ShieldCheck },
+const businessTypes: { id: BusinessType; title: string; icon: React.ElementType; mappedSlug: string }[] = [
+  { id: "startup", title: "New Startup / Founder", icon: Rocket, mappedSlug: "ecommerce-retail" },
+  { id: "ecommerce", title: "E-Commerce & Retail Shop", icon: ShoppingBag, mappedSlug: "ecommerce-retail" },
+  { id: "local_business", title: "Clinic / Healthcare / Local Service", icon: Building2, mappedSlug: "healthcare-clinics" },
+  { id: "enterprise", title: "Real Estate / Scale-Up / Coaching", icon: ShieldCheck, mappedSlug: "real-estate" },
 ];
 
 const timelines: { id: TimelineBudget; title: string; badge: string; bonus: string }[] = [
@@ -75,6 +77,7 @@ const timelines: { id: TimelineBudget; title: string; badge: string; bonus: stri
 ];
 
 export const HeroDiagnosticWidget: React.FC = () => {
+  const navigate = useNavigate();
   const { preferences, setPreferences, openProposalModal } = usePersonalization();
   const [step, setStep] = useState<number>(preferences.hasCompletedQuiz ? 4 : 1);
 
@@ -114,6 +117,13 @@ export const HeroDiagnosticWidget: React.FC = () => {
       timelineBudget: null,
       hasCompletedQuiz: false,
     });
+  };
+
+  const getMappedIndustrySlug = (): string => {
+    if (selectedBusiness === "ecommerce" || selectedBusiness === "startup") return "ecommerce-retail";
+    if (selectedBusiness === "local_business") return "healthcare-clinics";
+    if (selectedBusiness === "enterprise") return "real-estate";
+    return "healthcare-clinics";
   };
 
   const getRecommendationText = () => {
@@ -209,7 +219,7 @@ export const HeroDiagnosticWidget: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <p className="text-sm text-white/70 font-medium">
-                2. Which best describes your business stage?
+                2. Which best describes your business category?
               </p>
               <button
                 onClick={() => setStep(1)}
@@ -234,7 +244,7 @@ export const HeroDiagnosticWidget: React.FC = () => {
                       <span className="font-semibold text-sm text-white block group-hover:text-cyan-300 transition-colors">
                         {b.title}
                       </span>
-                      <span className="text-xs text-white/50">Select for tailored features</span>
+                      <span className="text-xs text-white/50">Select to tailor industry features</span>
                     </div>
                   </button>
                 );
@@ -302,10 +312,10 @@ export const HeroDiagnosticWidget: React.FC = () => {
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold uppercase tracking-wider text-cyan-300">
-                      Matched Recommendation
+                      Matched Growth Solution
                     </span>
                     <span className="flex items-center gap-1 text-[11px] text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                      <CheckCircle2 className="w-3 h-3" /> 98% Compatibility
+                      <CheckCircle2 className="w-3 h-3" /> 98% Industry Match
                     </span>
                   </div>
                   <h4 className="text-lg font-bold text-white font-display mt-0.5">
@@ -329,9 +339,9 @@ export const HeroDiagnosticWidget: React.FC = () => {
                 </span>
               </div>
               <div className="p-3 rounded-lg bg-white/[0.03] border border-white/10">
-                <span className="text-xs text-white/50 block">Business Type</span>
+                <span className="text-xs text-white/50 block">Business Category</span>
                 <span className="text-sm font-semibold text-white capitalize">
-                  {selectedBusiness ? selectedBusiness.replace("_", " ") : "E-Commerce / Business"}
+                  {selectedBusiness ? selectedBusiness.replace("_", " ") : "Retail / Local Business"}
                 </span>
               </div>
               <div className="p-3 rounded-lg bg-white/[0.03] border border-white/10">
@@ -349,12 +359,20 @@ export const HeroDiagnosticWidget: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row items-center gap-3">
               <button
+                onClick={() => navigate(`/industries/${getMappedIndustrySlug()}`)}
+                className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-sm shadow-lg shadow-cyan-500/30 hover:brightness-110 transition-all hover:scale-[1.01]"
+              >
+                <ExternalLink className="w-4 h-4" />
+                View Custom Industry Solution Page
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <button
                 onClick={() => openProposalModal(selectedGoal || "website")}
-                className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-sm shadow-lg shadow-cyan-500/30 hover:brightness-110 transition-all hover:scale-[1.01]"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl border border-white/20 bg-white/10 text-white font-bold text-sm hover:bg-white/20 transition-all"
               >
                 <Sparkles className="w-4 h-4" />
-                Generate My Custom AI Proposal & Special Discount
-                <ArrowRight className="w-4 h-4" />
+                Get Instant Proposal
               </button>
             </div>
           </motion.div>
