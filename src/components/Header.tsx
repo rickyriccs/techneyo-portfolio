@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, MessageCircle, X } from "lucide-react";
+import { Sparkles, Menu, MessageCircle, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { businessInfo } from "@/lib/business-info";
+import { usePersonalization } from "@/context/PersonalizationContext";
 
 const navLinks = [
   { label: "Home", path: "/" },
@@ -17,6 +18,7 @@ const navLinks = [
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { openProposalModal } = usePersonalization();
 
   useEffect(() => {
     setIsOpen(false);
@@ -59,15 +61,22 @@ const Header = () => {
 
           {/* CTA */}
           <div className="hidden md:flex items-center gap-3">
+            <button
+              onClick={() => openProposalModal()}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-500 px-4 py-2 text-xs font-bold text-white shadow-md hover:brightness-110 transition-all"
+            >
+              <Sparkles size={14} />
+              AI Proposal
+            </button>
             <a
               href={businessInfo.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
               data-cta-location="header"
-              className="inline-flex items-center gap-2 rounded-lg border border-cyan-200/20 bg-white/10 px-5 py-2.5 text-sm font-bold text-white transition-colors duration-200 hover:bg-cyan-300/15"
+              className="inline-flex items-center gap-2 rounded-lg border border-cyan-200/20 bg-white/10 px-4 py-2 text-xs font-bold text-white transition-colors duration-200 hover:bg-cyan-300/15"
             >
-              <MessageCircle size={16} />
-              Chat on WhatsApp
+              <MessageCircle size={14} />
+              WhatsApp
             </a>
           </div>
 

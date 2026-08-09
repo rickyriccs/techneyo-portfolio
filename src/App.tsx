@@ -41,6 +41,9 @@ import OfferDetails from "./pages/OfferDetails";
 import Onboarding from "./pages/Onboarding";
 import AdminBookings from "./pages/admin/AdminBookings";
 
+import { PersonalizationProvider } from "@/context/PersonalizationContext";
+import SmartProposalModal from "@/components/interactive/SmartProposalModal";
+
 const AppRoutes = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
@@ -89,6 +92,7 @@ const AppRoutes = () => {
       </main>
       {!isAdminRoute && <Footer />}
       {!isAdminRoute && <WhatsAppButton />}
+      <SmartProposalModal />
     </>
   );
 };
@@ -99,11 +103,13 @@ const App = () => (
       <Toaster />
       <Sonner />
       <AdminAuthProvider>
-        <BrowserRouter>
-          <ScrollToTop />
-          <AnalyticsRouteTracker />
-          <AppRoutes />
-        </BrowserRouter>
+        <PersonalizationProvider>
+          <BrowserRouter>
+            <ScrollToTop />
+            <AnalyticsRouteTracker />
+            <AppRoutes />
+          </BrowserRouter>
+        </PersonalizationProvider>
       </AdminAuthProvider>
     </TooltipProvider>
   </QueryClientProvider>

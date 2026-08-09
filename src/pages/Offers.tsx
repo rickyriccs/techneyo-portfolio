@@ -11,6 +11,8 @@ import { BookingModal } from "@/components/BookingModal";
 import { useAppSettings } from "@/hooks/use-app-settings";
 import { isInstagramLead } from "@/lib/utm";
 
+import { usePersonalization } from "@/context/PersonalizationContext";
+
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
   visible: (i = 0) => ({
@@ -30,6 +32,7 @@ export const Offers = () => {
   const [selectedOfferForBooking, setSelectedOfferForBooking] = useState<Offer | null>(null);
   const navigate = useNavigate();
   const { settings } = useAppSettings();
+  const { openProposalModal } = usePersonalization();
 
   useEffect(() => {
     const loadOffers = async () => {
@@ -88,8 +91,16 @@ export const Offers = () => {
               Affordable business website offers built to help you launch faster.
             </motion.h1>
             <motion.p variants={fadeUp} custom={2} className="mt-6 max-w-2xl text-lg leading-8 text-white/68">
-              Explore subscription plans, starter website packages, and custom tools. Book your slot online with an advance deposit or speak directly on WhatsApp.
+              Explore subscription plans, starter website packages, and custom tools. Book your slot online with an advance deposit or generate a customized AI proposal.
             </motion.p>
+            <motion.div variants={fadeUp} custom={3} className="mt-6 flex flex-wrap gap-3">
+              <button
+                onClick={() => openProposalModal()}
+                className="premium-btn premium-btn-primary flex items-center gap-2"
+              >
+                <Sparkles size={16} /> Get Custom AI Proposal & Special Discount
+              </button>
+            </motion.div>
           </motion.div>
         </div>
       </section>

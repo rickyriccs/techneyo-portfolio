@@ -188,6 +188,10 @@ const SectionIntro = ({ eyebrow, title, text }: { eyebrow: string; title: string
   </motion.div>
 );
 
+import HeroDiagnosticWidget from "@/components/interactive/HeroDiagnosticWidget";
+import ServiceMatrix from "@/components/interactive/ServiceMatrix";
+import { usePersonalization } from "@/context/PersonalizationContext";
+
 const DashboardVisual = () => (
   <motion.div className="premium-dashboard" variants={fadeUp} custom={3}>
     <div className="flex items-center justify-between border-b border-white/10 pb-4">
@@ -223,6 +227,7 @@ const DashboardVisual = () => (
 
 const Index = () => {
   const [dbOffers, setDbOffers] = useState<Offer[]>([]);
+  const { openProposalModal, preferences } = usePersonalization();
 
   useEffect(() => {
     const loadOffers = async () => {
@@ -262,40 +267,58 @@ const Index = () => {
   return (
     <div className="public-premium min-h-screen overflow-hidden bg-[#030711] text-white">
       <PageMeta
-        title="Techneyo Solutions | Website, CRM & Business Automation Services in Bharat & Asia"
+        title="Techneyo Solutions | Website, Mobile Apps, Social Media & Digital Marketing Services"
         description={pageDescriptions.home}
         canonicalPath="/"
         schema={pageSchema}
       />
 
-      <section className="premium-hero relative flex min-h-screen items-center overflow-hidden pt-28">
+      <section className="premium-hero relative flex min-h-screen items-center overflow-hidden pt-28 pb-12">
         <div className="premium-grid-bg" />
         <div className="premium-orbit premium-orbit-a" />
         <div className="premium-orbit premium-orbit-b" />
-        <div className="section-container relative z-10 grid items-center gap-12 pb-20 pt-12 lg:grid-cols-[1.05fr_0.95fr]">
-          <motion.div initial="hidden" animate="visible">
-            <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">Affordable digital growth across Bharat & Asia</motion.p>
-            <motion.h1 variants={fadeUp} custom={1} className="font-display text-5xl font-bold leading-[0.96] tracking-[-0.03em] text-white sm:text-6xl lg:text-7xl">
-              Website, CRM & Business Automation Solutions for Businesses Across Bharat & Asia
-            </motion.h1>
-            <motion.p variants={fadeUp} custom={2} className="mt-6 max-w-3xl text-lg leading-8 text-white/68 sm:text-xl">
-              Techneyo Solutions is based in Bharat and serves businesses across Asia with website development, CRM, SEO, WhatsApp automation, admin dashboards, and custom software solutions.
-            </motion.p>
-            <motion.div variants={fadeUp} custom={3} className="mt-8 flex flex-wrap gap-4">
-              <Link to="/contact" className="premium-btn premium-btn-primary" data-offer-name="Starter website consultation" data-cta-location="home_hero">
-                Start Website from Rs. 499/month <ArrowRight size={18} />
-              </Link>
-              <a href={businessInfo.whatsappUrl} target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn-ghost" data-cta-location="home_hero">
-                <MessageCircle size={18} /> WhatsApp Free Consultation
-              </a>
+        <div className="section-container relative z-10 space-y-12">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+            <motion.div initial="hidden" animate="visible">
+              <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">High-Converting IT & Digital Services Across Bharat & Asia</motion.p>
+              <motion.h1 variants={fadeUp} custom={1} className="font-display text-4xl sm:text-6xl lg:text-7xl font-bold leading-[0.96] tracking-[-0.03em] text-white">
+                {preferences.primaryGoal ? (
+                  <>
+                    Customized <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300 capitalize">{preferences.primaryGoal.replace("_", " ")}</span> Solutions for Your Business
+                  </>
+                ) : (
+                  <>
+                    Website, Mobile Apps, Social Media & High-ROI Digital Marketing
+                  </>
+                )}
+              </motion.h1>
+              <motion.p variants={fadeUp} custom={2} className="mt-6 max-w-3xl text-lg leading-8 text-white/68 sm:text-xl">
+                Techneyo Solutions builds high-impact websites, custom mobile apps, viral social media campaigns, and data-driven ad funnels to turn online traffic into loyal customers.
+              </motion.p>
+              <motion.div variants={fadeUp} custom={3} className="mt-8 flex flex-wrap gap-4">
+                <button
+                  onClick={() => openProposalModal()}
+                  className="premium-btn premium-btn-primary flex items-center gap-2"
+                >
+                  <Sparkles size={18} /> Get AI Proposal & Custom Offer <ArrowRight size={18} />
+                </button>
+                <a href={businessInfo.whatsappUrl} target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn-ghost flex items-center gap-2">
+                  <MessageCircle size={18} /> Instant WhatsApp Consultation
+                </a>
+              </motion.div>
+              <motion.div variants={fadeUp} custom={4} className="mt-8 flex flex-wrap gap-2">
+                {heroBadges.map((badge) => (
+                  <span key={badge} className="premium-badge">{badge}</span>
+                ))}
+              </motion.div>
             </motion.div>
-            <motion.div variants={fadeUp} custom={4} className="mt-8 flex flex-wrap gap-2">
-              {heroBadges.map((badge) => (
-                <span key={badge} className="premium-badge">{badge}</span>
-              ))}
-            </motion.div>
+            <DashboardVisual />
+          </div>
+
+          {/* Interactive Hero Diagnostic Widget */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+            <HeroDiagnosticWidget />
           </motion.div>
-          <DashboardVisual />
         </div>
       </section>
 
@@ -410,25 +433,8 @@ const Index = () => {
         </section>
       )}
 
-      <section className="premium-section">
-        <div className="section-container">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
-            <SectionIntro eyebrow="Services" title="Everything a growing business needs to look trusted and capture leads." />
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-              {services.map((service, index) => (
-                <motion.div key={service} variants={fadeUp} custom={index + 1} className="premium-chip-card">
-                  <Zap size={16} /> {service}
-                </motion.div>
-              ))}
-            </div>
-            <div className="mt-10 text-center">
-              <Link to="/services" className="premium-btn premium-btn-primary">
-                Explore Services <ArrowRight size={18} />
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      {/* Interactive Service Matrix Hub */}
+      <ServiceMatrix />
 
       <section className="premium-section pt-0">
         <div className="section-container">

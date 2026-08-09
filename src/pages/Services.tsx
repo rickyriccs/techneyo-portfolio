@@ -9,6 +9,7 @@ import PageMeta from "@/components/PageMeta";
 import { pageDescriptions } from "@/lib/business-info";
 import { organizationSchema } from "@/lib/schema";
 import { servicePages, servicePath } from "@/lib/seo-content";
+import ServiceMatrix from "@/components/interactive/ServiceMatrix";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -98,31 +99,19 @@ const Services = () => {
       const { data, error } = await supabase
         .from("services")
         .select("id,title,description,icon_name,features")
-        .eq("status", "active")
         .order("display_order", { ascending: true });
 
-      if (error) {
-        console.error("Failed to load services", error);
-        return;
-      }
-
-      if (data?.length) {
-        setServices(
-          data.map((service) => ({
-            ...service,
-            icon_name: iconMap[service.icon_name as keyof typeof iconMap] ? service.icon_name : "Globe",
-          })) as Service[],
-        );
+      if (!error && data && data.length > 0) {
+        setServices(data as Service[]);
       }
     };
-
     loadServices();
   }, []);
 
   return (
     <div className="public-premium min-h-screen overflow-hidden text-white">
       <PageMeta
-        title="Website Development, CRM, SEO & Automation Services | Techneyo Solutions"
+        title="Website Development, Mobile Apps, Social Media & Paid Ads Services | Techneyo Solutions"
         description={pageDescriptions.services}
         keywords="website development company Bharat, CRM development Asia, business automation tools, WhatsApp automation consultation, admin dashboard development, SEO services Bharat"
         canonicalPath="/services"
@@ -134,21 +123,24 @@ const Services = () => {
         <div className="premium-orbit premium-orbit-a" />
         <div className="section-container relative z-10">
           <motion.div initial="hidden" animate="visible" className="max-w-3xl">
-            <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">Our Services</motion.p>
+            <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">Our IT & Digital Services</motion.p>
             <motion.h1 variants={fadeUp} custom={1} className="mb-6 font-display text-4xl font-bold leading-tight text-white sm:text-6xl">
-              Website, CRM, SEO & automation services for businesses across Bharat & Asia.
+              High-converting websites, mobile apps, social media & digital ad services.
             </motion.h1>
             <motion.p variants={fadeUp} custom={2} className="max-w-2xl text-lg leading-8 text-white/68">
-              From starter websites to CRM dashboards, WhatsApp enquiry flows and custom software, Techneyo Solutions helps businesses across Bharat & Asia look trusted and capture leads.
+              Explore our full service matrix below. Select deliverables, customize your feature stack, and build your custom proposal in real time.
             </motion.p>
             <motion.div variants={fadeUp} custom={3} className="mt-8 flex flex-wrap gap-3">
-              {["Website from Rs. 499/month", "Lead capture ready", "Admin controlled", "Bharat & Asia service"].map((item) => (
+              {["Custom Web & Mobile Apps", "Social Media Branding", "Paid Meta & Google Ads", "WhatsApp Lead Automation"].map((item) => (
                 <span key={item} className="premium-badge">{item}</span>
               ))}
             </motion.div>
           </motion.div>
         </div>
       </section>
+
+      {/* Interactive Service Matrix */}
+      <ServiceMatrix />
 
       <section className="premium-section pt-0">
         <div className="section-container">
