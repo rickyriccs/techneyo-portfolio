@@ -60,10 +60,10 @@ const problems = [
 ];
 
 const solutions = [
-  { icon: Globe2, title: "Business websites", text: "High-trust websites, landing pages, ecommerce and booking experiences." },
-  { icon: MessageCircle, title: "Lead flows", text: "Contact forms, WhatsApp routing, follow-ups and enquiry tracking." },
-  { icon: LayoutDashboard, title: "Admin tools", text: "Offers, services, packages and leads controlled from a clean dashboard." },
-  { icon: Bot, title: "Automation", text: "Custom workflows, dashboards, CRM tools and AI-ready business systems." },
+  { icon: Globe2, title: "Business Websites", text: "High-trust websites, landing pages, e-commerce & online booking." },
+  { icon: MessageCircle, title: "Direct Lead Flows", text: "WhatsApp routing, direct phone call buttons & enquiry alerts." },
+  { icon: Smartphone, title: "Mobile App Development", text: "Custom iOS & Android apps designed for smooth performance & customer engagement." },
+  { icon: TrendingUp, title: "Google & Meta Ad Campaigns", text: "Targeted ad campaigns that bring phone calls and WhatsApp buyers within 48 hours." },
 ];
 
 type Offer = {
