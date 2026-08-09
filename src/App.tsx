@@ -21,6 +21,7 @@ import LocalSeoPage from "./pages/LocalSeoPage";
 import Resources from "./pages/Resources";
 import ResourcePost from "./pages/ResourcePost";
 import CompanyProfile from "./pages/CompanyProfile";
+import Portfolio from "./pages/Portfolio";
 import ThankYou from "./pages/ThankYou";
 import NotFound from "./pages/NotFound";
 import AnalyticsRouteTracker from "./components/AnalyticsRouteTracker";
@@ -67,6 +68,8 @@ const AppRoutes = () => {
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/techneyo-portfolio" element={<Portfolio />} />
           <Route path="/website-development-company-ludhiana" element={<LocalSeoPage />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/resources/:slug" element={<ResourcePost />} />

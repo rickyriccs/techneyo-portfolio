@@ -14,6 +14,7 @@ const services = [
 ];
 
 const quickLinks = [
+  { label: "Techneyo Portfolio & Tech Services", path: "/portfolio" },
   { label: "About Us", path: "/about" },
   { label: "Contact Us", path: "/contact" },
   { label: "Company Profile", path: "/company-profile" },
@@ -35,7 +36,14 @@ const Footer = () => {
             <p className="premium-eyebrow">{businessInfo.name}</p>
             <h2 className="font-display text-3xl font-bold text-white">Ready to grow digitally?</h2>
           </div>
-          <Link to="/contact" className="premium-btn premium-btn-primary" data-cta-location="footer_final_cta">Discuss Your Digital Requirement</Link>
+          <div className="flex flex-wrap gap-3">
+            <Link to="/portfolio" className="premium-btn border border-cyan-400 bg-cyan-500/20 text-cyan-300 hover:bg-cyan-400 hover:text-black font-bold" data-cta-location="footer_portfolio_cta">
+              View Portfolio & Tech Services
+            </Link>
+            <Link to="/contact" className="premium-btn premium-btn-primary" data-cta-location="footer_final_cta">
+              Discuss Your Digital Requirement
+            </Link>
+          </div>
         </div>
       </div>
       <div className="section-container py-16">
