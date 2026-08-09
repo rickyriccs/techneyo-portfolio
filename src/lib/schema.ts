@@ -8,26 +8,25 @@ export const organizationSchema = {
   url: businessInfo.website,
   email: businessInfo.email,
   telephone: businessInfo.phoneDisplay,
-  areaServed: "Bharat",
+  areaServed: "India",
   location: {
     "@type": "Place",
-    name: "Bharat",
+    name: "India",
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Bharat",
-      addressRegion: "Bharat",
+      addressLocality: "India",
+      addressRegion: "India",
       addressCountry: "IN",
     },
   },
   description:
-    "Techneyo Solutions is based in Bharat and provides website development, CRM development, SEO and digital presence, WhatsApp automation, admin dashboard development, business automation, and custom web-based software solutions for businesses across Bharat & Asia.",
+    "Techneyo Solutions is based in India and provides website development, mobile apps, social media marketing, local SEO, WhatsApp automation, and custom web software for businesses across India.",
   makesOffer: [
     "Website development",
-    "CRM development",
-    "Business automation",
+    "Mobile app development",
+    "Social media marketing",
     "WhatsApp automation",
     "SEO and digital presence",
-    "Admin dashboard development",
     "Custom software development",
   ].map((service) => ({
     "@type": "Offer",
@@ -52,7 +51,7 @@ export const organizationSchema = {
 export const localBusinessSchema = {
   ...organizationSchema,
   "@type": "LocalBusiness",
-  areaServed: ["Bharat", "Asia"],
+  areaServed: ["India"],
 };
 
 export const faqSchema = (faqs: FaqItem[]) => ({
@@ -92,7 +91,7 @@ export const serviceSchema = (service: ServicePage) => ({
     email: businessInfo.email,
     telephone: businessInfo.phoneDisplay,
   },
-  areaServed: ["Bharat", "Asia"],
+  areaServed: ["India"],
 });
 
 export const articleSchema = (post: BlogPost) => ({
@@ -109,63 +108,51 @@ export const articleSchema = (post: BlogPost) => ({
     name: businessInfo.name,
     logo: {
       "@type": "ImageObject",
-      url: businessInfo.ogImage,
+      url: `${businessInfo.website}/logo.png`,
     },
+  },
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": `${businessInfo.website}/resources/${post.slug}`,
+  },
+});
+
+export const singleOfferSchema = (offer: any) => ({
+  "@context": "https://schema.org",
+  "@type": "Offer",
+  name: offer.title,
+  description: offer.short_description || offer.long_description,
+  price: offer.discount_price || offer.starting_price || undefined,
+  priceCurrency: "INR",
+  url: `${businessInfo.website}/offers/${offer.slug}`,
+  seller: {
+    "@type": "Organization",
+    name: businessInfo.name,
   },
 });
 
 export const offersSchema = (offers: any[]) => ({
   "@context": "https://schema.org",
   "@type": "ItemList",
-  numberOfItems: offers.length,
   itemListElement: offers.map((offer, index) => ({
     "@type": "ListItem",
     position: index + 1,
     item: {
-      "@type": "Product",
+      "@type": "Offer",
       name: offer.title,
-      description: offer.short_description || offer.detailed_description || "",
-      offers: {
-        "@type": "Offer",
-        priceCurrency: "INR",
-        price: offer.discount_price || offer.starting_price || 0,
-        availability: "https://schema.org/InStock",
-        ...(offer.valid_from ? { validFrom: offer.valid_from } : {}),
-        ...(offer.valid_till ? { priceValidUntil: offer.valid_till } : {}),
+      description: offer.short_description,
+      price: offer.discount_price || offer.starting_price || undefined,
+      priceCurrency: "INR",
+      url: `${businessInfo.website}/offers`,
+      seller: {
+        "@type": "Organization",
+        name: businessInfo.name,
       },
     },
   })),
 });
 
-export const singleOfferSchema = (offer: any) => ({
-  "@context": "https://schema.org",
-  "@type": "Product",
-  name: offer.seo_title || offer.title,
-  description: offer.seo_description || offer.short_description,
-  brand: {
-    "@type": "Brand",
-    name: businessInfo.name,
-  },
-  offers: {
-    "@type": "Offer",
-    priceCurrency: "INR",
-    price: offer.discount_price || offer.starting_price || 0,
-    priceValidUntil: offer.valid_till || "2030-12-31",
-    itemCondition: "https://schema.org/NewCondition",
-    availability: "https://schema.org/InStock",
-    seller: {
-      "@type": "Organization",
-      name: businessInfo.name,
-      url: businessInfo.website,
-    },
-  },
-  ...(offer.target_keywords?.length
-    ? { keywords: offer.target_keywords.join(", ") }
-    : {}),
-});
-
-export const graphSchema = (...schemas: Record<string, unknown>[]) => ({
+export const graphSchema = (...schemas: any[]) => ({
   "@context": "https://schema.org",
   "@graph": schemas,
 });
-

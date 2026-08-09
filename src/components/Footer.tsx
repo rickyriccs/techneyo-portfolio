@@ -18,7 +18,7 @@ const quickLinks = [
   { label: "Contact Us", path: "/contact" },
   { label: "Company Profile", path: "/company-profile" },
   { label: "Resources", path: "/resources" },
-  { label: "Bharat Website Development", path: "/website-development-company-ludhiana" },
+  { label: "Website Development India", path: "/website-development-company-ludhiana" },
   { label: "Privacy Policy", path: "/privacy-policy" },
   { label: "Terms & Conditions", path: "/terms-and-conditions" },
   { label: "Refund & Cancellation Policy", path: "/refund-cancellation-policy" },

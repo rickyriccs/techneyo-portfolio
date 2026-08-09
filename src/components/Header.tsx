@@ -9,7 +9,7 @@ const navLinks = [
   { label: "Home", path: "/" },
   { label: "Services", path: "/services" },
   { label: "Industries", path: "/industries" },
-  { label: "Bharat", path: "/website-development-company-ludhiana" },
+  { label: "India", path: "/website-development-company-ludhiana" },
   { label: "Resources", path: "/resources" },
   { label: "Offers", path: "/offers" },
   { label: "About", path: "/about" },
