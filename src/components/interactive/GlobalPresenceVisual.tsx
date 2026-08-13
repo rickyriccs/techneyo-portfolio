@@ -124,20 +124,40 @@ export const GlobalPresenceVisual: React.FC = () => {
     const resizeCanvas = () => {
       const parent = canvas.parentElement;
       if (!parent) return;
-      const dpr = window.devicePixelRatio || 1;
-      const width = parent.clientWidth;
-      const height = Math.max(380, Math.min(480, width * 0.9));
+      const rect = parent.getBoundingClientRect();
+      const width = rect.width || parent.clientWidth || 320;
+      const height = Math.max(340, Math.min(460, width * 0.9));
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-
-      ctx.scale(dpr, dpr);
+      if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+      }
     };
 
     resizeCanvas();
+
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined" && canvas.parentElement) {
+      resizeObserver = new ResizeObserver(() => {
+        resizeCanvas();
+      });
+      resizeObserver.observe(canvas.parentElement);
+    }
+
     window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("orientationchange", resizeCanvas);
+
+    // Settling ticks for mobile Safari layout initialization
+    const rafId1 = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        resizeCanvas();
+      });
+    });
+    const timer1 = setTimeout(resizeCanvas, 150);
+    const timer2 = setTimeout(resizeCanvas, 600);
 
     // Create latitude & longitude grid dots
     const gridPoints: { lat: number; lng: number }[] = [];
@@ -148,8 +168,9 @@ export const GlobalPresenceVisual: React.FC = () => {
     }
 
     const render = () => {
-      const width = canvas.width / (window.devicePixelRatio || 1);
-      const height = canvas.height / (window.devicePixelRatio || 1);
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const width = canvas.width / dpr;
+      const height = canvas.height / dpr;
       const centerX = width / 2;
       const centerY = height / 2;
       const radius = Math.min(width, height) * 0.38;
@@ -159,6 +180,8 @@ export const GlobalPresenceVisual: React.FC = () => {
       }
       arcProgress = (arcProgress + 0.008) % 1;
 
+      // Reset scale transform every frame to prevent cumulative scaling
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, width, height);
 
       // Outer glow atmosphere
@@ -343,12 +366,17 @@ export const GlobalPresenceVisual: React.FC = () => {
     render();
 
     return () => {
+      cancelAnimationFrame(rafId1);
+      clearTimeout(timer1);
+      clearTimeout(timer2);
       window.removeEventListener("resize", resizeCanvas);
+      window.removeEventListener("orientationchange", resizeCanvas);
+      if (resizeObserver) resizeObserver.disconnect();
       cancelAnimationFrame(animationFrameId);
     };
   }, [isAutoSpinning, selectedHub, hoveredHub]);
 
-  // Drag interaction handlers for rotating the globe
+  // Mouse & Touch drag interaction handlers for rotating the globe
   const handleMouseDown = (e: React.MouseEvent) => {
     isDraggingRef.current = true;
     setIsAutoSpinning(false);
@@ -370,6 +398,32 @@ export const GlobalPresenceVisual: React.FC = () => {
   };
 
   const handleMouseUp = () => {
+    isDraggingRef.current = false;
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      isDraggingRef.current = true;
+      setIsAutoSpinning(false);
+      previousMouseRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDraggingRef.current || e.touches.length !== 1) return;
+    const deltaX = e.touches[0].clientX - previousMouseRef.current.x;
+    const deltaY = e.touches[0].clientY - previousMouseRef.current.y;
+
+    rotationRef.current.y += deltaX * 0.005;
+    rotationRef.current.x = Math.max(
+      -0.6,
+      Math.min(0.6, rotationRef.current.x + deltaY * 0.005)
+    );
+
+    previousMouseRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  };
+
+  const handleTouchEnd = () => {
     isDraggingRef.current = false;
   };
 
@@ -404,11 +458,15 @@ export const GlobalPresenceVisual: React.FC = () => {
       <div className="relative mt-4 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
         {/* Canvas Sphere Area */}
         <div
-          className="relative flex min-h-[340px] items-center justify-center rounded-xl border border-white/5 bg-gradient-to-b from-blue-950/20 to-slate-950/40 p-2 cursor-grab active:cursor-grabbing"
+          className="relative flex min-h-[340px] items-center justify-center rounded-xl border border-white/5 bg-gradient-to-b from-blue-950/20 to-slate-950/40 p-2 cursor-grab active:cursor-grabbing touch-none select-none overflow-hidden"
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onTouchCancel={handleTouchEnd}
         >
           <canvas ref={canvasRef} className="max-w-full" />
 
