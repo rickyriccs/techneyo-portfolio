@@ -69,7 +69,7 @@ const Services = () => {
       <PageMeta
         title="Services | High-Converting Websites, Mobile Apps & Digital Marketing"
         description={pageDescriptions.services}
-        keywords="website development Bharat, mobile app development, social media marketing, local SEO Google Maps, WhatsApp business automation"
+        keywords="website development worldwide, mobile app development, social media marketing, local SEO Google Maps, WhatsApp business automation"
         canonicalPath="/services"
         schema={organizationSchema}
       />

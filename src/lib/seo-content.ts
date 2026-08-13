@@ -213,10 +213,10 @@ export type BlogPost = {
 export const blogPosts: BlogPost[] = [
   {
     slug: "why-local-business-ludhiana-needs-website",
-    title: "Why every local business in India needs a website",
-    seoTitle: "Why Local Businesses in India Need a Website | Techneyo Solutions",
-    metaDescription: "A practical guide for businesses in India on why a website, WhatsApp, CRM, and SEO foundation helps customers trust and contact them.",
-    intro: "Customers now check online before calling, visiting, or trusting a local business. A professional website gives businesses in India a clear place to show services, location, contact details, proof, and enquiry options.",
+    title: "Why every modern business needs a professional website",
+    seoTitle: "Why Every Modern Business Needs a Website | Techneyo Solutions",
+    metaDescription: "A practical guide for businesses worldwide on why a website, WhatsApp, CRM, and SEO foundation helps customers trust and contact them.",
+    intro: "Customers now check online before calling, visiting, or trusting a business. A professional website gives businesses worldwide a clear place to show services, location, contact details, proof, and enquiry options.",
     sections: [
       { heading: "Your website is your owned digital address", body: "Social platforms are useful, but a website gives your business a stable home that can appear in Google, be shared in WhatsApp, and support campaigns, QR codes, profiles, and directory listings." },
       { heading: "Local customers want quick clarity", body: "A good website tells customers what you offer, where you serve, how to contact you, and why your business is relevant. This matters for shops, clinics, institutes, consultants, manufacturers, and service providers." },
@@ -315,9 +315,9 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "website-development-cost-small-business-india",
-    title: "Website development cost for small businesses in India",
-    seoTitle: "Website Development Cost for Small Business in India | Techneyo Solutions",
-    metaDescription: "Understand what affects website development cost for small businesses in India, including pages, design, content, forms, SEO, and dashboards.",
+    title: "Website development cost for growing & global businesses",
+    seoTitle: "Website Development Cost for Growing & Global Businesses | Techneyo Solutions",
+    metaDescription: "Understand what affects website development cost for growing & global businesses, including pages, design, content, forms, SEO, and dashboards.",
     intro: "Website development cost depends on scope, pages, design complexity, content, forms, integrations, SEO needs, and whether backend or dashboard features are required.",
     sections: [
       { heading: "Simple websites cost less", body: "A focused one-page or starter website is usually faster to build because it has fewer pages and simpler content requirements." },
@@ -344,7 +344,7 @@ export const blogPosts: BlogPost[] = [
     relatedServices: ["website-development", "whatsapp-automation", "crm-development"],
     faqs: [
       { question: "Can website development help with lead generation?", answer: "Yes. Website development for lead generation focuses on clear services, trust sections, CTA placement, contact paths, and follow-up tracking." },
-      { question: "Should every website have WhatsApp integration?", answer: "For many businesses in India, WhatsApp integration reduces friction and helps customers start conversations quickly." },
+      { question: "Should every website have WhatsApp integration?", answer: "For many businesses worldwide, WhatsApp integration reduces friction and helps customers start conversations quickly." },
     ],
   },
   {

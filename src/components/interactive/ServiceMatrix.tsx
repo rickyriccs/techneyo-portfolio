@@ -165,7 +165,7 @@ const serviceCatalog: ServiceData[] = [
     ],
     features: [
       "Retargeting Ads for People Who Showed Interest",
-      "Call-Only Campaign Setup for Direct Phone Inquiries",
+      // "Call-Only Campaign Setup for Direct Phone Inquiries",
       "Lead Quality Filtering to Block Spam",
       "Daily Ad Budget Control & Expense Tracking",
     ],
@@ -398,44 +398,40 @@ export const ServiceMatrix: React.FC = () => {
                             <span className="text-[11px] text-white/60 block mt-0.5">{addon.description}</span>
                           </div>
                         </div>
-                        <span className="font-bold text-cyan-300 shrink-0 text-xs">+₹{addon.price.toLocaleString("en-IN")}</span>
+                        <span className={`font-semibold shrink-0 text-xs px-2 py-0.5 rounded border ${isSelected ? "text-cyan-300 bg-cyan-500/15 border-cyan-500/30" : "text-white/50 bg-white/5 border-white/10"}`}>
+                          {isSelected ? "Selected" : "Optional Upgrade"}
+                        </span>
                       </button>
                     );
                   })}
                 </div>
               </div>
 
-              {/* Calculated Price Summary */}
+              {/* Package Scope & Consultation Summary */}
               <div className="pt-4 border-t border-white/10">
-                <div className="flex items-baseline justify-between mb-1">
-                  <span className="text-xs text-white/60 font-medium">Total Package Estimate</span>
-                  <span className="text-xs text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                    Free Strategy Call Included
-                  </span>
-                </div>
-                <div className="flex items-baseline justify-between">
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-2xl sm:text-3xl font-extrabold text-white font-display">
-                      ₹{calculatedTotal.toLocaleString("en-IN")}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-xs text-white/60 font-medium block">Custom Scope & Strategy</span>
+                    <span className="text-sm font-bold text-white font-display">
+                      {selectedAddonsList.length > 0
+                        ? `${selectedAddonsList.length} Premium Feature Upgrades Selected`
+                        : "Core Package Architecture Selected"}
                     </span>
-                    <span className="text-xs text-white/50 font-normal">One-time</span>
                   </div>
-                  {totalAddonPrice > 0 && (
-                    <span className="text-xs text-cyan-300 font-semibold">
-                      (Base ₹{activeService.startingPrice.toLocaleString("en-IN")} + ₹{totalAddonPrice.toLocaleString("en-IN")} Upgrades)
-                    </span>
-                  )}
+                  <span className="text-xs text-emerald-400 font-bold bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20 shadow-sm">
+                    Free Strategy & Proposal
+                  </span>
                 </div>
               </div>
 
               {/* Action Button */}
               <button
                 onClick={handleClaimProposal}
-                className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-sm shadow-lg shadow-cyan-500/30 hover:brightness-110 transition-all hover:scale-[1.01]"
+                className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-gradient-to-r from-cyan-500 via-teal-500 to-blue-600 text-white font-bold text-sm shadow-lg shadow-cyan-500/30 hover:brightness-110 transition-all hover:scale-[1.01]"
               >
                 <Sparkles className="w-4 h-4" />
-                Claim This Offer & Get Custom Proposal
-                <ArrowRight className="w-4 h-4" />
+                Request Custom Proposal & Scope
+                <ArrowRight className="w-4 h-4 text-cyan-200" />
               </button>
             </div>
           </motion.div>

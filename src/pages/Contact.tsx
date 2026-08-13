@@ -77,10 +77,10 @@ const Contact = () => {
         budgetRange: form.budgetRange,
         message: [
           form.message,
-          `Business Category: ${form.businessType}`,
-          `Has Existing Website: ${form.hasWebsite}`,
-          `Has Google Profile: ${form.hasGoogleProfile}`,
-        ].join("\n"),
+          form.businessType ? `Business Category: ${form.businessType}` : "",
+          form.hasWebsite ? `Has Existing Website: ${form.hasWebsite}` : "",
+          form.hasGoogleProfile ? `Has Google Profile: ${form.hasGoogleProfile}` : "",
+        ].filter(Boolean).join("\n"),
         sourcePage: "/contact",
         serviceInterested: form.need,
       });
@@ -271,10 +271,9 @@ const Contact = () => {
                 </div>
 
                 <div>
-                  <label className={labelClass}>Business Category *</label>
+                  <label className={labelClass}>Business Category (Optional)</label>
                   <input
                     type="text"
-                    required
                     value={form.businessType}
                     onChange={(e) => setForm({ ...form, businessType: e.target.value })}
                     className={fieldClass}
@@ -286,7 +285,6 @@ const Contact = () => {
                   <div>
                     <label className={labelClass}>Do you have a website?</label>
                     <select
-                      required
                       value={form.hasWebsite}
                       onChange={(e) => setForm({ ...form, hasWebsite: e.target.value })}
                       className={`${fieldClass} bg-[#0b1329]`}
@@ -299,7 +297,6 @@ const Contact = () => {
                   <div>
                     <label className={labelClass}>Google Maps Profile?</label>
                     <select
-                      required
                       value={form.hasGoogleProfile}
                       onChange={(e) => setForm({ ...form, hasGoogleProfile: e.target.value })}
                       className={`${fieldClass} bg-[#0b1329]`}
@@ -440,22 +437,22 @@ const Contact = () => {
       </section>
 
       {/* Map */}
-      <section className="pb-16">
-        <div className="section-container">
-          <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl" style={{ height: 380 }}>
-            <iframe
-              src="https://www.google.com/maps?q=Ludhiana%2C%20Punjab&output=embed"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Techneyo Solutions Service Area - India"
-            />
-          </div>
-        </div>
-      </section>
+      {/*<section className="pb-16">*/}
+      {/*  <div className="section-container">*/}
+      {/*    <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl" style={{ height: 380 }}>*/}
+      {/*      <iframe*/}
+      {/*        src="https://www.google.com/maps?q=Ludhiana%2C%20Punjab&output=embed"*/}
+      {/*        width="100%"*/}
+      {/*        height="100%"*/}
+      {/*        style={{ border: 0 }}*/}
+      {/*        allowFullScreen*/}
+      {/*        loading="lazy"*/}
+      {/*        referrerPolicy="no-referrer-when-downgrade"*/}
+      {/*        title="Techneyo Solutions Service Area - India"*/}
+      {/*      />*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*</section>*/}
     </div>
   );
 };

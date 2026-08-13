@@ -44,7 +44,7 @@ const fadeUp = {
 };
 
 const trustItems = [
-  "Serving businesses across Bharat & Asia",
+  "Serving businesses worldwide & across global markets",
   "Affordable digital presence",
   "Admin-controlled website tools",
   "Lead capture ready",
@@ -52,7 +52,7 @@ const trustItems = [
   "WhatsApp-ready enquiry flow",
 ];
 
-const heroBadges = ["Website from Rs. 499/month", "Bharat & Asia Coverage", "Fast Delivery", "SEO Friendly", "WhatsApp Ready", "Business-Focused UI"];
+const heroBadges = ["Website from Rs. 499/month", "Global Coverage", "Fast Delivery", "SEO Friendly", "WhatsApp Ready", "Business-Focused UI"];
 
 const problems = [
   "No professional website",
@@ -195,41 +195,12 @@ const SectionIntro = ({ eyebrow, title, text }: { eyebrow: string; title: string
 );
 
 import HeroDiagnosticWidget from "@/components/interactive/HeroDiagnosticWidget";
-import ServiceMatrix from "@/components/interactive/ServiceMatrix";
+// import ServiceMatrix from "@/components/interactive/ServiceMatrix";
+import GlobalPresenceVisual from "@/components/interactive/GlobalPresenceVisual";
+import ProblemSolverSection from "@/components/ProblemSolverSection";
 import { usePersonalization } from "@/context/PersonalizationContext";
 
-const DashboardVisual = () => (
-  <motion.div className="premium-dashboard" variants={fadeUp} custom={3}>
-    <div className="flex items-center justify-between border-b border-white/10 pb-4">
-      <div>
-        <p className="text-xs uppercase tracking-[0.2em] text-cyan-200/70">Growth Console</p>
-        <h3 className="mt-1 font-display text-xl font-semibold text-white">Business launch system</h3>
-      </div>
-      <div className="rounded-full border border-emerald-300/30 bg-emerald-300/10 px-3 py-1 text-xs font-semibold text-emerald-200">Live</div>
-    </div>
-    <div className="mt-5 grid gap-3 sm:grid-cols-3">
-      <Stat value="29" label="Leads" />
-      <Stat value="8" label="Offers" />
-      <Stat value="24h" label="Response" />
-    </div>
-    <div className="mt-5 space-y-3">
-      {[
-        { icon: Globe2, label: "Website launch", value: "Ready" },
-        { icon: MessageCircle, label: "WhatsApp enquiry", value: "Connected" },
-        { icon: Workflow, label: "Automation flow", value: "Mapped" },
-        { icon: LayoutDashboard, label: "Admin-controlled offers", value: "Active" },
-      ].map((item) => (
-        <div key={item.label} className="premium-flow-row">
-          <div className="flex items-center gap-3">
-            <item.icon size={17} className="text-cyan-200" />
-            <span>{item.label}</span>
-          </div>
-          <span className="text-cyan-100">{item.value}</span>
-        </div>
-      ))}
-    </div>
-  </motion.div>
-);
+
 
 const Index = () => {
   const [dbOffers, setDbOffers] = useState<Offer[]>([]);
@@ -286,7 +257,7 @@ const Index = () => {
         <div className="section-container relative z-10 space-y-12">
           <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
             <motion.div initial="hidden" animate="visible">
-              <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">High-Converting IT & Digital Services Across Bharat & Asia</motion.p>
+              <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">High-Converting IT & Digital Services Worldwide</motion.p>
               <motion.h1 variants={fadeUp} custom={1} className="font-display text-4xl sm:text-6xl lg:text-7xl font-bold leading-[0.96] tracking-[-0.03em] text-white">
                 {preferences.primaryGoal ? (
                   <>
@@ -318,8 +289,10 @@ const Index = () => {
                 ))}
               </motion.div>
             </motion.div>
-            <DashboardVisual />
+            <GlobalPresenceVisual />
           </div>
+          {/* Problem Solver Interactive Section */}
+          <ProblemSolverSection />
 
           {/* Interactive Hero Diagnostic Widget */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
@@ -328,6 +301,7 @@ const Index = () => {
         </div>
       </section>
 
+
       <div className="premium-marquee border-y border-white/10 bg-white/[0.03] py-4">
         <div className="premium-marquee-track">
           {trustItems.map((item) => (
@@ -335,26 +309,6 @@ const Index = () => {
           ))}
         </div>
       </div>
-
-      <section className="premium-section">
-        <div className="section-container">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
-            <SectionIntro
-              eyebrow="The business gap"
-              title="Your business may be good, but customers first check your online presence."
-              text="If that first impression is weak, slow, or missing, your best customers may never reach you."
-            />
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {problems.map((problem, index) => (
-                <motion.div key={problem} variants={fadeUp} custom={index + 1} className="premium-card p-5">
-                  <HelpCircle size={20} className="mb-4 text-orange-200" />
-                  <p className="text-sm leading-6 text-white/68">{problem}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
       <section className="premium-section pt-0">
         <div className="section-container">
@@ -375,72 +329,72 @@ const Index = () => {
         </div>
       </section>
 
-      {dbOffers.length > 0 && (
-        <section className="premium-section bg-white/[0.025]">
-          <div className="section-container">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
-              <SectionIntro eyebrow="Offers" title="Start small, launch fast, upgrade when the leads begin." text="Clear offer cards help business owners choose the next right step without confusion." />
-              <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-                {dbOffers.map((offer, index) => {
-                  const href = actionHref(offer);
-                  const isExternal = href.startsWith("http") || href.startsWith("tel:");
-                  const features = offer.detailed_description
-                    ? offer.detailed_description.split("\n").map((f) => f.trim()).filter(Boolean)
-                    : [];
+      {/*{dbOffers.length > 0 && (*/}
+      {/*  <section className="premium-section bg-white/[0.025]">*/}
+      {/*    <div className="section-container">*/}
+      {/*      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>*/}
+      {/*        <SectionIntro eyebrow="Offers" title="Start small, launch fast, upgrade when the leads begin." text="Clear offer cards help business owners choose the next right step without confusion." />*/}
+      {/*        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">*/}
+      {/*          {dbOffers.map((offer, index) => {*/}
+      {/*            const href = actionHref(offer);*/}
+      {/*            const isExternal = href.startsWith("http") || href.startsWith("tel:");*/}
+      {/*            const features = offer.detailed_description*/}
+      {/*              ? offer.detailed_description.split("\n").map((f) => f.trim()).filter(Boolean)*/}
+      {/*              : [];*/}
 
-                  return (
-                    <motion.div key={offer.id} variants={fadeUp} custom={index + 1} className="premium-card premium-card-hover flex h-full flex-col p-6">
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">{offer.offer_type}</p>
-                      <h3 className="mt-3 font-display text-2xl font-semibold text-white">{offer.title}</h3>
-                      <div className="mt-2 flex items-end gap-3 min-h-[2rem]">
-                        {offer.discount_price || offer.starting_price ? (
-                          <>
-                            <span className="font-display text-2xl font-bold text-orange-200">
-                              {offer.discount_price && offer.starting_price ? "" : "From "}
-                              {formatPriceVal(offer.discount_price || offer.starting_price)}
-                            </span>
-                            {offer.discount_price && offer.starting_price && (
-                              <span className="pb-1 text-sm text-white/35 line-through">{formatPriceVal(offer.starting_price)}</span>
-                            )}
-                          </>
-                        ) : (
-                          <span className="font-display text-2xl font-bold text-orange-200">
-                            {offer.id === "custom-tool" ? "Consultation" : "Custom"}
-                          </span>
-                        )}
-                      </div>
-                      {offer.short_description && (
-                        <p className="mt-3 text-sm leading-6 text-white/60">{offer.short_description}</p>
-                      )}
-                      <div className="mt-5 space-y-2 flex-grow">
-                        {features.map((feature) => (
-                          <div key={feature} className="flex items-center gap-2 text-sm text-white/64">
-                            <CheckCircle2 size={15} className="text-emerald-200 shrink-0" />
-                            <span>{feature}</span>
-                          </div>
-                        ))}
-                      </div>
-                      {offer.valid_till && <CountdownTimer validTill={offer.valid_till} />}
-                      {isExternal ? (
-                        <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noopener noreferrer" : undefined} className="premium-link mt-6" data-offer-name={offer.title} data-cta-location="home_offers">
-                          {offer.button_text || "View offer"} <ArrowRight size={16} />
-                        </a>
-                      ) : (
-                        <Link to={href} className="premium-link mt-6" data-offer-name={offer.title} data-cta-location="home_offers">
-                          {offer.button_text || "View offer"} <ArrowRight size={16} />
-                        </Link>
-                      )}
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </motion.div>
-          </div>
-        </section>
-      )}
+      {/*            return (*/}
+      {/*              <motion.div key={offer.id} variants={fadeUp} custom={index + 1} className="premium-card premium-card-hover flex h-full flex-col p-6">*/}
+      {/*                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">{offer.offer_type}</p>*/}
+      {/*                <h3 className="mt-3 font-display text-2xl font-semibold text-white">{offer.title}</h3>*/}
+      {/*                <div className="mt-2 flex items-end gap-3 min-h-[2rem]">*/}
+      {/*                  {offer.discount_price || offer.starting_price ? (*/}
+      {/*                    <>*/}
+      {/*                      <span className="font-display text-2xl font-bold text-orange-200">*/}
+      {/*                        {offer.discount_price && offer.starting_price ? "" : "From "}*/}
+      {/*                        {formatPriceVal(offer.discount_price || offer.starting_price)}*/}
+      {/*                      </span>*/}
+      {/*                      {offer.discount_price && offer.starting_price && (*/}
+      {/*                        <span className="pb-1 text-sm text-white/35 line-through">{formatPriceVal(offer.starting_price)}</span>*/}
+      {/*                      )}*/}
+      {/*                    </>*/}
+      {/*                  ) : (*/}
+      {/*                    <span className="font-display text-2xl font-bold text-orange-200">*/}
+      {/*                      {offer.id === "custom-tool" ? "Consultation" : "Custom"}*/}
+      {/*                    </span>*/}
+      {/*                  )}*/}
+      {/*                </div>*/}
+      {/*                {offer.short_description && (*/}
+      {/*                  <p className="mt-3 text-sm leading-6 text-white/60">{offer.short_description}</p>*/}
+      {/*                )}*/}
+      {/*                <div className="mt-5 space-y-2 flex-grow">*/}
+      {/*                  {features.map((feature) => (*/}
+      {/*                    <div key={feature} className="flex items-center gap-2 text-sm text-white/64">*/}
+      {/*                      <CheckCircle2 size={15} className="text-emerald-200 shrink-0" />*/}
+      {/*                      <span>{feature}</span>*/}
+      {/*                    </div>*/}
+      {/*                  ))}*/}
+      {/*                </div>*/}
+      {/*                {offer.valid_till && <CountdownTimer validTill={offer.valid_till} />}*/}
+      {/*                {isExternal ? (*/}
+      {/*                  <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noopener noreferrer" : undefined} className="premium-link mt-6" data-offer-name={offer.title} data-cta-location="home_offers">*/}
+      {/*                    {offer.button_text || "View offer"} <ArrowRight size={16} />*/}
+      {/*                  </a>*/}
+      {/*                ) : (*/}
+      {/*                  <Link to={href} className="premium-link mt-6" data-offer-name={offer.title} data-cta-location="home_offers">*/}
+      {/*                    {offer.button_text || "View offer"} <ArrowRight size={16} />*/}
+      {/*                  </Link>*/}
+      {/*                )}*/}
+      {/*              </motion.div>*/}
+      {/*            );*/}
+      {/*          })}*/}
+      {/*        </div>*/}
+      {/*      </motion.div>*/}
+      {/*    </div>*/}
+      {/*  </section>*/}
+      {/*)}*/}
 
       {/* Interactive Service Matrix Hub */}
-      <ServiceMatrix />
+      {/*<ServiceMatrix />*/}
 
       {/* Industry Solutions Showcase */}
       <section className="premium-section bg-white/[0.02]">
@@ -490,74 +444,74 @@ const Index = () => {
         </div>
       </section>
 
-      <section className="premium-section pt-0">
-        <div className="section-container">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
-            <SectionIntro
-              eyebrow="Service pages"
-              title="Detailed service pages for website, CRM, SEO, and automation needs."
-              text="Use these pages to understand each service, compare related solutions, and move toward the right contact flow."
-            />
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-              {servicePages.map((service, index) => (
-                <motion.div key={service.slug} variants={fadeUp} custom={index + 1}>
-                  <Link to={servicePath(service.slug)} className="premium-card premium-card-hover block h-full p-5">
-                    <h3 className="font-display text-xl font-semibold text-white">{service.title}</h3>
-                    <p className="mt-3 text-sm leading-6 text-white/60">{service.metaDescription}</p>
-                    <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-cyan-100">
-                      Learn more <ArrowRight size={15} />
-                    </span>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link to="/website-development-company-ludhiana" className="premium-btn premium-btn-ghost">Website Development in Bharat</Link>
-              <Link to="/resources" className="premium-btn premium-btn-ghost">Read Resources</Link>
-              <Link to="/company-profile" className="premium-btn premium-btn-ghost">Company Profile</Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      {/*<section className="premium-section pt-0">*/}
+      {/*  <div className="section-container">*/}
+      {/*    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>*/}
+      {/*      <SectionIntro*/}
+      {/*        eyebrow="Service pages"*/}
+      {/*        title="Detailed service pages for website, CRM, SEO, and automation needs."*/}
+      {/*        text="Use these pages to understand each service, compare related solutions, and move toward the right contact flow."*/}
+      {/*      />*/}
+      {/*      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">*/}
+      {/*        {servicePages.map((service, index) => (*/}
+      {/*          <motion.div key={service.slug} variants={fadeUp} custom={index + 1}>*/}
+      {/*            <Link to={servicePath(service.slug)} className="premium-card premium-card-hover block h-full p-5">*/}
+      {/*              <h3 className="font-display text-xl font-semibold text-white">{service.title}</h3>*/}
+      {/*              <p className="mt-3 text-sm leading-6 text-white/60">{service.metaDescription}</p>*/}
+      {/*              <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-cyan-100">*/}
+      {/*                Learn more <ArrowRight size={15} />*/}
+      {/*              </span>*/}
+      {/*            </Link>*/}
+      {/*          </motion.div>*/}
+      {/*        ))}*/}
+      {/*      </div>*/}
+      {/*      <div className="mt-8 flex flex-wrap justify-center gap-3">*/}
+      {/*        <Link to="/website-development-company-ludhiana" className="premium-btn premium-btn-ghost">Worldwide Website Development</Link>*/}
+      {/*        <Link to="/resources" className="premium-btn premium-btn-ghost">Read Resources</Link>*/}
+      {/*        <Link to="/company-profile" className="premium-btn premium-btn-ghost">Company Profile</Link>*/}
+      {/*      </div>*/}
+      {/*    </motion.div>*/}
+      {/*  </div>*/}
+      {/*</section>*/}
 
-      <section className="premium-section bg-white/[0.025]">
-        <div className="section-container">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
-            <SectionIntro eyebrow="Process" title="From business conversation to live lead system." />
-            <div className="grid gap-5 lg:grid-cols-4">
-              {process.map((step, index) => (
-                <motion.div key={step.title} variants={fadeUp} custom={index + 1} className="premium-card p-6">
-                  <div className="mb-5 flex items-center justify-between">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-purple-300/10 text-purple-100">
-                      <step.icon size={21} />
-                    </div>
-                    <span className="font-mono text-xs text-white/35">0{index + 1}</span>
-                  </div>
-                  <h3 className="font-display text-xl font-semibold text-white">{step.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-white/60">{step.text}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      {/*<section className="premium-section bg-white/[0.025]">*/}
+      {/*  <div className="section-container">*/}
+      {/*    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>*/}
+      {/*      <SectionIntro eyebrow="Process" title="From business conversation to live lead system." />*/}
+      {/*      <div className="grid gap-5 lg:grid-cols-4">*/}
+      {/*        {process.map((step, index) => (*/}
+      {/*          <motion.div key={step.title} variants={fadeUp} custom={index + 1} className="premium-card p-6">*/}
+      {/*            <div className="mb-5 flex items-center justify-between">*/}
+      {/*              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-purple-300/10 text-purple-100">*/}
+      {/*                <step.icon size={21} />*/}
+      {/*              </div>*/}
+      {/*              <span className="font-mono text-xs text-white/35">0{index + 1}</span>*/}
+      {/*            </div>*/}
+      {/*            <h3 className="font-display text-xl font-semibold text-white">{step.title}</h3>*/}
+      {/*            <p className="mt-3 text-sm leading-6 text-white/60">{step.text}</p>*/}
+      {/*          </motion.div>*/}
+      {/*        ))}*/}
+      {/*      </div>*/}
+      {/*    </motion.div>*/}
+      {/*  </div>*/}
+      {/*</section>*/}
 
-      <section className="premium-section">
-        <div className="section-container">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
-            <SectionIntro eyebrow="What we can build" title="Conceptual demos for real business workflows in Bharat & Asia." />
-            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-              {showcases.map((item, index) => (
-                <motion.div key={item.title} variants={fadeUp} custom={index + 1} className="premium-showcase-card">
-                  <item.icon size={24} className="text-cyan-200" />
-                  <h3 className="mt-5 font-display text-xl font-semibold text-white">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-white/60">{item.text}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      {/*<section className="premium-section">*/}
+      {/*  <div className="section-container">*/}
+      {/*    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>*/}
+      {/*      <SectionIntro eyebrow="What we can build" title="Conceptual demos for real business workflows worldwide." />*/}
+      {/*      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">*/}
+      {/*        {showcases.map((item, index) => (*/}
+      {/*          <motion.div key={item.title} variants={fadeUp} custom={index + 1} className="premium-showcase-card">*/}
+      {/*            <item.icon size={24} className="text-cyan-200" />*/}
+      {/*            <h3 className="mt-5 font-display text-xl font-semibold text-white">{item.title}</h3>*/}
+      {/*            <p className="mt-3 text-sm leading-6 text-white/60">{item.text}</p>*/}
+      {/*          </motion.div>*/}
+      {/*        ))}*/}
+      {/*      </div>*/}
+      {/*    </motion.div>*/}
+      {/*  </div>*/}
+      {/*</section>*/}
 
       <ClientsSection />
 

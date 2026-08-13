@@ -175,8 +175,8 @@ User Notes: ${formData.notes || "None"}`;
                   {/* Base Package Line */}
                   <div className="flex items-center justify-between bg-white/[0.04] p-2.5 rounded-lg border border-white/5">
                     <span className="text-white/80 font-medium">Base Service ({targetService.split(" (")[0]})</span>
-                    <span className="font-bold text-white">
-                      {basePrice ? `₹${basePrice.toLocaleString("en-IN")}` : "Included"}
+                    <span className="font-bold text-cyan-300 text-[11px] bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">
+                      Standard Global Scope
                     </span>
                   </div>
 
@@ -184,14 +184,14 @@ User Notes: ${formData.notes || "None"}`;
                   {selectedAddons.length > 0 && (
                     <div className="bg-white/[0.04] p-2.5 rounded-lg border border-white/5 space-y-1.5">
                       <span className="text-[11px] font-bold text-cyan-300 uppercase tracking-wider block">
-                        Selected Add-On Services ({selectedAddons.length})
+                        Selected Upgrades ({selectedAddons.length})
                       </span>
                       {selectedAddons.map((addon) => (
                         <div key={addon.id} className="flex items-center justify-between text-[11px]">
                           <span className="text-white/70 flex items-center gap-1">
                             <Check className="w-3 h-3 text-cyan-400" /> {addon.name}
                           </span>
-                          <span className="font-semibold text-cyan-300">+₹{addon.price.toLocaleString("en-IN")}</span>
+                          <span className="font-semibold text-cyan-300">Included</span>
                         </div>
                       ))}
                     </div>
@@ -200,13 +200,13 @@ User Notes: ${formData.notes || "None"}`;
                   {/* Total & Bonus Line */}
                   <div className="flex items-center justify-between bg-gradient-to-r from-cyan-500/20 to-blue-600/20 p-3 rounded-lg border border-cyan-500/30">
                     <div>
-                      <span className="text-xs font-bold text-white block">Total Estimated Investment</span>
+                      <span className="text-xs font-bold text-white block">Project Scope Status</span>
                       <span className="text-[11px] text-emerald-400 font-semibold flex items-center gap-1 mt-0.5">
                         <Gift className="w-3 h-3" /> Includes: {bonusOffer}
                       </span>
                     </div>
-                    <span className="text-xl font-extrabold text-white font-display">
-                      {totalPrice ? `₹${totalPrice.toLocaleString("en-IN")}` : "Custom Quote"}
+                    <span className="text-sm font-bold text-cyan-300 font-display bg-cyan-500/15 px-3 py-1 rounded-full border border-cyan-500/30">
+                      Tailored Global Proposal
                     </span>
                   </div>
                 </div>

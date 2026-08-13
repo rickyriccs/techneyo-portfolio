@@ -89,8 +89,8 @@ const Tools = () => {
     <div className="public-premium min-h-screen overflow-hidden text-white">
       <PageMeta
         title="Digital Business Tools & Automation | Techneyo Solutions"
-        description="Techneyo Solutions digital tools for lead capture, WhatsApp enquiries, booking flows, CRM dashboards, reports, and business automation in Bharat & Asia."
-        keywords="digital business tools Bharat, lead capture software Asia, WhatsApp enquiry tools, business CRM tools, admin dashboard tools, workflow automation tools Asia"
+        description="Techneyo Solutions digital tools for lead capture, WhatsApp enquiries, booking flows, CRM dashboards, reports, and business automation worldwide."
+        keywords="digital business tools, lead capture software, WhatsApp enquiry tools, business CRM tools, admin dashboard tools, workflow automation tools"
         canonicalPath="/tools"
         schema={organizationSchema}
       />

@@ -112,10 +112,10 @@ const Footer = () => {
           <div>
             <h4 className="font-display font-semibold mb-4">Contact Info</h4>
             <ul className="space-y-3">
-              <li className="flex items-start gap-3 text-sm text-white/60">
-                <Globe2 size={16} className="mt-0.5 shrink-0 text-accent" />
-                Website: <a href={businessInfo.website} className="hover:text-white transition-colors">{businessInfo.displayWebsite}</a>
-              </li>
+              {/*<li className="flex items-start gap-3 text-sm text-white/60">*/}
+              {/*  <Globe2 size={16} className="mt-0.5 shrink-0 text-accent" />*/}
+              {/*  Website: <a href={businessInfo.website} className="hover:text-white transition-colors">{businessInfo.displayWebsite}</a>*/}
+              {/*</li>*/}
               <li className="flex items-center gap-3 text-sm text-white/60">
                 <Phone size={16} className="shrink-0 text-accent" />
                 <a href={businessInfo.phoneHref} className="hover:text-white transition-colors" data-cta-location="footer_contact">Call/WhatsApp: {businessInfo.phoneDisplay}</a>

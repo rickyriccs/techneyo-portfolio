@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle2, Gift, MessageCircle, CreditCard, ExternalLink, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle2, Gift, MessageCircle, CreditCard, ExternalLink, Sparkles, Globe } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import PageMeta from "@/components/PageMeta";
 import { businessInfo } from "@/lib/business-info";
@@ -10,6 +10,7 @@ import type { Offer } from "@/types/offer";
 import { BookingModal } from "@/components/BookingModal";
 import { useAppSettings } from "@/hooks/use-app-settings";
 import { isInstagramLead } from "@/lib/utm";
+import { isIndiaUser } from "@/lib/geo";
 
 import { usePersonalization } from "@/context/PersonalizationContext";
 
@@ -30,11 +31,18 @@ const formatPrice = (price: number | null) => {
 export const Offers = () => {
   const [offers, setOffers] = useState<Offer[]>([]);
   const [selectedOfferForBooking, setSelectedOfferForBooking] = useState<Offer | null>(null);
+  const [isIndia, setIsIndia] = useState<boolean | null>(null);
   const navigate = useNavigate();
   const { settings } = useAppSettings();
   const { openProposalModal } = usePersonalization();
 
   useEffect(() => {
+    const checkGeo = async () => {
+      const isInd = await isIndiaUser();
+      setIsIndia(isInd);
+    };
+    checkGeo();
+
     const loadOffers = async () => {
       if (!supabase) return;
 
@@ -74,9 +82,9 @@ export const Offers = () => {
   return (
     <div className="public-premium min-h-screen overflow-hidden text-white">
       <PageMeta
-        title="Website Offers & Packages in Bharat & Asia | Techneyo Solutions"
-        description="Affordable Techneyo Solutions website subscription offers, ₹299/month basic business plans, landing page offers, and online booking across Bharat & Asia."
-        keywords="website offers Bharat, affordable website packages Asia, ₹299 website plan, business website subscription Bharat, landing page offer Asia, digital presence packages"
+        title="Website Offers & Packages Worldwide | Techneyo Solutions"
+        description="Affordable Techneyo Solutions website subscription offers, ₹299/month basic business plans, landing page offers, and online booking worldwide."
+        keywords="website offers, affordable website packages, ₹299 website plan, business website subscription, landing page offers, global digital presence packages"
         canonicalPath="/offers"
         schema={pageSchema}
       />
@@ -107,7 +115,43 @@ export const Offers = () => {
 
       <section className="premium-section pt-4">
         <div className="section-container">
-          {offers.length === 0 ? (
+          {isIndia === false ? (
+            <div className="relative overflow-hidden rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-[#08152b]/95 via-[#0b1c38]/90 to-[#040a14]/95 p-8 sm:p-12 shadow-2xl backdrop-blur-xl max-w-4xl mx-auto">
+              <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-cyan-500/20 blur-[90px]" />
+              <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-emerald-500/20 blur-[90px]" />
+
+              <div className="relative z-10 text-center max-w-2xl mx-auto space-y-5">
+                <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">
+                  <Globe className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
+                  Global Enterprise Solutions
+                </div>
+
+                <h2 className="font-display text-3xl font-bold leading-tight text-white sm:text-5xl">
+                  Custom Digital Solutions for International Businesses
+                </h2>
+
+                <p className="text-sm sm:text-base leading-relaxed text-slate-300/80">
+                  Promotional subscription packages are currently active for select domestic markets. For international clients, Techneyo Solutions delivers custom web applications, dedicated software systems, and AI growth funnels tailored specifically to your market and timezone.
+                </p>
+
+                <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
+                  <button
+                    onClick={() => openProposalModal()}
+                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-400 via-teal-400 to-emerald-400 px-6 py-3.5 text-sm font-bold text-slate-950 shadow-lg shadow-cyan-500/25 hover:scale-[1.02] transition-all"
+                  >
+                    <Sparkles className="h-4 w-4" /> Get Custom Global Proposal <ArrowRight className="h-4 w-4" />
+                  </button>
+
+                  <Link
+                    to="/contact"
+                    className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/5 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur-md hover:bg-white/10 transition-all"
+                  >
+                    Contact Senior Team
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ) : offers.length === 0 ? (
             <div className="flex flex-col items-center justify-center text-center py-16 px-4 rounded-xl border border-white/5 bg-white/[0.01] max-w-xl mx-auto">
               <p className="text-white/60 text-lg leading-7">No active promotional offers at the moment. Please contact us for custom plans built specifically for your business goals.</p>
               <Link to="/contact" className="premium-btn premium-btn-primary mt-6">

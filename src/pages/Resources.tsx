@@ -9,8 +9,8 @@ const Resources = () => (
   <div className="public-premium min-h-screen overflow-hidden text-white">
     <PageMeta
       title="Resources & Guides | Website, CRM, SEO & Automation | Techneyo Solutions"
-      description="Read practical Techneyo Solutions resources about websites, CRM, WhatsApp automation, SEO, dashboards, and digital growth for businesses across Bharat & Asia."
-      keywords="digital business guides Bharat, website development guide Asia, CRM setup tutorial, WhatsApp automation guide, business SEO tips Bharat"
+      description="Read practical Techneyo Solutions resources about websites, CRM, WhatsApp automation, SEO, dashboards, and digital growth for businesses worldwide."
+      keywords="digital business guides, website development guide, CRM setup tutorial, WhatsApp automation guide, global business SEO tips"
       canonicalPath="/resources"
       schema={organizationSchema}
     />
@@ -18,9 +18,9 @@ const Resources = () => (
       <div className="premium-grid-bg" />
       <div className="section-container relative z-10 max-w-4xl">
         <p className="premium-eyebrow">Resources</p>
-        <h1 className="font-display text-4xl font-bold leading-tight text-white sm:text-6xl">Practical digital growth guides for local businesses.</h1>
+        <h1 className="font-display text-4xl font-bold leading-tight text-white sm:text-6xl">Practical digital growth guides for modern & global businesses.</h1>
         <p className="mt-6 text-lg leading-8 text-white/68">
-          Learn about website development, landing pages, CRM, WhatsApp automation, SEO, admin dashboards, and business software in simple business language.
+          Learn about website development, landing pages, CRM, WhatsApp automation, SEO, admin dashboards, and business software for growing enterprises worldwide.
         </p>
       </div>
     </section>

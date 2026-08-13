@@ -42,7 +42,7 @@ export const Industries: React.FC = () => {
     <div className="public-premium min-h-screen overflow-hidden bg-[#030711] text-white">
       <PageMeta
         title="Industry Solutions | Customized Websites, Apps & Ads for Your Business"
-        description="Tailored digital solutions for Healthcare & Clinics, E-Commerce, Real Estate, Education, Restaurants, and Local Business Services across Bharat & Asia."
+        description="Tailored digital solutions for Healthcare & Clinics, E-Commerce, Real Estate, Education, Restaurants, and Local Business Services for businesses worldwide."
         canonicalPath="/industries"
       />
 

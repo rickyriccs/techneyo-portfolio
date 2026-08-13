@@ -256,7 +256,7 @@ export const About: React.FC = () => {
               Act III: The Transformation & Victory
             </span>
             <h2 className="font-display text-3xl sm:text-5xl font-extrabold text-white">
-              Trusted by 100+ Business Owners Across Bharat & Asia
+              Trusted by 100+ Business Owners Worldwide
             </h2>
           </div>
 

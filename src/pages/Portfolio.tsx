@@ -1,6 +1,7 @@
 import { useState, useId } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import ProblemSolverSection from "@/components/ProblemSolverSection";
 import {
   Code2,
   Cpu,
@@ -333,51 +334,7 @@ const comparisonMatrix = [
   { feature: "Post-Launch Support", developer: "Hard to reach after payment", techneyo: "Long-term tech partner providing support & updates" },
 ];
 
-// Business Problems Solved (Non-Technical Language)
-const problemCards = [
-  {
-    title: "Need a Website That Gets You Customers?",
-    desc: "We build fast, modern websites that show up on Google and make it effortless for visitors to call you or message on WhatsApp.",
-    cta: "Build My Website",
-    serviceKey: "Business Website Development",
-    icon: Globe,
-  },
-  {
-    title: "Have a Software Idea But Don't Know How to Build It?",
-    desc: "We take your concept and build a clean, easy-to-use software product ready for your customers to sign up and pay for.",
-    cta: "Discuss Software Idea",
-    serviceKey: "SaaS & Digital Product Development",
-    icon: Boxes,
-  },
-  {
-    title: "Tired of Managing Everything Manually in Excel?",
-    desc: "Replace spreadsheet clutter with a custom dashboard that organizes your orders, clients, and team tasks automatically.",
-    cta: "Automate Workflows",
-    serviceKey: "Custom Software & Dashboards",
-    icon: Workflow,
-  },
-  {
-    title: "Is Your Current Website or Software Slow or Buggy?",
-    desc: "We audit your existing system, fix bugs, speed up page loads, and make it simple for your team and customers to use.",
-    cta: "Audit My Software",
-    serviceKey: "Custom Software & Dashboards",
-    icon: ShieldCheck,
-  },
-  {
-    title: "Want to Use AI to Save Time & Money?",
-    desc: "Let AI handle 24/7 customer questions, send automated WhatsApp confirmations, and read PDF invoices automatically.",
-    cta: "Explore AI Solutions",
-    serviceKey: "AI & Business Automation",
-    icon: Bot,
-  },
-  {
-    title: "Need Honest Tech Advice Before Investing?",
-    desc: "Get clear, friendly advisory on choosing the right tools, estimating realistic costs, and reviewing developer proposals.",
-    cta: "Get Tech Guidance",
-    serviceKey: "Technology Advisory & Guidance",
-    icon: Cpu,
-  },
-];
+
 
 // Simple AI Benefits
 const aiFeatures = [
@@ -1093,49 +1050,7 @@ const Portfolio = () => {
       </section>
 
       {/* BUSINESS PROBLEMS WE SOLVE */}
-      <section className="py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <span className="text-xs font-bold uppercase tracking-widest text-cyan-400">
-              Problem Solver
-            </span>
-            <h2 className="mt-2 font-display text-3xl font-bold text-white sm:text-4xl">
-              Have a Specific Tech Problem?
-            </h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm text-white/60">
-              Click on your main challenge below and let's turn it into a smooth digital solution.
-            </p>
-          </div>
-
-          <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {problemCards.map((p, idx) => {
-              const IconC = p.icon;
-              return (
-                <div
-                  key={idx}
-                  className="flex flex-col justify-between rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-sm transition-all hover:border-cyan-400/40 hover:bg-white/[0.06]"
-                >
-                  <div>
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-300">
-                      <IconC size={20} />
-                    </div>
-                    <h3 className="mt-4 font-display text-lg font-bold text-white">{p.title}</h3>
-                    <p className="mt-2 text-xs leading-relaxed text-white/60">{p.desc}</p>
-                  </div>
-
-                  <button
-                    onClick={() => handleServiceSelect(p.serviceKey)}
-                    className="mt-6 flex items-center justify-center gap-2 rounded-xl bg-cyan-400/10 py-2.5 text-xs font-bold text-cyan-300 transition-all hover:bg-cyan-400 hover:text-black"
-                  >
-                    <span>{p.cta}</span>
-                    <ArrowRight size={14} />
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      <ProblemSolverSection onSelectService={handleServiceSelect} />
 
       {/* AI & AUTOMATION SECTION */}
       <section id="ai" className="relative border-t border-white/10 bg-gradient-to-b from-[#0b1324] to-[#070b14] py-20">
