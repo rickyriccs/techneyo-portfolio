@@ -27,6 +27,34 @@ interface CachedSlackSettings {
   fetchedAt: number;
 }
 
+const SLACK_STORAGE_KEY = "techneyo_slack_settings";
+
+export const getLocalSlackSettings = (): Partial<CachedSlackSettings> | null => {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(SLACK_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
+export const saveLocalSlackSettings = (settings: Partial<CachedSlackSettings>) => {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(SLACK_STORAGE_KEY, JSON.stringify(settings));
+    if (cachedSettings) {
+      cachedSettings = {
+        ...cachedSettings,
+        ...settings,
+        fetchedAt: Date.now(),
+      };
+    }
+  } catch (e) {
+    console.warn("Failed to save Slack settings locally", e);
+  }
+};
+
 let cachedSettings: CachedSlackSettings | null = null;
 
 export const getSlackSettings = async (): Promise<CachedSlackSettings> => {
@@ -35,14 +63,16 @@ export const getSlackSettings = async (): Promise<CachedSlackSettings> => {
     return cachedSettings;
   }
 
+  const local = getLocalSlackSettings();
+
   const defaultSettings: CachedSlackSettings = {
-    slack_enabled: false,
-    slack_webhook_url: import.meta.env.VITE_SLACK_WEBHOOK_URL || "",
-    slack_channel: "#leads",
-    slack_notify_enquiries: true,
-    slack_notify_bookings: true,
-    slack_notify_proposals: true,
-    slack_notify_onboarding: true,
+    slack_enabled: local?.slack_enabled ?? false,
+    slack_webhook_url: local?.slack_webhook_url || import.meta.env.VITE_SLACK_WEBHOOK_URL || "",
+    slack_channel: local?.slack_channel || "#leads",
+    slack_notify_enquiries: local?.slack_notify_enquiries ?? true,
+    slack_notify_bookings: local?.slack_notify_bookings ?? true,
+    slack_notify_proposals: local?.slack_notify_proposals ?? true,
+    slack_notify_onboarding: local?.slack_notify_onboarding ?? true,
     fetchedAt: now,
   };
 
@@ -51,7 +81,7 @@ export const getSlackSettings = async (): Promise<CachedSlackSettings> => {
   }
 
   try {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("app_settings")
       .select(
         "slack_enabled,slack_webhook_url,slack_channel,slack_notify_enquiries,slack_notify_bookings,slack_notify_proposals,slack_notify_onboarding"
@@ -60,25 +90,26 @@ export const getSlackSettings = async (): Promise<CachedSlackSettings> => {
       .limit(1)
       .maybeSingle();
 
-    if (data) {
+    if (!error && data) {
       cachedSettings = {
         slack_enabled: data.slack_enabled ?? defaultSettings.slack_enabled,
         slack_webhook_url: data.slack_webhook_url || defaultSettings.slack_webhook_url,
         slack_channel: data.slack_channel || defaultSettings.slack_channel,
-        slack_notify_enquiries: data.slack_notify_enquiries ?? true,
-        slack_notify_bookings: data.slack_notify_bookings ?? true,
-        slack_notify_proposals: data.slack_notify_proposals ?? true,
-        slack_notify_onboarding: data.slack_notify_onboarding ?? true,
+        slack_notify_enquiries: data.slack_notify_enquiries ?? defaultSettings.slack_notify_enquiries,
+        slack_notify_bookings: data.slack_notify_bookings ?? defaultSettings.slack_notify_bookings,
+        slack_notify_proposals: data.slack_notify_proposals ?? defaultSettings.slack_notify_proposals,
+        slack_notify_onboarding: data.slack_notify_onboarding ?? defaultSettings.slack_notify_onboarding,
         fetchedAt: now,
       };
       return cachedSettings;
     }
   } catch {
-    // Fall back to default
+    // Fall back to default/local
   }
 
   return defaultSettings;
 };
+
 
 export const sendSlackNotification = async (
   options: SlackNotificationOptions

@@ -1,8 +1,8 @@
 import { FormEvent, useEffect, useState } from "react";
-import { CreditCard, Save, Server, RefreshCw, Bell, Send, CheckCircle2, AlertCircle } from "lucide-react";
+import { CreditCard, Save, Server, RefreshCw, Bell, Send, CheckCircle2, AlertCircle, Copy, Database } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAdminAuth } from "@/lib/admin-auth";
-import { testSlackWebhook } from "@/lib/slack";
+import { testSlackWebhook, getLocalSlackSettings, saveLocalSlackSettings } from "@/lib/slack";
 
 type SettingsForm = {
   id?: string;
@@ -72,11 +72,26 @@ export const AdminSettings = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isTestingSlack, setIsTestingSlack] = useState(false);
   const [slackTestResult, setSlackTestResult] = useState<{ status: "success" | "error"; message: string } | null>(null);
+  const [copiedSql, setCopiedSql] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
   const loadSettings = async () => {
+    const localSlack = getLocalSlackSettings();
+
     if (!supabase) {
+      if (localSlack) {
+        setForm((prev) => ({
+          ...prev,
+          slack_enabled: localSlack.slack_enabled ?? prev.slack_enabled,
+          slack_webhook_url: localSlack.slack_webhook_url || prev.slack_webhook_url,
+          slack_channel: localSlack.slack_channel || prev.slack_channel,
+          slack_notify_enquiries: localSlack.slack_notify_enquiries ?? prev.slack_notify_enquiries,
+          slack_notify_bookings: localSlack.slack_notify_bookings ?? prev.slack_notify_bookings,
+          slack_notify_proposals: localSlack.slack_notify_proposals ?? prev.slack_notify_proposals,
+          slack_notify_onboarding: localSlack.slack_notify_onboarding ?? prev.slack_notify_onboarding,
+        }));
+      }
       setIsLoading(false);
       return;
     }
@@ -115,13 +130,13 @@ export const AdminSettings = () => {
         smtp_pass: data.smtp_pass || "",
         smtp_from_email: data.smtp_from_email || "",
         smtp_from_name: data.smtp_from_name || defaultForm.smtp_from_name,
-        slack_enabled: data.slack_enabled ?? defaultForm.slack_enabled,
-        slack_webhook_url: data.slack_webhook_url || "",
-        slack_channel: data.slack_channel || defaultForm.slack_channel,
-        slack_notify_enquiries: data.slack_notify_enquiries ?? true,
-        slack_notify_bookings: data.slack_notify_bookings ?? true,
-        slack_notify_proposals: data.slack_notify_proposals ?? true,
-        slack_notify_onboarding: data.slack_notify_onboarding ?? true,
+        slack_enabled: data.slack_enabled ?? localSlack?.slack_enabled ?? defaultForm.slack_enabled,
+        slack_webhook_url: data.slack_webhook_url || localSlack?.slack_webhook_url || "",
+        slack_channel: data.slack_channel || localSlack?.slack_channel || defaultForm.slack_channel,
+        slack_notify_enquiries: data.slack_notify_enquiries ?? localSlack?.slack_notify_enquiries ?? true,
+        slack_notify_bookings: data.slack_notify_bookings ?? localSlack?.slack_notify_bookings ?? true,
+        slack_notify_proposals: data.slack_notify_proposals ?? localSlack?.slack_notify_proposals ?? true,
+        slack_notify_onboarding: data.slack_notify_onboarding ?? localSlack?.slack_notify_onboarding ?? true,
       });
     }
     setIsLoading(false);
@@ -130,6 +145,20 @@ export const AdminSettings = () => {
   useEffect(() => {
     loadSettings();
   }, []);
+
+  const handleCopySql = () => {
+    const sql = `-- Run this in your Supabase SQL Editor to enable Slack persistence in app_settings
+alter table public.app_settings add column if not exists slack_enabled boolean default false;
+alter table public.app_settings add column if not exists slack_webhook_url text;
+alter table public.app_settings add column if not exists slack_channel text default '#leads';
+alter table public.app_settings add column if not exists slack_notify_enquiries boolean default true;
+alter table public.app_settings add column if not exists slack_notify_bookings boolean default true;
+alter table public.app_settings add column if not exists slack_notify_proposals boolean default true;
+alter table public.app_settings add column if not exists slack_notify_onboarding boolean default true;`;
+    navigator.clipboard.writeText(sql);
+    setCopiedSql(true);
+    setTimeout(() => setCopiedSql(false), 3000);
+  };
 
   const handleTestSlack = async () => {
     if (!form.slack_webhook_url || !form.slack_webhook_url.startsWith("https://hooks.slack.com/")) {
@@ -168,7 +197,22 @@ export const AdminSettings = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!supabase) return;
+
+    // 1. Always save Slack settings to localStorage so they are immediately active & never lost
+    saveLocalSlackSettings({
+      slack_enabled: form.slack_enabled,
+      slack_webhook_url: form.slack_webhook_url.trim(),
+      slack_channel: form.slack_channel.trim(),
+      slack_notify_enquiries: form.slack_notify_enquiries,
+      slack_notify_bookings: form.slack_notify_bookings,
+      slack_notify_proposals: form.slack_notify_proposals,
+      slack_notify_onboarding: form.slack_notify_onboarding,
+    });
+
+    if (!supabase) {
+      setSuccess("Settings and Slack alert credentials saved locally!");
+      return;
+    }
 
     setIsSaving(true);
     setError("");
@@ -211,13 +255,43 @@ export const AdminSettings = () => {
       : await supabase.from("app_settings").insert(payload);
 
     if (saveError) {
-      setError(saveError.message);
+      // Check if missing columns in database schema
+      const isMissingSlackColumn =
+        saveError.code === "PGRST204" ||
+        /slack_enabled|slack_webhook_url|slack_channel|slack_notify/i.test(saveError.message);
+
+      if (isMissingSlackColumn) {
+        // Fallback: strip Slack columns and save base settings
+        const {
+          slack_enabled,
+          slack_webhook_url,
+          slack_channel,
+          slack_notify_enquiries,
+          slack_notify_bookings,
+          slack_notify_proposals,
+          slack_notify_onboarding,
+          ...basePayload
+        } = payload;
+
+        const { error: fallbackErr } = form.id
+          ? await supabase.from("app_settings").update(basePayload).eq("id", form.id)
+          : await supabase.from("app_settings").insert(basePayload);
+
+        if (fallbackErr) {
+          setError(fallbackErr.message);
+        } else {
+          setSuccess("Settings & Slack alerts saved in browser! ℹ️ Note: To sync Slack columns to your Supabase database table, please run the SQL patch in Supabase SQL editor.");
+        }
+      } else {
+        setError(saveError.message);
+      }
     } else {
-      setSuccess("App settings, Slack notifications, Razorpay keys, and SMTP updated successfully!");
+      setSuccess("App settings, Slack alerts, Razorpay keys, and SMTP updated successfully in database!");
       await loadSettings();
     }
     setIsSaving(false);
   };
+
 
 
   if (isLoading) {
@@ -542,17 +616,29 @@ export const AdminSettings = () => {
             </div>
           </div>
 
-          {/* Test Slack Dispatch */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 border-t border-border">
-            <button
-              type="button"
-              disabled={isTestingSlack || !form.slack_webhook_url}
-              onClick={handleTestSlack}
-              className="inline-flex items-center gap-2 rounded-md bg-purple-600/20 text-purple-300 border border-purple-500/30 px-4 py-2 text-xs font-semibold hover:bg-purple-600/30 disabled:opacity-40 transition-colors"
-            >
-              <Send size={14} className={isTestingSlack ? "animate-spin" : ""} />
-              {isTestingSlack ? "Sending Test Alert..." : "Send Test Slack Notification"}
-            </button>
+          {/* Test Slack Dispatch & SQL Patch helper */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-border">
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                disabled={isTestingSlack || !form.slack_webhook_url}
+                onClick={handleTestSlack}
+                className="inline-flex items-center gap-2 rounded-md bg-purple-600/20 text-purple-300 border border-purple-500/30 px-4 py-2 text-xs font-semibold hover:bg-purple-600/30 disabled:opacity-40 transition-colors"
+              >
+                <Send size={14} className={isTestingSlack ? "animate-spin" : ""} />
+                {isTestingSlack ? "Sending Test Alert..." : "Send Test Slack Notification"}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleCopySql}
+                className="inline-flex items-center gap-1.5 rounded-md border border-border bg-muted/40 px-3 py-2 text-xs font-medium text-foreground hover:bg-muted transition-colors"
+                title="Copy SQL script to enable Slack settings table columns in Supabase"
+              >
+                {copiedSql ? <CheckCircle2 size={13} className="text-emerald-400" /> : <Copy size={13} />}
+                <span>{copiedSql ? "SQL Script Copied! (Paste in Supabase)" : "Copy Supabase SQL Patch"}</span>
+              </button>
+            </div>
 
             {slackTestResult && (
               <div
