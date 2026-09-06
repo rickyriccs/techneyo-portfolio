@@ -15,6 +15,7 @@ const services = [
 
 const quickLinks = [
   { label: "Techneyo Portfolio & Tech Services", path: "/portfolio" },
+  { label: "Blog & Insights", path: "/blog" },
   { label: "About Us", path: "/about" },
   { label: "Contact Us", path: "/contact" },
   { label: "Company Profile", path: "/company-profile" },

@@ -9,8 +9,9 @@ const navLinks = [
   { label: "Home", path: "/" },
   { label: "Services", path: "/services" },
   { label: "Industries", path: "/industries" },
-  { label: "Resources", path: "/resources" },
   { label: "Offers", path: "/offers" },
+  { label: "Blog", path: "/blog" },
+  { label: "Resources", path: "/resources" },
   { label: "About", path: "/about" },
   { label: "Contact Us", path: "/contact" },
 ];

@@ -41,6 +41,9 @@ const queryClient = new QueryClient();
 import OfferDetails from "./pages/OfferDetails";
 import Onboarding from "./pages/Onboarding";
 import AdminBookings from "./pages/admin/AdminBookings";
+import AdminBlogs from "./pages/admin/AdminBlogs";
+import Blog from "./pages/Blog";
+import BlogPostPage from "./pages/BlogPostPage";
 
 import { PersonalizationProvider } from "@/context/PersonalizationContext";
 import SmartProposalModal from "@/components/interactive/SmartProposalModal";
@@ -65,6 +68,8 @@ const AppRoutes = () => {
           <Route path="/industries/:slug" element={<IndustryDetail />} />
           <Route path="/offers" element={<Offers />} />
           <Route path="/offers/:slug" element={<OfferDetails />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/contact" element={<Contact />} />
@@ -84,6 +89,7 @@ const AppRoutes = () => {
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<Navigate to="/admin/dashboard" replace />} />
               <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="blogs" element={<AdminBlogs />} />
               <Route path="enquiries" element={<AdminEnquiries />} />
               <Route path="services" element={<AdminServices />} />
               <Route path="offers" element={<AdminOffers />} />

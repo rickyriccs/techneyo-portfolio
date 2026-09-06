@@ -199,11 +199,12 @@ import HeroDiagnosticWidget from "@/components/interactive/HeroDiagnosticWidget"
 import GlobalPresenceVisual from "@/components/interactive/GlobalPresenceVisual";
 import ProblemSolverSection from "@/components/ProblemSolverSection";
 import { usePersonalization } from "@/context/PersonalizationContext";
-
-
+import { fetchPublishedBlogs } from "@/lib/blog-data";
+import type { BlogPost } from "@/types/blog";
 
 const Index = () => {
   const [dbOffers, setDbOffers] = useState<Offer[]>([]);
+  const [recentBlogs, setRecentBlogs] = useState<BlogPost[]>([]);
   const { openProposalModal, preferences } = usePersonalization();
 
   useEffect(() => {
@@ -236,7 +237,14 @@ const Index = () => {
         setDbOffers(activeOffers);
       }
     };
+
+    const loadBlogs = async () => {
+      const posts = await fetchPublishedBlogs();
+      setRecentBlogs(posts.slice(0, 3));
+    };
+
     loadOffers();
+    loadBlogs();
   }, []);
 
   const pageSchema = graphSchema(organizationSchema, offersSchema(dbOffers));
@@ -512,6 +520,79 @@ const Index = () => {
       {/*    </motion.div>*/}
       {/*  </div>*/}
       {/*</section>*/}
+
+      {/* Latest Insights & Articles Section */}
+      {recentBlogs.length > 0 && (
+        <section className="premium-section py-20 border-t border-white/5 bg-white/[0.015]">
+          <div className="section-container">
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+                <div>
+                  <p className="premium-eyebrow">Knowledge Hub & Insights</p>
+                  <h2 className="font-display text-3xl font-bold text-white sm:text-5xl mt-2">
+                    Latest Insights & Growth Guides
+                  </h2>
+                  <p className="mt-3 text-sm sm:text-base text-white/65 max-w-xl">
+                    Actionable tutorials and case studies to help your business leverage modern web
+                    architecture, SEO, and automation.
+                  </p>
+                </div>
+                <Link
+                  to="/blog"
+                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-cyan-300 hover:text-white transition-colors"
+                >
+                  Explore All Articles <ArrowRight size={15} />
+                </Link>
+              </div>
+
+              <div className="grid gap-6 md:grid-cols-3">
+                {recentBlogs.map((b, idx) => (
+                  <motion.article
+                    key={b.id}
+                    variants={fadeUp}
+                    custom={idx}
+                    className="premium-card premium-card-hover flex flex-col justify-between p-6 rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-md group"
+                  >
+                    <div>
+                      {b.cover_image && (
+                        <div className="overflow-hidden rounded-xl h-44 mb-4 border border-white/10">
+                          <img
+                            src={b.cover_image}
+                            alt={b.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                        </div>
+                      )}
+                      <div className="flex items-center justify-between text-xs text-white/50 mb-2">
+                        <span className="text-cyan-300 font-semibold uppercase tracking-wider text-[11px]">
+                          {b.category}
+                        </span>
+                        <span>{b.reading_time}</span>
+                      </div>
+                      <h3 className="font-display text-lg font-bold text-white group-hover:text-cyan-200 transition-colors line-clamp-2">
+                        <Link to={`/blog/${b.slug}`}>{b.title}</Link>
+                      </h3>
+                      <p className="text-xs sm:text-sm text-white/60 mt-2 line-clamp-2 leading-relaxed">
+                        {b.excerpt}
+                      </p>
+                    </div>
+
+                    <div className="mt-5 pt-4 border-t border-white/10 flex items-center justify-between text-xs">
+                      <span className="text-white/50">{b.author_name}</span>
+                      <Link
+                        to={`/blog/${b.slug}`}
+                        className="font-semibold text-cyan-300 hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform"
+                      >
+                        Read Article <ArrowRight size={13} />
+                      </Link>
+                    </div>
+                  </motion.article>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
 
       <ClientsSection />
 

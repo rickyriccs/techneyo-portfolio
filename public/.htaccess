@@ -2,8 +2,29 @@
   RewriteEngine On
   RewriteBase /
 
-  RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
+  # Redirect Trailing Slashes If not a Folder...
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.html [L]
+  RewriteCond %{REQUEST_URI} (.+)/$
+  RewriteRule ^ %1 [L,R=301]
+
+  # Direct access to existing files and folders
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Rewrite all other URLs to index.html for SPA routing
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Browser Caching Headers for High Speed & SEO
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/xml "access plus 1 day"
+  ExpiresByType application/xml "access plus 1 day"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
 </IfModule>

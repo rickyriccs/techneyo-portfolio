@@ -15,6 +15,7 @@ const staticPages = [
   { path: "/about", priority: "0.8", changefreq: "monthly" },
   { path: "/services", priority: "0.9", changefreq: "weekly" },
   { path: "/offers", priority: "0.9", changefreq: "daily" },
+  { path: "/blog", priority: "0.9", changefreq: "daily" },
   { path: "/tools", priority: "0.7", changefreq: "monthly" },
   { path: "/resources", priority: "0.8", changefreq: "weekly" },
   { path: "/company-profile", priority: "0.7", changefreq: "monthly" },
@@ -38,7 +39,7 @@ const serviceSlugs = [
   "custom-software-development",
 ];
 
-// Blog Resources
+// Blog Resources (Static Guides)
 const blogSlugs = [
   "why-local-business-ludhiana-needs-website",
   "website-vs-landing-page-small-business",
@@ -55,6 +56,13 @@ const blogSlugs = [
 // Known Active Promotional Offers (Fallback & Seed)
 const fallbackOffers = [
   "business-website-starting-999-month",
+];
+
+// Known Published Blog Articles (Fallback & Seed)
+const fallbackBlogs = [
+  "how-monthly-website-subscription-helps-small-businesses-grow",
+  "top-7-local-seo-strategies-rank-business-higher-google-2026",
+  "automating-customer-follow-ups-whatsapp-increase-sales",
 ];
 
 async function fetchSupabaseOffers() {
@@ -74,7 +82,6 @@ async function fetchSupabaseOffers() {
     });
 
     if (!res.ok) {
-      console.warn("Supabase fetch returned status:", res.status);
       return fallbackOffers;
     }
 
@@ -92,9 +99,46 @@ async function fetchSupabaseOffers() {
   return fallbackOffers;
 }
 
+async function fetchSupabaseBlogs() {
+  const supabaseUrl = process.env.VITE_SUPABASE_URL;
+  const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseKey || supabaseUrl.includes("your-project-ref")) {
+    return fallbackBlogs;
+  }
+
+  try {
+    const res = await fetch(`${supabaseUrl}/rest/v1/blogs?select=slug,status&status=eq.Published`, {
+      headers: {
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+      },
+    });
+
+    if (!res.ok) {
+      return fallbackBlogs;
+    }
+
+    const data = await res.json();
+    if (Array.isArray(data) && data.length > 0) {
+      const publishedSlugs = data
+        .filter((b) => b.slug)
+        .map((b) => b.slug);
+      return Array.from(new Set([...fallbackBlogs, ...publishedSlugs]));
+    }
+  } catch (err) {
+    console.warn("Could not query Supabase for live blogs, using fallback list:", err.message);
+  }
+
+  return fallbackBlogs;
+}
+
 async function generate() {
   console.log("Generating XML sitemap...");
-  const offerSlugs = await fetchSupabaseOffers();
+  const [offerSlugs, publishedBlogSlugs] = await Promise.all([
+    fetchSupabaseOffers(),
+    fetchSupabaseBlogs(),
+  ]);
 
   let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
   xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n`;
@@ -119,13 +163,23 @@ async function generate() {
     xml += `  </url>\n`;
   }
 
-  // Blog Resource Pages
+  // Blog Resource Pages (Guides)
   for (const slug of blogSlugs) {
     xml += `  <url>\n`;
     xml += `    <loc>${BASE_URL}/resources/${slug}</loc>\n`;
     xml += `    <lastmod>${TODAY}</lastmod>\n`;
     xml += `    <changefreq>monthly</changefreq>\n`;
     xml += `    <priority>0.7</priority>\n`;
+    xml += `  </url>\n`;
+  }
+
+  // Dynamic Blog Articles
+  for (const slug of publishedBlogSlugs) {
+    xml += `  <url>\n`;
+    xml += `    <loc>${BASE_URL}/blog/${slug}</loc>\n`;
+    xml += `    <lastmod>${TODAY}</lastmod>\n`;
+    xml += `    <changefreq>weekly</changefreq>\n`;
+    xml += `    <priority>0.8</priority>\n`;
     xml += `  </url>\n`;
   }
 
