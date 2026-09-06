@@ -1,10 +1,11 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
-import { BarChart3, BookOpen, BriefcaseBusiness, Building2, CreditCard, FileText, Gift, LayoutDashboard, LogOut, Package, Settings, Shield, Wrench } from "lucide-react";
+import { BarChart3, BookOpen, BriefcaseBusiness, Building2, CreditCard, FileText, Gift, LayoutDashboard, LogOut, Package, Settings, Shield, TrendingUp, Wrench } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAdminAuth } from "@/lib/admin-auth";
 
 const adminLinks = [
   { label: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
+  { label: "Analytics", path: "/admin/analytics", icon: TrendingUp },
   { label: "Blogs", path: "/admin/blogs", icon: BookOpen },
   { label: "Enquiries", path: "/admin/enquiries", icon: FileText },
   { label: "Bookings", path: "/admin/bookings", icon: CreditCard },

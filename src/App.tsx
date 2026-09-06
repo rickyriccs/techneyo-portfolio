@@ -42,6 +42,7 @@ import OfferDetails from "./pages/OfferDetails";
 import Onboarding from "./pages/Onboarding";
 import AdminBookings from "./pages/admin/AdminBookings";
 import AdminBlogs from "./pages/admin/AdminBlogs";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import Blog from "./pages/Blog";
 import BlogPostPage from "./pages/BlogPostPage";
 
@@ -89,6 +90,7 @@ const AppRoutes = () => {
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<Navigate to="/admin/dashboard" replace />} />
               <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="analytics" element={<AdminAnalytics />} />
               <Route path="blogs" element={<AdminBlogs />} />
               <Route path="enquiries" element={<AdminEnquiries />} />
               <Route path="services" element={<AdminServices />} />

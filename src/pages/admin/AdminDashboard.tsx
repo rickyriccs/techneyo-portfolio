@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, FileText, Gift, Package, Users, Wrench } from "lucide-react";
+import { ArrowRight, FileText, Gift, Package, TrendingUp, Users, Wrench, Zap, Eye, BarChart3 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 
@@ -107,9 +107,36 @@ const AdminDashboard = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-3xl font-bold text-foreground">Dashboard</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Track leads, offers, packages, and recent admin activity.</p>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="font-display text-3xl font-bold text-foreground">Dashboard</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Track leads, offers, packages, and recent admin activity.</p>
+        </div>
+        <Link
+          to="/admin/analytics"
+          className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:opacity-90 transition-all"
+        >
+          <TrendingUp size={16} /> View Analytics Hub
+        </Link>
+      </div>
+
+      {/* Analytics Quick Banner */}
+      <div className="rounded-xl border border-cyan-500/20 bg-gradient-to-r from-cyan-950/20 via-card to-card p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/15 text-cyan-500">
+            <BarChart3 size={20} />
+          </div>
+          <div>
+            <h3 className="font-display text-base font-bold text-foreground">Google Analytics & Visitor Intelligence</h3>
+            <p className="text-xs text-muted-foreground">Real-time traffic acquisition, WhatsApp conversions, and UTM campaign tracking.</p>
+          </div>
+        </div>
+        <Link
+          to="/admin/analytics"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline self-start sm:self-auto"
+        >
+          Open Analytics Dashboard <ArrowRight size={14} />
+        </Link>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
