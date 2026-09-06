@@ -201,13 +201,13 @@ alter table public.app_settings add column if not exists slack_notify_onboarding
 
       let saveErr = null;
       if (form.id) {
-        const { error } = await supabase.from("app_settings").update(slackPayload).eq("id", form.id);
+        const { data, error } = await supabase.from("app_settings").update(slackPayload).eq("id", form.id).select();
         saveErr = error;
       } else {
-        const { error } = await supabase.from("app_settings").insert({
+        const { data, error } = await supabase.from("app_settings").insert({
           business_name: form.business_name,
           ...slackPayload,
-        });
+        }).select();
         saveErr = error;
       }
 
@@ -334,8 +334,8 @@ alter table public.app_settings add column if not exists slack_notify_onboarding
     };
 
     const { error: saveError } = form.id
-      ? await supabase.from("app_settings").update(payload).eq("id", form.id)
-      : await supabase.from("app_settings").insert(payload);
+      ? await supabase.from("app_settings").update(payload).eq("id", form.id).select()
+      : await supabase.from("app_settings").insert(payload).select();
 
     if (saveError) {
       // Check if missing columns in database schema
