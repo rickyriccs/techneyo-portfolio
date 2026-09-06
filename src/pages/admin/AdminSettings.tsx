@@ -1,7 +1,8 @@
 import { FormEvent, useEffect, useState } from "react";
-import { CreditCard, Save, Server, RefreshCw } from "lucide-react";
+import { CreditCard, Save, Server, RefreshCw, Bell, Send, CheckCircle2, AlertCircle } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAdminAuth } from "@/lib/admin-auth";
+import { testSlackWebhook } from "@/lib/slack";
 
 type SettingsForm = {
   id?: string;
@@ -25,6 +26,13 @@ type SettingsForm = {
   smtp_pass: string;
   smtp_from_email: string;
   smtp_from_name: string;
+  slack_enabled: boolean;
+  slack_webhook_url: string;
+  slack_channel: string;
+  slack_notify_enquiries: boolean;
+  slack_notify_bookings: boolean;
+  slack_notify_proposals: boolean;
+  slack_notify_onboarding: boolean;
 };
 
 const defaultForm: SettingsForm = {
@@ -48,6 +56,13 @@ const defaultForm: SettingsForm = {
   smtp_pass: "",
   smtp_from_email: "hello@techneyo.com",
   smtp_from_name: "Techneyo Solutions",
+  slack_enabled: false,
+  slack_webhook_url: "",
+  slack_channel: "#leads",
+  slack_notify_enquiries: true,
+  slack_notify_bookings: true,
+  slack_notify_proposals: true,
+  slack_notify_onboarding: true,
 };
 
 export const AdminSettings = () => {
@@ -55,6 +70,8 @@ export const AdminSettings = () => {
   const [form, setForm] = useState<SettingsForm>(defaultForm);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isTestingSlack, setIsTestingSlack] = useState(false);
+  const [slackTestResult, setSlackTestResult] = useState<{ status: "success" | "error"; message: string } | null>(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -98,6 +115,13 @@ export const AdminSettings = () => {
         smtp_pass: data.smtp_pass || "",
         smtp_from_email: data.smtp_from_email || "",
         smtp_from_name: data.smtp_from_name || defaultForm.smtp_from_name,
+        slack_enabled: data.slack_enabled ?? defaultForm.slack_enabled,
+        slack_webhook_url: data.slack_webhook_url || "",
+        slack_channel: data.slack_channel || defaultForm.slack_channel,
+        slack_notify_enquiries: data.slack_notify_enquiries ?? true,
+        slack_notify_bookings: data.slack_notify_bookings ?? true,
+        slack_notify_proposals: data.slack_notify_proposals ?? true,
+        slack_notify_onboarding: data.slack_notify_onboarding ?? true,
       });
     }
     setIsLoading(false);
@@ -106,6 +130,41 @@ export const AdminSettings = () => {
   useEffect(() => {
     loadSettings();
   }, []);
+
+  const handleTestSlack = async () => {
+    if (!form.slack_webhook_url || !form.slack_webhook_url.startsWith("https://hooks.slack.com/")) {
+      setSlackTestResult({
+        status: "error",
+        message: "Please enter a valid Slack incoming webhook URL starting with https://hooks.slack.com/",
+      });
+      return;
+    }
+
+    setIsTestingSlack(true);
+    setSlackTestResult(null);
+
+    try {
+      const ok = await testSlackWebhook(form.slack_webhook_url.trim());
+      if (ok) {
+        setSlackTestResult({
+          status: "success",
+          message: "Test message sent to Slack successfully! Check your channel.",
+        });
+      } else {
+        setSlackTestResult({
+          status: "error",
+          message: "Failed to dispatch test message. Please verify your webhook URL.",
+        });
+      }
+    } catch (err: any) {
+      setSlackTestResult({
+        status: "error",
+        message: err.message || "Failed to dispatch test message to Slack.",
+      });
+    } finally {
+      setIsTestingSlack(false);
+    }
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -136,6 +195,13 @@ export const AdminSettings = () => {
       smtp_pass: form.smtp_pass.trim() || null,
       smtp_from_email: form.smtp_from_email.trim() || null,
       smtp_from_name: form.smtp_from_name.trim() || null,
+      slack_enabled: form.slack_enabled,
+      slack_webhook_url: form.slack_webhook_url.trim() || null,
+      slack_channel: form.slack_channel.trim() || null,
+      slack_notify_enquiries: form.slack_notify_enquiries,
+      slack_notify_bookings: form.slack_notify_bookings,
+      slack_notify_proposals: form.slack_notify_proposals,
+      slack_notify_onboarding: form.slack_notify_onboarding,
       updated_by: user?.id || null,
       updated_at: new Date().toISOString(),
     };
@@ -147,11 +213,12 @@ export const AdminSettings = () => {
     if (saveError) {
       setError(saveError.message);
     } else {
-      setSuccess("App settings, Razorpay keys, and Custom SMTP credentials updated successfully!");
+      setSuccess("App settings, Slack notifications, Razorpay keys, and SMTP updated successfully!");
       await loadSettings();
     }
     setIsSaving(false);
   };
+
 
   if (isLoading) {
     return <div className="p-6 text-muted-foreground">Loading settings...</div>;
@@ -339,6 +406,170 @@ export const AdminSettings = () => {
                 />
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Slack Instant Notifications Card */}
+        <section className="rounded-lg border border-purple-500/30 bg-card p-6 space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-lg bg-purple-500/10 text-purple-400">
+                <Bell size={20} />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="font-display text-lg font-semibold text-foreground">Slack Real-Time Lead & Booking Alerts</h2>
+                  <span className="text-[10px] font-bold uppercase tracking-wider bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full">
+                    Instant Webhook
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Receive instant rich notifications directly in your team's Slack channel whenever an inquiry, booking, proposal, or onboarding is submitted.
+                </p>
+              </div>
+            </div>
+
+            <label className="flex items-center gap-2.5 cursor-pointer self-start sm:self-center">
+              <input
+                type="checkbox"
+                checked={form.slack_enabled}
+                onChange={(e) => setForm({ ...form, slack_enabled: e.target.checked })}
+                className="h-4 w-4 rounded border-border text-primary"
+              />
+              <span className="text-xs font-semibold text-foreground">
+                {form.slack_enabled ? "🟢 Alerts Enabled" : "⚪ Alerts Disabled"}
+              </span>
+            </label>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="md:col-span-2">
+              <label className="block text-xs font-medium text-muted-foreground mb-1">
+                Slack Incoming Webhook URL *
+              </label>
+              <input
+                type="url"
+                value={form.slack_webhook_url}
+                onChange={(e) => setForm({ ...form, slack_webhook_url: e.target.value })}
+                className="h-10 w-full rounded-md border border-border bg-background px-3 font-mono text-xs outline-none focus:ring-2 focus:ring-purple-500/30"
+                placeholder="Paste your Slack webhook URL (e.g. from Slack App Incoming Webhooks)"
+              />
+              <p className="text-[11px] text-muted-foreground mt-1">
+                Create an Incoming Webhook at <a href="https://api.slack.com/apps" target="_blank" rel="noopener noreferrer" className="text-purple-400 underline hover:text-purple-300">api.slack.com/apps</a> & paste the webhook URL here.
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">
+                Display Channel
+              </label>
+              <input
+                type="text"
+                value={form.slack_channel}
+                onChange={(e) => setForm({ ...form, slack_channel: e.target.value })}
+                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-purple-500/30"
+                placeholder="#leads or #sales-alerts"
+              />
+              <p className="text-[11px] text-muted-foreground mt-1">
+                Channel identifier for internal reference.
+              </p>
+            </div>
+          </div>
+
+          {/* Trigger Event Toggles */}
+          <div>
+            <span className="block text-xs font-semibold text-foreground mb-2">Notification Triggers</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <label className={`flex items-start gap-2.5 p-3 rounded-lg border text-xs cursor-pointer transition-all ${
+                form.slack_notify_enquiries ? "border-cyan-500/40 bg-cyan-500/5 text-foreground" : "border-border bg-muted/10 text-muted-foreground"
+              }`}>
+                <input
+                  type="checkbox"
+                  checked={form.slack_notify_enquiries}
+                  onChange={(e) => setForm({ ...form, slack_notify_enquiries: e.target.checked })}
+                  className="mt-0.5 rounded border-border"
+                />
+                <div>
+                  <p className="font-semibold">📩 Contact Inquiries</p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">Forms from Contact & service pages</p>
+                </div>
+              </label>
+
+              <label className={`flex items-start gap-2.5 p-3 rounded-lg border text-xs cursor-pointer transition-all ${
+                form.slack_notify_bookings ? "border-emerald-500/40 bg-emerald-500/5 text-foreground" : "border-border bg-muted/10 text-muted-foreground"
+              }`}>
+                <input
+                  type="checkbox"
+                  checked={form.slack_notify_bookings}
+                  onChange={(e) => setForm({ ...form, slack_notify_bookings: e.target.checked })}
+                  className="mt-0.5 rounded border-border"
+                />
+                <div>
+                  <p className="font-semibold">💳 Offer Bookings</p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">Paid deposits & free offer leads</p>
+                </div>
+              </label>
+
+              <label className={`flex items-start gap-2.5 p-3 rounded-lg border text-xs cursor-pointer transition-all ${
+                form.slack_notify_proposals ? "border-purple-500/40 bg-purple-500/5 text-foreground" : "border-border bg-muted/10 text-muted-foreground"
+              }`}>
+                <input
+                  type="checkbox"
+                  checked={form.slack_notify_proposals}
+                  onChange={(e) => setForm({ ...form, slack_notify_proposals: e.target.checked })}
+                  className="mt-0.5 rounded border-border"
+                />
+                <div>
+                  <p className="font-semibold">⚡ AI Proposals</p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">Custom quotes generated by leads</p>
+                </div>
+              </label>
+
+              <label className={`flex items-start gap-2.5 p-3 rounded-lg border text-xs cursor-pointer transition-all ${
+                form.slack_notify_onboarding ? "border-amber-500/40 bg-amber-500/5 text-foreground" : "border-border bg-muted/10 text-muted-foreground"
+              }`}>
+                <input
+                  type="checkbox"
+                  checked={form.slack_notify_onboarding}
+                  onChange={(e) => setForm({ ...form, slack_notify_onboarding: e.target.checked })}
+                  className="mt-0.5 rounded border-border"
+                />
+                <div>
+                  <p className="font-semibold">📝 Client Onboarding</p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">Requirement questionnaire submissions</p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          {/* Test Slack Dispatch */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 border-t border-border">
+            <button
+              type="button"
+              disabled={isTestingSlack || !form.slack_webhook_url}
+              onClick={handleTestSlack}
+              className="inline-flex items-center gap-2 rounded-md bg-purple-600/20 text-purple-300 border border-purple-500/30 px-4 py-2 text-xs font-semibold hover:bg-purple-600/30 disabled:opacity-40 transition-colors"
+            >
+              <Send size={14} className={isTestingSlack ? "animate-spin" : ""} />
+              {isTestingSlack ? "Sending Test Alert..." : "Send Test Slack Notification"}
+            </button>
+
+            {slackTestResult && (
+              <div
+                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs ${
+                  slackTestResult.status === "success"
+                    ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
+                    : "bg-red-500/15 text-red-300 border border-red-500/30"
+                }`}
+              >
+                {slackTestResult.status === "success" ? (
+                  <CheckCircle2 size={14} />
+                ) : (
+                  <AlertCircle size={14} />
+                )}
+                <span>{slackTestResult.message}</span>
+              </div>
+            )}
           </div>
         </section>
 

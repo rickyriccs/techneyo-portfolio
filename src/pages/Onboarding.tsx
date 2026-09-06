@@ -4,6 +4,7 @@ import { CheckCircle, Send, ArrowRight, Sparkles, Building, Phone, Mail } from "
 import PageMeta from "@/components/PageMeta";
 import { supabase } from "@/lib/supabase";
 import { isInstagramLead } from "@/lib/utm";
+import { notifySlackOnboarding } from "@/lib/slack";
 
 export const Onboarding = () => {
   const navigate = useNavigate();
@@ -103,6 +104,17 @@ export const Onboarding = () => {
         console.error("Onboarding update error:", error);
       }
     }
+
+    // Trigger Slack notification for onboarding submission non-blockingly
+    notifySlackOnboarding({
+      businessName: form.businessName.trim(),
+      contactPerson: form.contactPerson.trim(),
+      phone: form.phone.trim(),
+      email: form.email.trim(),
+      servicesOffered: form.servicesOffered.trim() || undefined,
+      domainPreference: form.domainPreference.trim() || undefined,
+      designNotes: form.designNotes.trim() || undefined,
+    }).catch((e) => console.warn("Slack onboarding dispatch error:", e));
 
     setIsSubmitting(false);
     setIsSubmitted(true);

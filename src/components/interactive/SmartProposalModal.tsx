@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { usePersonalization } from "@/context/PersonalizationContext";
 import { createContactEnquiry } from "@/lib/contact-enquiries";
+import { notifySlackNewProposal } from "@/lib/slack";
 
 export const SmartProposalModal: React.FC = () => {
   const {
@@ -100,6 +101,19 @@ User Notes: ${formData.notes || "None"}`;
         message: detailedMessage,
         sourcePage: window.location.pathname,
       });
+
+      // Dispatch dedicated proposal Slack alert
+      notifySlackNewProposal({
+        refCode,
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        businessName: formData.businessName,
+        service: targetService,
+        totalPrice: totalPrice || null,
+        addons: selectedAddons.map((a) => `${a.name} (+₹${a.price})`),
+        notes: formData.notes,
+      }).catch((e) => console.warn("Slack proposal dispatch error:", e));
     } catch (err: any) {
       console.warn("Error submitting proposal enquiry", err);
       setErrorMessage(err.message || "Failed to record enquiry to database.");

@@ -4,6 +4,7 @@ import type { Offer } from "@/types/offer";
 import { initiateOfferBookingPayment, BookingCustomerDetails } from "@/lib/razorpay";
 import { supabase } from "@/lib/supabase";
 import { getSourceData } from "@/lib/utm";
+import { notifySlackNewBooking } from "@/lib/slack";
 
 interface BookingModalProps {
   offer: Offer;
@@ -63,6 +64,19 @@ export const BookingModal = ({
       })
       .select("id")
       .single();
+
+    // Trigger Slack notification non-blockingly
+    notifySlackNewBooking({
+      offerTitle: offer.title,
+      customerName: customer.customer_name,
+      customerPhone: customer.customer_phone,
+      customerEmail: customer.customer_email,
+      businessName: customer.business_name,
+      advanceAmountPaid: 0,
+      totalPlanPrice: offer.discount_price || offer.starting_price || null,
+      paymentStatus: "pending",
+      utmSource: source.utm_source,
+    }).catch((e) => console.warn("Slack booking dispatch error:", e));
 
     if (error) {
       console.error("Error saving free booking:", error);

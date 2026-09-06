@@ -1,5 +1,6 @@
 import { supabase } from "./supabase";
 import { getSourceData } from "./utm";
+import { notifySlackNewEnquiry } from "./slack";
 
 export type ContactEnquiryInput = {
   name: string;
@@ -52,6 +53,20 @@ export const createContactEnquiry = async (input: ContactEnquiryInput) => {
 
   const { error } = await supabase.from("contact_enquiries").insert(leadTrackingPayload);
 
+  // Dispatch Slack notification non-blockingly
+  notifySlackNewEnquiry({
+    name: input.name,
+    phone: input.phone,
+    email: input.email,
+    businessName: input.businessName,
+    city: input.city,
+    state: input.state,
+    serviceRequired: input.serviceRequired || input.serviceInterested,
+    budgetRange: input.budgetRange,
+    message: input.message,
+    utmSource: source.utm_source,
+  }).catch((e) => console.warn("Slack dispatch error:", e));
+
   if (error) {
     const isMissingLeadTrackingColumn =
       error.code === "PGRST204" &&
@@ -71,3 +86,4 @@ export const createContactEnquiry = async (input: ContactEnquiryInput) => {
 
   return { stored: true, trackingColumnsAvailable: true };
 };
+

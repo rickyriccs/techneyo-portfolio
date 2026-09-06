@@ -2,6 +2,7 @@ import { supabase } from "./supabase";
 import { businessInfo } from "./business-info";
 import type { Offer } from "@/types/offer";
 import { getSourceData } from "./utm";
+import { notifySlackNewBooking } from "./slack";
 
 interface RazorpayResponse {
   razorpay_payment_id: string;
@@ -128,6 +129,19 @@ export const initiateOfferBookingPayment = async ({
             referrer: source.referrer || null,
             device_type: source.device_type || null,
           }).select("id").single();
+
+          // Dispatch Slack notification non-blockingly
+          notifySlackNewBooking({
+            offerTitle: offer.title,
+            customerName: customer.customer_name,
+            customerPhone: customer.customer_phone,
+            customerEmail: customer.customer_email,
+            businessName: customer.business_name,
+            advanceAmountPaid: advanceAmount,
+            totalPlanPrice: offer.discount_price || offer.starting_price || null,
+            paymentStatus: "paid",
+            utmSource: source.utm_source,
+          }).catch((e) => console.warn("Slack booking dispatch error:", e));
 
           if (error) {
             console.error("Booking db record error:", error);
