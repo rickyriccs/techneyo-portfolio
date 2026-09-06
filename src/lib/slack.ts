@@ -154,7 +154,30 @@ export const sendSlackNotification = async (
       ],
     };
 
-    // 1. Try Supabase Edge Function if deployed
+    const isLocalhost =
+      typeof window !== "undefined" &&
+      (window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1" ||
+        window.location.hostname === "::1" ||
+        import.meta.env.DEV);
+
+    // 1. In Local Development: Use Vite Dev Server proxy to completely bypass browser CORS limitations
+    if (isLocalhost && webhookUrl.startsWith("https://hooks.slack.com/")) {
+      const proxyUrl = webhookUrl.replace("https://hooks.slack.com", "/api/slack-proxy");
+      const res = await fetch(proxyUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        return true;
+      }
+    }
+
+    // 2. In Production: Try Supabase Edge Function if deployed
     if (supabase?.functions) {
       try {
         const { data, error } = await supabase.functions.invoke("send-slack-alert", {
@@ -168,9 +191,7 @@ export const sendSlackNotification = async (
       }
     }
 
-    // 2. Direct browser webhook POST using application/x-www-form-urlencoded
-    // Slack incoming webhooks accept `payload=<url_encoded_json>`
-    // application/x-www-form-urlencoded is a CORS-safelisted type that browsers can send without CORS preflight block
+    // 3. Fallback: Direct browser webhook POST using application/x-www-form-urlencoded
     const formParams = new URLSearchParams();
     formParams.append("payload", JSON.stringify(payload));
 
@@ -189,6 +210,7 @@ export const sendSlackNotification = async (
     return false;
   }
 };
+
 
 
 /**

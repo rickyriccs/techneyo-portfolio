@@ -10,6 +10,14 @@ export default defineConfig(() => ({
     hmr: {
       overlay: false,
     },
+    proxy: {
+      "/api/slack-proxy": {
+        target: "https://hooks.slack.com",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/slack-proxy/, ""),
+        secure: false,
+      },
+    },
   },
   plugins: [react()],
   resolve: {
@@ -18,4 +26,5 @@ export default defineConfig(() => ({
     },
   },
 }));
+
 
