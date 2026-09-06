@@ -71,7 +71,9 @@ export const AdminSettings = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isTestingSlack, setIsTestingSlack] = useState(false);
+  const [isSavingSlack, setIsSavingSlack] = useState(false);
   const [slackTestResult, setSlackTestResult] = useState<{ status: "success" | "error"; message: string } | null>(null);
+  const [slackSaveMessage, setSlackSaveMessage] = useState<{ type: "success" | "warning" | "error"; text: string } | null>(null);
   const [copiedSql, setCopiedSql] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -160,6 +162,86 @@ alter table public.app_settings add column if not exists slack_notify_onboarding
     setTimeout(() => setCopiedSql(false), 3000);
   };
 
+  const handleSaveSlackOnly = async () => {
+    setIsSavingSlack(true);
+    setSlackSaveMessage(null);
+
+    // 1. Immediately persist to localStorage
+    saveLocalSlackSettings({
+      slack_enabled: form.slack_enabled,
+      slack_webhook_url: form.slack_webhook_url.trim(),
+      slack_channel: form.slack_channel.trim(),
+      slack_notify_enquiries: form.slack_notify_enquiries,
+      slack_notify_bookings: form.slack_notify_bookings,
+      slack_notify_proposals: form.slack_notify_proposals,
+      slack_notify_onboarding: form.slack_notify_onboarding,
+    });
+
+    if (!supabase) {
+      setIsSavingSlack(false);
+      setSlackSaveMessage({
+        type: "success",
+        text: "Slack settings saved locally in browser memory!",
+      });
+      return;
+    }
+
+    try {
+      const slackPayload = {
+        slack_enabled: form.slack_enabled,
+        slack_webhook_url: form.slack_webhook_url.trim() || null,
+        slack_channel: form.slack_channel.trim() || null,
+        slack_notify_enquiries: form.slack_notify_enquiries,
+        slack_notify_bookings: form.slack_notify_bookings,
+        slack_notify_proposals: form.slack_notify_proposals,
+        slack_notify_onboarding: form.slack_notify_onboarding,
+        updated_by: user?.id || null,
+        updated_at: new Date().toISOString(),
+      };
+
+      let saveErr = null;
+      if (form.id) {
+        const { error } = await supabase.from("app_settings").update(slackPayload).eq("id", form.id);
+        saveErr = error;
+      } else {
+        const { error } = await supabase.from("app_settings").insert({
+          business_name: form.business_name,
+          ...slackPayload,
+        });
+        saveErr = error;
+      }
+
+      if (saveErr) {
+        if (
+          saveErr.code === "PGRST204" ||
+          /slack_enabled|slack_webhook_url|slack_channel|slack_notify/i.test(saveErr.message)
+        ) {
+          setSlackSaveMessage({
+            type: "warning",
+            text: "Saved locally! ⚠️ To sync with Supabase cloud DB, click 'Copy Supabase SQL Patch' and run it in Supabase SQL editor.",
+          });
+        } else {
+          setSlackSaveMessage({
+            type: "error",
+            text: `Database Error: ${saveErr.message}`,
+          });
+        }
+      } else {
+        setSlackSaveMessage({
+          type: "success",
+          text: "Slack alert settings saved to Supabase database successfully! 🎉",
+        });
+      }
+    } catch (err: any) {
+      setSlackSaveMessage({
+        type: "error",
+        text: err.message || "Failed to update database.",
+      });
+    } finally {
+      setIsSavingSlack(false);
+    }
+  };
+
   const handleTestSlack = async () => {
     if (!form.slack_webhook_url || !form.slack_webhook_url.startsWith("https://hooks.slack.com/")) {
       setSlackTestResult({
@@ -194,6 +276,7 @@ alter table public.app_settings add column if not exists slack_notify_onboarding
       setIsTestingSlack(false);
     }
   };
+
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -617,43 +700,74 @@ alter table public.app_settings add column if not exists slack_notify_onboarding
           </div>
 
           {/* Test Slack Dispatch & SQL Patch helper */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-border">
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                type="button"
-                disabled={isTestingSlack || !form.slack_webhook_url}
-                onClick={handleTestSlack}
-                className="inline-flex items-center gap-2 rounded-md bg-purple-600/20 text-purple-300 border border-purple-500/30 px-4 py-2 text-xs font-semibold hover:bg-purple-600/30 disabled:opacity-40 transition-colors"
-              >
-                <Send size={14} className={isTestingSlack ? "animate-spin" : ""} />
-                {isTestingSlack ? "Sending Test Alert..." : "Send Test Slack Notification"}
-              </button>
+          <div className="space-y-3 pt-3 border-t border-border">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  disabled={isSavingSlack}
+                  onClick={handleSaveSlackOnly}
+                  className="inline-flex items-center gap-2 rounded-md bg-purple-600 px-4 py-2 text-xs font-semibold text-white hover:bg-purple-500 disabled:opacity-50 transition-colors shadow-sm"
+                >
+                  <Save size={14} className={isSavingSlack ? "animate-spin" : ""} />
+                  {isSavingSlack ? "Saving Slack Settings..." : "Save Slack Settings"}
+                </button>
 
-              <button
-                type="button"
-                onClick={handleCopySql}
-                className="inline-flex items-center gap-1.5 rounded-md border border-border bg-muted/40 px-3 py-2 text-xs font-medium text-foreground hover:bg-muted transition-colors"
-                title="Copy SQL script to enable Slack settings table columns in Supabase"
-              >
-                {copiedSql ? <CheckCircle2 size={13} className="text-emerald-400" /> : <Copy size={13} />}
-                <span>{copiedSql ? "SQL Script Copied! (Paste in Supabase)" : "Copy Supabase SQL Patch"}</span>
-              </button>
+                <button
+                  type="button"
+                  disabled={isTestingSlack || !form.slack_webhook_url}
+                  onClick={handleTestSlack}
+                  className="inline-flex items-center gap-2 rounded-md bg-purple-600/20 text-purple-300 border border-purple-500/30 px-3.5 py-2 text-xs font-semibold hover:bg-purple-600/30 disabled:opacity-40 transition-colors"
+                >
+                  <Send size={14} className={isTestingSlack ? "animate-spin" : ""} />
+                  {isTestingSlack ? "Sending Test Alert..." : "Send Test Alert"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleCopySql}
+                  className="inline-flex items-center gap-1.5 rounded-md border border-border bg-muted/40 px-3 py-2 text-xs font-medium text-foreground hover:bg-muted transition-colors"
+                  title="Copy SQL script to enable Slack settings table columns in Supabase"
+                >
+                  {copiedSql ? <CheckCircle2 size={13} className="text-emerald-400" /> : <Copy size={13} />}
+                  <span>{copiedSql ? "SQL Script Copied! (Paste in Supabase)" : "Copy Supabase SQL Patch"}</span>
+                </button>
+              </div>
+
+              {slackTestResult && (
+                <div
+                  className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs ${
+                    slackTestResult.status === "success"
+                      ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
+                      : "bg-red-500/15 text-red-300 border border-red-500/30"
+                  }`}
+                >
+                  {slackTestResult.status === "success" ? (
+                    <CheckCircle2 size={14} />
+                  ) : (
+                    <AlertCircle size={14} />
+                  )}
+                  <span>{slackTestResult.message}</span>
+                </div>
+              )}
             </div>
 
-            {slackTestResult && (
+            {slackSaveMessage && (
               <div
-                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs ${
-                  slackTestResult.status === "success"
+                className={`p-3 rounded-md text-xs flex items-center gap-2 ${
+                  slackSaveMessage.type === "success"
                     ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
+                    : slackSaveMessage.type === "warning"
+                    ? "bg-amber-500/15 text-amber-300 border border-amber-500/30"
                     : "bg-red-500/15 text-red-300 border border-red-500/30"
                 }`}
               >
-                {slackTestResult.status === "success" ? (
-                  <CheckCircle2 size={14} />
+                {slackSaveMessage.type === "success" ? (
+                  <CheckCircle2 size={15} className="shrink-0 text-emerald-400" />
                 ) : (
-                  <AlertCircle size={14} />
+                  <AlertCircle size={15} className="shrink-0" />
                 )}
-                <span>{slackTestResult.message}</span>
+                <span>{slackSaveMessage.text}</span>
               </div>
             )}
           </div>
