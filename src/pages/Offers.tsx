@@ -1,7 +1,18 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState, useMemo } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle2, Gift, MessageCircle, CreditCard, ExternalLink, Sparkles, Globe } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Gift,
+  MessageCircle,
+  CreditCard,
+  ExternalLink,
+  Sparkles,
+  Globe,
+  Tag,
+  X,
+} from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import PageMeta from "@/components/PageMeta";
 import { businessInfo } from "@/lib/business-info";
@@ -32,6 +43,10 @@ export const Offers = () => {
   const [offers, setOffers] = useState<Offer[]>([]);
   const [selectedOfferForBooking, setSelectedOfferForBooking] = useState<Offer | null>(null);
   const [isIndia, setIsIndia] = useState<boolean | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTag = searchParams.get("tag");
+  const activeCategory = searchParams.get("category");
+
   const navigate = useNavigate();
   const { settings } = useAppSettings();
   const { openProposalModal } = usePersonalization();
@@ -77,29 +92,66 @@ export const Offers = () => {
     loadOffers();
   }, []);
 
+  const filteredOffers = useMemo(() => {
+    return offers.filter((offer) => {
+      if (activeTag) {
+        const lowerTag = activeTag.toLowerCase();
+        const hasTag =
+          offer.target_keywords?.some((kw) => kw.toLowerCase().includes(lowerTag)) ||
+          offer.target_audience?.some((aud) => aud.toLowerCase().includes(lowerTag)) ||
+          offer.title.toLowerCase().includes(lowerTag) ||
+          offer.short_description?.toLowerCase().includes(lowerTag);
+        if (!hasTag) return false;
+      }
+      if (activeCategory) {
+        if (offer.offer_type.toLowerCase() !== activeCategory.toLowerCase()) return false;
+      }
+      return true;
+    });
+  }, [offers, activeTag, activeCategory]);
+
+  const clearFilters = () => {
+    setSearchParams({});
+  };
+
   const pageSchema = graphSchema(organizationSchema, offersSchema(offers));
 
   return (
     <div className="public-premium min-h-screen overflow-hidden text-white">
       <PageMeta
-        title="Website Offers & Packages Worldwide | Techneyo Solutions"
+        title={
+          activeTag
+            ? `${activeTag} Offers & Packages | Techneyo Solutions`
+            : "Website Offers & Packages Worldwide | Techneyo Solutions"
+        }
         description="Affordable Techneyo Solutions website subscription offers, ₹299/month basic business plans, landing page offers, and online booking worldwide."
         keywords="website offers, affordable website packages, ₹299 website plan, business website subscription, landing page offers, global digital presence packages"
         canonicalPath="/offers"
         schema={pageSchema}
       />
 
-      <section className="premium-hero relative overflow-hidden pb-20 pt-32">
+      <section className="premium-hero relative overflow-hidden pb-16 pt-32">
         <div className="premium-grid-bg" />
         <div className="premium-orbit premium-orbit-a" />
         <div className="section-container relative z-10">
           <motion.div initial="hidden" animate="visible" className="max-w-4xl">
-            <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">Digital Growth & Website Offers</motion.p>
-            <motion.h1 variants={fadeUp} custom={1} className="font-display text-4xl font-bold leading-tight text-white sm:text-6xl">
+            <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">
+              Digital Growth & Website Offers
+            </motion.p>
+            <motion.h1
+              variants={fadeUp}
+              custom={1}
+              className="font-display text-4xl font-bold leading-tight text-white sm:text-6xl"
+            >
               Affordable business website offers built to help you launch faster.
             </motion.h1>
-            <motion.p variants={fadeUp} custom={2} className="mt-6 max-w-2xl text-lg leading-8 text-white/68">
-              Explore subscription plans, starter website packages, and custom tools. Book your slot online with an advance deposit or generate a customized AI proposal.
+            <motion.p
+              variants={fadeUp}
+              custom={2}
+              className="mt-6 max-w-2xl text-lg leading-8 text-white/68"
+            >
+              Explore subscription plans, starter website packages, and custom tools. Book your slot
+              online with an advance deposit or generate a customized AI proposal.
             </motion.p>
             <motion.div variants={fadeUp} custom={3} className="mt-6 flex flex-wrap gap-3">
               <button
@@ -112,6 +164,28 @@ export const Offers = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Active Filter Pill */}
+      {(activeTag || activeCategory) && (
+        <section className="pb-4">
+          <div className="section-container">
+            <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full px-4 py-1.5 text-xs text-cyan-300">
+              <Tag size={13} />
+              <span>
+                Filtering by: <strong>{activeTag ? `#${activeTag}` : activeCategory}</strong> (
+                {filteredOffers.length} {filteredOffers.length === 1 ? "result" : "results"})
+              </span>
+              <button
+                onClick={clearFilters}
+                className="ml-1 text-white/60 hover:text-white transition-colors"
+                title="Clear filter"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="premium-section pt-4">
         <div className="section-container">
@@ -131,7 +205,10 @@ export const Offers = () => {
                 </h2>
 
                 <p className="text-sm sm:text-base leading-relaxed text-slate-300/80">
-                  Promotional subscription packages are currently active for select domestic markets. For international clients, Techneyo Solutions delivers custom web applications, dedicated software systems, and AI growth funnels tailored specifically to your market and timezone.
+                  Promotional subscription packages are currently active for select domestic markets.
+                  For international clients, Techneyo Solutions delivers custom web applications,
+                  dedicated software systems, and AI growth funnels tailored specifically to your
+                  market and timezone.
                 </p>
 
                 <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
@@ -151,17 +228,28 @@ export const Offers = () => {
                 </div>
               </div>
             </div>
-          ) : offers.length === 0 ? (
+          ) : filteredOffers.length === 0 ? (
             <div className="flex flex-col items-center justify-center text-center py-16 px-4 rounded-xl border border-white/5 bg-white/[0.01] max-w-xl mx-auto">
-              <p className="text-white/60 text-lg leading-7">No active promotional offers at the moment. Please contact us for custom plans built specifically for your business goals.</p>
-              <Link to="/contact" className="premium-btn premium-btn-primary mt-6">
-                Get a Free Consultation
-              </Link>
+              <p className="text-white/60 text-lg leading-7">
+                {activeTag
+                  ? `No active offers found matching "${activeTag}".`
+                  : "No active promotional offers at the moment. Please contact us for custom plans built specifically for your business goals."}
+              </p>
+              {activeTag ? (
+                <button onClick={clearFilters} className="premium-btn premium-btn-primary mt-6">
+                  Show All Offers
+                </button>
+              ) : (
+                <Link to="/contact" className="premium-btn premium-btn-primary mt-6">
+                  Get a Free Consultation
+                </Link>
+              )}
             </div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {offers.map((offer, index) => {
-                const advanceAmount = offer.booking_amount || offer.setup_fee || offer.discount_price || 999;
+              {filteredOffers.map((offer, index) => {
+                const advanceAmount =
+                  offer.booking_amount || offer.setup_fee || offer.discount_price || 999;
                 const slugUrl = `/offers/${offer.slug || offer.id}`;
 
                 return (
@@ -181,22 +269,45 @@ export const Offers = () => {
                       {offer.is_featured && <span className="premium-badge">Featured</span>}
                     </div>
 
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">{offer.offer_type}</p>
-                    
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">
+                      {offer.offer_type}
+                    </p>
+
                     <h2 className="mt-2 font-display text-2xl font-bold text-white hover:text-cyan-300 transition-colors">
                       <Link to={slugUrl}>{offer.title}</Link>
                     </h2>
 
-                    <p className="mt-3 text-sm leading-relaxed text-white/65 line-clamp-3">{offer.short_description}</p>
+                    <p className="mt-3 text-sm leading-relaxed text-white/65 line-clamp-3">
+                      {offer.short_description}
+                    </p>
+
+                    {/* Tags preview */}
+                    {offer.target_keywords && offer.target_keywords.length > 0 && (
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {offer.target_keywords.slice(0, 3).map((kw, i) => (
+                          <Link
+                            key={i}
+                            to={`/offers?tag=${encodeURIComponent(kw)}`}
+                            className="text-[11px] font-medium px-2 py-0.5 rounded-md border border-white/10 bg-white/5 text-cyan-300/80 hover:text-cyan-200 hover:border-cyan-400/40 transition-colors"
+                          >
+                            #{kw}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
 
                     {/* Pricing */}
                     <div className="mt-5 flex items-end gap-2">
                       <span className="font-display text-3xl font-bold text-orange-300">
                         {formatPrice(offer.discount_price || offer.starting_price)}
                       </span>
-                      {offer.billing_period === "monthly" && <span className="text-white/50 text-xs pb-1">/ month</span>}
+                      {offer.billing_period === "monthly" && (
+                        <span className="text-white/50 text-xs pb-1">/ month</span>
+                      )}
                       {offer.discount_price && offer.starting_price && (
-                        <span className="pb-1 text-xs text-white/35 line-through ml-1">{formatPrice(offer.starting_price)}</span>
+                        <span className="pb-1 text-xs text-white/35 line-through ml-1">
+                          {formatPrice(offer.starting_price)}
+                        </span>
                       )}
                     </div>
 
@@ -208,7 +319,11 @@ export const Offers = () => {
 
                     {/* Features snippet */}
                     <div className="mt-5 space-y-2 flex-grow">
-                      {(offer.whats_included?.slice(0, 3) || [offer.detailed_description || "Professional layout"]).map((f, i) => (
+                      {(
+                        offer.whats_included?.slice(0, 3) || [
+                          offer.detailed_description || "Professional layout",
+                        ]
+                      ).map((f, i) => (
                         <div key={i} className="flex items-start gap-2 text-xs text-white/70">
                           <CheckCircle2 size={14} className="mt-0.5 shrink-0 text-emerald-300" />
                           <span className="line-clamp-1">{f}</span>
@@ -228,7 +343,8 @@ export const Offers = () => {
                       >
                         {settings.payment_required ? (
                           <>
-                            <CreditCard size={15} /> Book with Rs. {advanceAmount.toLocaleString("en-IN")} Advance
+                            <CreditCard size={15} /> Book with Rs.{" "}
+                            {advanceAmount.toLocaleString("en-IN")} Advance
                           </>
                         ) : (
                           <>
