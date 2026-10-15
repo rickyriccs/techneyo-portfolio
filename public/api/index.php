@@ -611,17 +611,52 @@ if ($route === 'enquiries' && $method === 'POST') {
     $id = generate_uuid();
     $ip = $_SERVER['HTTP_CF_CONNECTING_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
     $ip = explode(',', $ip)[0];
+    $ua = substr($_SERVER['HTTP_USER_AGENT'] ?? ($body['user_agent'] ?? ''), 0, 500);
 
-    $stmt = $pdo->prepare("INSERT INTO contact_enquiries (id, name, email, phone, message, subject, lead_type, status, source) VALUES (?, ?, ?, ?, ?, ?, ?, 'new', ?)");
+    $sql = "INSERT INTO contact_enquiries (
+        id, name, phone, email, business_name, city, state,
+        service_required, budget_range, message, source_page,
+        source_page_url, landing_page_url, initial_referrer, referrer,
+        selected_offer_id, selected_package_id, utm_source, utm_medium,
+        utm_campaign, utm_term, utm_content, device_type, ip_address,
+        user_agent, lead_status
+    ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?,
+        ?, ?, ?, ?,
+        ?, ?, ?, ?,
+        ?, ?, ?, ?, ?,
+        ?, ?
+    )";
+
+    $stmt = $pdo->prepare($sql);
     $stmt->execute([
         $id,
         $name,
-        $email,
         $phone,
-        $message,
-        $body['subject'] ?? 'Website Enquiry',
-        $body['lead_type'] ?? 'general',
-        $body['source'] ?? 'website'
+        $email ?: null,
+        $body['business_name'] ?? null,
+        $body['city'] ?? null,
+        $body['state'] ?? null,
+        $body['service_required'] ?? ($body['service_interested'] ?? null),
+        $body['budget_range'] ?? null,
+        $message ?: null,
+        $body['source_page'] ?? null,
+        $body['source_page_url'] ?? null,
+        $body['landing_page_url'] ?? null,
+        $body['initial_referrer'] ?? null,
+        $body['referrer'] ?? null,
+        $body['selected_offer_id'] ?? null,
+        $body['selected_package_id'] ?? null,
+        $body['utm_source'] ?? null,
+        $body['utm_medium'] ?? null,
+        $body['utm_campaign'] ?? null,
+        $body['utm_term'] ?? null,
+        $body['utm_content'] ?? null,
+        $body['device_type'] ?? null,
+        trim($ip),
+        $ua,
+        'new'
     ]);
 
     log_activity(null, 'create', 'enquiries', $id, ['name' => $name, 'email' => $email]);
