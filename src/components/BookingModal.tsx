@@ -82,7 +82,8 @@ export const BookingModal = ({
       console.error("Error saving free booking:", error);
       throw new Error(error.message);
     }
-    return data?.id || crypto.randomUUID();
+    const bookingRecord = Array.isArray(data) ? data[0] : data;
+    return bookingRecord?.id || data?.id || crypto.randomUUID();
   };
 
   const handleSubmit = async (e: FormEvent) => {

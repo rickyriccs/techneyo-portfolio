@@ -178,7 +178,8 @@ export class MySQLQueryBuilder implements PromiseLike<any> {
           }),
         });
         const json = await parseApiResponse(res);
-        return { data: json.data, error: json.error || null };
+        const data = this.isSingle && Array.isArray(json.data) ? (json.data[0] || null) : json.data;
+        return { data, error: json.error || null };
       }
 
       if (this.action === "update") {

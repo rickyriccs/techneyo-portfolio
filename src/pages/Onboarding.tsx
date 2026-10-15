@@ -72,7 +72,7 @@ export const Onboarding = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    if (supabase && bookingId) {
+    if (supabase) {
       const detailsPayload = {
         businessName: form.businessName.trim(),
         contactPerson: form.contactPerson.trim(),
@@ -85,23 +85,46 @@ export const Onboarding = () => {
         submittedAt: new Date().toISOString(),
       };
 
-      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(bookingId);
+      let isSuccess = false;
 
-      let query = supabase.from("offer_bookings").update({
-        onboarding_status: "completed",
-        onboarding_details: detailsPayload,
-        business_name: form.businessName.trim() || undefined,
-      });
+      if (bookingId) {
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(bookingId);
+        let query = supabase.from("offer_bookings").update({
+          onboarding_status: "completed",
+          onboarding_details: detailsPayload,
+          business_name: form.businessName.trim() || undefined,
+        });
 
-      if (isUuid) {
-        query = query.eq("id", bookingId);
-      } else {
-        query = query.eq("razorpay_payment_id", bookingId);
+        if (isUuid) {
+          query = query.eq("id", bookingId);
+        } else {
+          query = query.eq("razorpay_payment_id", bookingId);
+        }
+
+        const { error, data } = await query;
+        if (!error && data && data.length > 0) {
+          isSuccess = true;
+        }
       }
 
-      const { error } = await query;
-      if (error) {
-        console.error("Onboarding update error:", error);
+      // Fallback: match by email or phone if bookingId was missing or unmatched
+      if (!isSuccess && (form.email.trim() || form.phone.trim())) {
+        let fallbackQuery = supabase.from("offer_bookings").update({
+          onboarding_status: "completed",
+          onboarding_details: detailsPayload,
+          business_name: form.businessName.trim() || undefined,
+        });
+
+        if (form.email.trim()) {
+          fallbackQuery = fallbackQuery.eq("customer_email", form.email.trim().toLowerCase());
+        } else {
+          fallbackQuery = fallbackQuery.eq("customer_phone", form.phone.trim());
+        }
+
+        const { error } = await fallbackQuery;
+        if (error) {
+          console.error("Onboarding fallback update error:", error);
+        }
       }
     }
 
