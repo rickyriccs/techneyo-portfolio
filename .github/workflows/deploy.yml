@@ -51,16 +51,16 @@ jobs:
           ACTUAL_PASS="${MYSQL_PASSWORD:-${DB_PASSWORD:-}}"
           ACTUAL_ADMIN_EMAIL="${ADMIN_EMAIL:-admin@techneyo.com}"
 
-          cat << EOF > dist/.env
-MYSQL_HOST=${ACTUAL_HOST}
-MYSQL_PORT=${ACTUAL_PORT}
-MYSQL_DATABASE=${ACTUAL_DB}
-MYSQL_USER=${ACTUAL_USER}
-MYSQL_PASSWORD=${ACTUAL_PASS}
-JWT_SECRET=${JWT_SECRET}
-ADMIN_EMAIL=${ACTUAL_ADMIN_EMAIL}
-ADMIN_PASSWORD=${ADMIN_PASSWORD}
-EOF
+          printf "%s\n" \
+            "MYSQL_HOST=${ACTUAL_HOST}" \
+            "MYSQL_PORT=${ACTUAL_PORT}" \
+            "MYSQL_DATABASE=${ACTUAL_DB}" \
+            "MYSQL_USER=${ACTUAL_USER}" \
+            "MYSQL_PASSWORD=${ACTUAL_PASS}" \
+            "JWT_SECRET=${JWT_SECRET}" \
+            "ADMIN_EMAIL=${ACTUAL_ADMIN_EMAIL}" \
+            "ADMIN_PASSWORD=${ADMIN_PASSWORD}" > dist/.env
+
           chmod 600 dist/.env
           echo "Production .env created in dist/ with database: ${ACTUAL_DB} and user: ${ACTUAL_USER}"
 
