@@ -69,12 +69,12 @@ function env_val($key, $default = '') {
     return $default;
 }
 
-// Configuration values
-$DB_HOST = env_val('MYSQL_HOST', 'localhost');
-$DB_PORT = env_val('MYSQL_PORT', '3306');
-$DB_NAME = env_val('MYSQL_DATABASE', 'techneyo_portfolio');
-$DB_USER = env_val('MYSQL_USER', 'root');
-$DB_PASS = env_val('MYSQL_PASSWORD', 'Ns@ram01');
+// Configuration values (supports both MYSQL_* and DB_* naming conventions)
+$DB_HOST = env_val('MYSQL_HOST', env_val('DB_HOST', 'localhost'));
+$DB_PORT = env_val('MYSQL_PORT', env_val('DB_PORT', '3306'));
+$DB_NAME = env_val('MYSQL_DATABASE', env_val('MYSQL_DB', env_val('DB_NAME', env_val('DB_DATABASE', 'techneyo_portfolio'))));
+$DB_USER = env_val('MYSQL_USER', env_val('DB_USER', env_val('MYSQL_USERNAME', env_val('DB_USERNAME', 'root'))));
+$DB_PASS = env_val('MYSQL_PASSWORD', env_val('DB_PASSWORD', env_val('MYSQL_PASS', env_val('DB_PASS', 'Ns@ram01'))));
 
 $JWT_SECRET = env_val('JWT_SECRET', 'techneyo_jwt_super_secret_key_2026_production');
 $ADMIN_EMAIL = env_val('ADMIN_EMAIL', 'admin@techneyo.com');
