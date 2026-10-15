@@ -31,30 +31,38 @@ jobs:
 
       - name: Inject production environment secrets into dist/.env
         env:
-          MYSQL_HOST: ${{ vars.MYSQL_HOST || secrets.MYSQL_HOST || vars.DB_HOST || secrets.DB_HOST || 'localhost' }}
-          MYSQL_PORT: ${{ vars.MYSQL_PORT || secrets.MYSQL_PORT || vars.DB_PORT || secrets.DB_PORT || '3306' }}
-          MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE || secrets.MYSQL_DATABASE || vars.MYSQL_DB || secrets.MYSQL_DB || vars.DB_NAME || secrets.DB_NAME || vars.DB_DATABASE || secrets.DB_DATABASE || '' }}
-          MYSQL_USER: ${{ vars.MYSQL_USER || secrets.MYSQL_USER || vars.DB_USER || secrets.DB_USER || vars.MYSQL_USERNAME || secrets.MYSQL_USERNAME || '' }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD || secrets.DB_PASSWORD || secrets.MYSQL_PASS || secrets.DB_PASS || vars.MYSQL_PASSWORD || vars.DB_PASSWORD || '' }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET || vars.JWT_SECRET || 'techneyo_jwt_super_secret_key_2026_production' }}
-          ADMIN_EMAIL: ${{ vars.ADMIN_EMAIL || secrets.ADMIN_EMAIL || 'admin@techneyo.com' }}
-          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD || vars.ADMIN_PASSWORD || '' }}
+          MYSQL_HOST: ${{ vars.MYSQL_HOST || secrets.MYSQL_HOST }}
+          MYSQL_PORT: ${{ vars.MYSQL_PORT || secrets.MYSQL_PORT }}
+          MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE || secrets.MYSQL_DATABASE }}
+          MYSQL_USER: ${{ vars.MYSQL_USER || secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          DB_HOST: ${{ vars.DB_HOST || secrets.DB_HOST }}
+          DB_DATABASE: ${{ vars.DB_DATABASE || vars.DB_NAME }}
+          DB_USER: ${{ vars.DB_USER || secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET || 'techneyo_jwt_super_secret_key_2026_production' }}
+          ADMIN_EMAIL: ${{ vars.ADMIN_EMAIL || secrets.ADMIN_EMAIL }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
         run: |
-          if [ -n "${MYSQL_DATABASE}" ] && [ -n "${MYSQL_USER}" ]; then
-            cat << EOF > dist/.env
-MYSQL_HOST=${MYSQL_HOST}
-MYSQL_PORT=${MYSQL_PORT}
-MYSQL_DATABASE=${MYSQL_DATABASE}
-MYSQL_USER=${MYSQL_USER}
-MYSQL_PASSWORD=${MYSQL_PASSWORD}
+          ACTUAL_HOST="${MYSQL_HOST:-${DB_HOST:-localhost}}"
+          ACTUAL_PORT="${MYSQL_PORT:-3306}"
+          ACTUAL_DB="${MYSQL_DATABASE:-${DB_DATABASE:-techneyo_portfolio}}"
+          ACTUAL_USER="${MYSQL_USER:-${DB_USER:-root}}"
+          ACTUAL_PASS="${MYSQL_PASSWORD:-${DB_PASSWORD:-}}"
+          ACTUAL_ADMIN_EMAIL="${ADMIN_EMAIL:-admin@techneyo.com}"
+
+          cat << EOF > dist/.env
+MYSQL_HOST=${ACTUAL_HOST}
+MYSQL_PORT=${ACTUAL_PORT}
+MYSQL_DATABASE=${ACTUAL_DB}
+MYSQL_USER=${ACTUAL_USER}
+MYSQL_PASSWORD=${ACTUAL_PASS}
 JWT_SECRET=${JWT_SECRET}
-ADMIN_EMAIL=${ADMIN_EMAIL}
+ADMIN_EMAIL=${ACTUAL_ADMIN_EMAIL}
 ADMIN_PASSWORD=${ADMIN_PASSWORD}
 EOF
-            echo "Successfully generated dist/.env from GitHub Secrets & Variables."
-          else
-            echo "Notice: MYSQL_DATABASE or MYSQL_USER empty in GitHub Secrets/Variables. Skipping dist/.env generation."
-          fi
+          chmod 600 dist/.env
+          echo "Production .env created in dist/ with database: ${ACTUAL_DB} and user: ${ACTUAL_USER}"
 
       - name: Confirm dist folder & backend assets
         run: |
@@ -63,7 +71,8 @@ EOF
           test -f dist/index.html
           test -f dist/.htaccess
           test -f dist/api/index.php
-          echo "Verified dist/ contains index.html, .htaccess, and api/index.php"
+          test -f dist/.env
+          echo "Verified dist/ contains index.html, .htaccess, api/index.php, and .env"
 
       - name: Deploy dist files to Hostinger public_html
         uses: easingthemes/ssh-deploy@main
