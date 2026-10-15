@@ -48,4 +48,4 @@ jobs:
           SOURCE: "dist/"
           TARGET: ${{ secrets.HOSTINGER_DEPLOY_PATH || 'public_html/' }}
           ARGS: "-rlgoDzvc --delete"
-          EXCLUDE: "/subdomains/, /.well-known/"
+          EXCLUDE: "/subdomains/, /.well-known/, /.env*, /api/.env*"

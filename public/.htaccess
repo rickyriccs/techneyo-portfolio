@@ -19,6 +19,11 @@
   RewriteRule ^ index.html [L]
 </IfModule>
 
+# Block access to sensitive files (.env, .sql, etc.)
+<FilesMatch "^\.env|\.sql$">
+  Require all denied
+</FilesMatch>
+
 # Browser Caching Headers for High Speed & SEO
 <IfModule mod_expires.c>
   ExpiresActive On
