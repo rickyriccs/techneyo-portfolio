@@ -42,6 +42,7 @@ const Contact = () => {
     "w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-sm text-white outline-none transition-all duration-200 placeholder:text-white/30 focus:border-cyan-400 focus:bg-white/[0.08] focus:ring-2 focus:ring-cyan-500/20";
   const labelClass = "mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cyan-300";
 
+  const [formMountTime] = useState<number>(Date.now());
   const [form, setForm] = useState({
     name: "",
     businessName: "",
@@ -55,6 +56,7 @@ const Contact = () => {
     need: "",
     budgetRange: "",
     message: "",
+    honeypot: "",
   });
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -83,6 +85,8 @@ const Contact = () => {
         ].filter(Boolean).join("\n"),
         sourcePage: "/contact",
         serviceInterested: form.need,
+        website_url: form.honeypot,
+        fill_time_ms: Date.now() - formMountTime,
       });
 
       trackEvent("contact_form_submit", {
@@ -111,6 +115,7 @@ const Contact = () => {
         need: "",
         budgetRange: "",
         message: "",
+        honeypot: "",
       });
       navigate(`/thank-you?service=${encodeURIComponent(form.need || "general")}`, { replace: false });
     } catch (error) {
@@ -197,6 +202,19 @@ const Contact = () => {
               )}
 
               <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Anti-spam honeypot field (hidden from humans, trapped for bots) */}
+                <div className="absolute opacity-0 -z-50 pointer-events-none select-none h-0 w-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
+                  <label htmlFor="website_url">Leave this field blank</label>
+                  <input
+                    type="text"
+                    id="website_url"
+                    name="website_url"
+                    value={form.honeypot}
+                    onChange={(e) => setForm({ ...form, honeypot: e.target.value })}
+                    autoComplete="off"
+                    tabIndex={-1}
+                  />
+                </div>
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label className={labelClass}>Your Full Name *</label>

@@ -28,12 +28,14 @@ export const SmartProposalModal: React.FC = () => {
     preferences,
   } = usePersonalization();
 
+  const [modalMountTime] = useState<number>(Date.now());
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     businessName: "",
     notes: "",
+    website_url: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -100,6 +102,8 @@ User Notes: ${formData.notes || "None"}`;
         budgetRange: formattedBudget,
         message: detailedMessage,
         sourcePage: window.location.pathname,
+        website_url: formData.website_url,
+        fill_time_ms: Date.now() - modalMountTime,
       });
 
       // Dispatch dedicated proposal Slack alert
@@ -228,6 +232,19 @@ User Notes: ${formData.notes || "None"}`;
 
               {/* Form */}
               <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Anti-spam honeypot field (hidden from humans, trapped for bots) */}
+                <div className="absolute opacity-0 -z-50 pointer-events-none select-none h-0 w-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
+                  <label htmlFor="smart_website_url">Leave this field blank</label>
+                  <input
+                    type="text"
+                    id="smart_website_url"
+                    name="website_url"
+                    value={formData.website_url}
+                    onChange={handleChange}
+                    autoComplete="off"
+                    tabIndex={-1}
+                  />
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold text-white/90 mb-1">

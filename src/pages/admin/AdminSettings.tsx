@@ -229,7 +229,7 @@ alter table public.app_settings add column if not exists slack_notify_onboarding
       } else {
         setSlackSaveMessage({
           type: "success",
-          text: "Slack alert settings saved to Supabase database successfully! 🎉",
+          text: "Slack alert settings saved to database successfully! 🎉",
         });
       }
     } catch (err: any) {
@@ -721,16 +721,6 @@ alter table public.app_settings add column if not exists slack_notify_onboarding
                 >
                   <Send size={14} className={isTestingSlack ? "animate-spin" : ""} />
                   {isTestingSlack ? "Sending Test Alert..." : "Send Test Alert"}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleCopySql}
-                  className="inline-flex items-center gap-1.5 rounded-md border border-border bg-muted/40 px-3 py-2 text-xs font-medium text-foreground hover:bg-muted transition-colors"
-                  title="Copy SQL script to enable Slack settings table columns in Supabase"
-                >
-                  {copiedSql ? <CheckCircle2 size={13} className="text-emerald-400" /> : <Copy size={13} />}
-                  <span>{copiedSql ? "SQL Script Copied! (Paste in Supabase)" : "Copy Supabase SQL Patch"}</span>
                 </button>
               </div>
 

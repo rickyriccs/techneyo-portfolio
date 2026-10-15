@@ -1,6 +1,4 @@
-import { supabase } from "./supabase";
 import { getSourceData } from "./utm";
-import { notifySlackNewEnquiry } from "./slack";
 
 export type ContactEnquiryInput = {
   name: string;
@@ -14,15 +12,52 @@ export type ContactEnquiryInput = {
   message: string;
   sourcePage?: string;
   serviceInterested?: string;
+  website_url?: string; // Honeypot field
+  business_fax?: string; // Secondary honeypot field
+  fill_time_ms?: number; // Form completion time in ms
+};
+
+/**
+ * Checks for email dot-trick spam (e.g. ip.o.zu.yu.cun6.1.0@gmail.com)
+ */
+export const isDotTrickEmail = (email?: string): boolean => {
+  if (!email || typeof email !== "string") return false;
+  const parts = email.trim().toLowerCase().split("@");
+  if (parts.length !== 2) return true;
+
+  const [localPart] = parts;
+  const dotCount = (localPart.match(/\./g) || []).length;
+  if (dotCount >= 3) return true;
+
+  const segments = localPart.split(".");
+  if (segments.length >= 3 && segments.some((s) => s.length === 1)) {
+    return true;
+  }
+
+  return false;
 };
 
 export const createContactEnquiry = async (input: ContactEnquiryInput) => {
-  if (!supabase) {
-    throw new Error("Supabase is not configured for contact enquiries.");
+  // 1. Client-Side Honeypot Silent Trap
+  if (input.website_url || input.business_fax) {
+    console.warn("[Bot Defense] Honeypot field was filled. Dropping enquiry silently.");
+    return { stored: true, trackingColumnsAvailable: true };
+  }
+
+  // 2. Client-Side Fill Velocity Silent Trap (<2.5s)
+  if (typeof input.fill_time_ms === "number" && input.fill_time_ms > 0 && input.fill_time_ms < 2500) {
+    console.warn("[Bot Defense] Form submitted unnaturally fast (<2.5s). Dropping enquiry silently.");
+    return { stored: true, trackingColumnsAvailable: true };
+  }
+
+  // 3. Client-Side Dot-Trick Spam Email Trap
+  if (input.email && isDotTrickEmail(input.email)) {
+    console.warn("[Bot Defense] Dot-trick spam email detected. Dropping enquiry silently.");
+    return { stored: true, trackingColumnsAvailable: true };
   }
 
   const source = getSourceData();
-  const basePayload = {
+  const payload = {
     name: input.name,
     phone: input.phone,
     email: input.email || null,
@@ -33,57 +68,32 @@ export const createContactEnquiry = async (input: ContactEnquiryInput) => {
     budget_range: input.budgetRange || null,
     message: input.message,
     source_page: input.sourcePage || (typeof window === "undefined" ? null : window.location.pathname),
-    utm_source: source.utm_source || null,
-    utm_medium: source.utm_medium || null,
-    utm_campaign: source.utm_campaign || null,
-    user_agent: typeof navigator === "undefined" ? null : navigator.userAgent,
-  };
-
-  const leadTrackingPayload = {
-    ...basePayload,
     source_page_url: source.current_page_url || null,
     landing_page_url: source.landing_page_url || null,
     initial_referrer: source.initial_referrer || null,
     referrer: source.referrer || null,
+    utm_source: source.utm_source || null,
+    utm_medium: source.utm_medium || null,
+    utm_campaign: source.utm_campaign || null,
     utm_term: source.utm_term || null,
     utm_content: source.utm_content || null,
     device_type: source.device_type || null,
-    lead_status: "new",
+    user_agent: typeof navigator === "undefined" ? null : navigator.userAgent,
+    website_url: input.website_url || undefined,
+    fill_time_ms: input.fill_time_ms || undefined,
   };
 
-  const { error } = await supabase.from("contact_enquiries").insert(leadTrackingPayload);
+  const res = await fetch("/api/enquiries", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
 
-  // Dispatch Slack notification non-blockingly
-  notifySlackNewEnquiry({
-    name: input.name,
-    phone: input.phone,
-    email: input.email,
-    businessName: input.businessName,
-    city: input.city,
-    state: input.state,
-    serviceRequired: input.serviceRequired || input.serviceInterested,
-    budgetRange: input.budgetRange,
-    message: input.message,
-    utmSource: source.utm_source,
-  }).catch((e) => console.warn("Slack dispatch error:", e));
-
-  if (error) {
-    const isMissingLeadTrackingColumn =
-      error.code === "PGRST204" &&
-      /source_page_url|landing_page_url|initial_referrer|referrer|utm_term|utm_content|device_type|lead_status/i.test(error.message);
-
-    if (!isMissingLeadTrackingColumn) {
-      throw error;
-    }
-
-    const { error: fallbackError } = await supabase.from("contact_enquiries").insert(basePayload);
-    if (fallbackError) {
-      throw fallbackError;
-    }
-
-    return { stored: true, trackingColumnsAvailable: false };
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.error || "Failed to submit enquiry");
   }
 
-  return { stored: true, trackingColumnsAvailable: true };
+  const data = await res.json();
+  return { stored: true, trackingColumnsAvailable: true, id: data.id };
 };
-

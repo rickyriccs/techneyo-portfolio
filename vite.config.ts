@@ -17,6 +17,11 @@ export default defineConfig(() => ({
         rewrite: (path) => path.replace(/^\/api\/slack-proxy/, ""),
         secure: false,
       },
+      "/api": {
+        target: "http://localhost:5050",
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
   plugins: [react()],

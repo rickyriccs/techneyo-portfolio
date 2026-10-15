@@ -423,6 +423,7 @@ const Portfolio = () => {
   const [activeTechCategory, setActiveTechCategory] = useState<TechCategory>("All Tools");
   const [activeProjectCategory, setActiveProjectCategory] = useState<ProjectCategory>("All Solutions");
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+  const [formMountTime] = useState<number>(Date.now());
 
   // Form State
   const [form, setForm] = useState({
@@ -433,6 +434,7 @@ const Portfolio = () => {
     serviceRequired: "Business Website Development",
     budgetRange: "₹25,000 - ₹50,000 ($300 - $600)",
     message: "",
+    honeypot: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -463,6 +465,8 @@ const Portfolio = () => {
         message: form.message,
         sourcePage: "/portfolio",
         serviceInterested: form.serviceRequired,
+        website_url: form.honeypot,
+        fill_time_ms: Date.now() - formMountTime,
       });
 
       trackEvent("contact_form_submit", {
@@ -1313,6 +1317,19 @@ const Portfolio = () => {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+                {/* Anti-spam honeypot field (hidden from humans, trapped for bots) */}
+                <div className="absolute opacity-0 -z-50 pointer-events-none select-none h-0 w-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
+                  <label htmlFor="portfolio_website_url">Leave this field blank</label>
+                  <input
+                    type="text"
+                    id="portfolio_website_url"
+                    name="website_url"
+                    value={form.honeypot}
+                    onChange={(e) => setForm({ ...form, honeypot: e.target.value })}
+                    autoComplete="off"
+                    tabIndex={-1}
+                  />
+                </div>
                 {submitError && (
                   <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3.5 text-xs text-red-300">
                     {submitError}

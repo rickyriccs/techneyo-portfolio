@@ -36,7 +36,7 @@ const AdminLogs = () => {
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-3xl font-bold text-foreground">Activity logs</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Recent admin and system activity from Supabase.</p>
+        <p className="mt-1 text-sm text-muted-foreground">Recent admin and system activity logs.</p>
       </div>
 
       {error && <div className="rounded-md border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}

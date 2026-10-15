@@ -24,22 +24,16 @@ const AdminLogin = () => {
     setError("");
     setIsSubmitting(true);
 
-    if (!supabase) {
-      setError("Supabase env variables are missing. Add them to .env.local and restart the dev server.");
-      setIsSubmitting(false);
-      return;
-    }
-
     const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
     if (signInError) {
-      setError(signInError.message);
+      setError(signInError.message || "Invalid email or password");
       setIsSubmitting(false);
       return;
     }
 
     const adminProfile = await refreshProfile(data.user?.id);
     if (!adminProfile) {
-      setError("This account is authenticated but is not active in admin_profiles.");
+      setError("This account is authenticated but is not active in admin_users.");
       await supabase.auth.signOut();
       setIsSubmitting(false);
       return;
@@ -54,15 +48,9 @@ const AdminLogin = () => {
         <div className="w-full rounded-lg border border-border bg-card p-6 shadow-sm">
           <div className="mb-6">
             <p className="text-sm font-semibold uppercase tracking-wide text-primary">Techneyo Solutions</p>
-            <h1 className="mt-2 font-display text-3xl font-bold text-foreground">Admin login</h1>
-            <p className="mt-2 text-sm text-muted-foreground">Sign in with a Supabase Auth admin account.</p>
+            <h1 className="mt-2 font-display text-3xl font-bold text-foreground">Admin Login</h1>
+            <p className="mt-2 text-sm text-muted-foreground">Sign in with your administrator account.</p>
           </div>
-
-          {!isConfigured && (
-            <div className="mb-5 rounded-md border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive">
-              Supabase is not configured. Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
-            </div>
-          )}
 
           {error && (
             <div className="mb-5 rounded-md border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive">
@@ -80,6 +68,7 @@ const AdminLogin = () => {
                   required
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
+                  placeholder="admin@techneyo.com"
                   className="h-11 w-full bg-transparent text-sm text-foreground outline-none"
                 />
               </span>
@@ -93,17 +82,18 @@ const AdminLogin = () => {
                   required
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
+                  placeholder="••••••••••••"
                   className="h-11 w-full bg-transparent text-sm text-foreground outline-none"
                 />
               </span>
             </label>
-            <button type="submit" disabled={isSubmitting || !isConfigured} className="btn-hero w-full disabled:cursor-not-allowed disabled:opacity-60">
+            <button type="submit" disabled={isSubmitting} className="btn-hero w-full disabled:cursor-not-allowed disabled:opacity-60">
               {isSubmitting ? "Signing in..." : "Login"}
             </button>
           </form>
 
           <p className="mt-5 text-xs leading-relaxed text-muted-foreground">
-            The user must exist in Supabase Auth and have an active row in `admin_profiles`.
+            Connected to MySQL database. Manage admin credentials in your environment settings.
           </p>
         </div>
       </div>

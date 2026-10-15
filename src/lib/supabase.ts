@@ -1,18 +1,9 @@
-import { createClient } from "@supabase/supabase-js";
+/**
+ * Compatibility Re-Export
+ * Maps any legacy imports to the native MySQL database client in src/lib/db.ts
+ */
+export * from "./db";
+import { db, isDatabaseConfigured } from "./db";
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-const hasPlaceholderValue = (value: string | undefined) =>
-  !value || value.includes("your-project-ref") || value.includes("your-public-anon-key");
-
-export const isSupabaseConfigured = !hasPlaceholderValue(supabaseUrl) && !hasPlaceholderValue(supabaseAnonKey);
-
-export const supabase = isSupabaseConfigured
-  ? createClient(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-      },
-    })
-  : null;
+export const isSupabaseConfigured = isDatabaseConfigured;
+export const supabase = db;

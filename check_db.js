@@ -1,19 +1,22 @@
-import { createClient } from '@supabase/supabase-js';
+import mysql from "mysql2/promise";
+import dotenv from "dotenv";
 
-const supabaseUrl = 'https://asqwddohpubsblhuspci.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFzcXdkZG9ocHVic2JsaHVzcGNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNDk4NjcsImV4cCI6MjA5NjcyNTg2N30.ldFHpRGIx4HQV2167qh6rzeF_Ur4uKTGifgAFLtGtRc';
-
-const supabase = createClient(supabaseUrl, supabaseKey);
+dotenv.config({ path: ".env.local" });
 
 async function run() {
-  const { data, error } = await supabase
-    .from('offers')
-    .select('*');
-  
-  if (error) {
-    console.error(error);
-  } else {
-    console.log(JSON.stringify(data, null, 2));
+  try {
+    const conn = await mysql.createConnection({
+      host: process.env.MYSQL_HOST || "localhost",
+      user: process.env.MYSQL_USER || "root",
+      password: process.env.MYSQL_PASSWORD || "",
+      database: process.env.MYSQL_DATABASE || "techneyo_portfolio",
+    });
+
+    const [rows] = await conn.query("SELECT id, title, offer_type, status FROM offers LIMIT 5");
+    console.log("Connected to MySQL! Sample offers:", rows);
+    await conn.end();
+  } catch (err) {
+    console.error("MySQL check error:", err.message);
   }
 }
 
