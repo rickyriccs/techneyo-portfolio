@@ -5,7 +5,7 @@ on:
     branches:
       - production
   schedule:
-    # Runs daily at 02:00 UTC (07:30 AM IST) to generate and deploy fresh sitemap & latest DB content
+    # Runs daily at 02:00 UTC (07:30 AM IST) to generate and deploy fresh sitemap
     - cron: '0 2 * * *'
   workflow_dispatch:
 
@@ -13,9 +13,6 @@ jobs:
   build-and-deploy:
     name: Build Fresh and Deploy Dist
     runs-on: ubuntu-latest
-    env:
-      VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || secrets.VITE_SUPABASE_URL }}
-      VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY }}
 
     steps:
       - name: Checkout production branch
@@ -29,25 +26,17 @@ jobs:
       - name: Fresh install dependencies
         run: npm ci
 
-      - name: Verify frontend environment
-        run: |
-          if [ -z "${VITE_SUPABASE_URL}" ]; then
-            echo "Missing VITE_SUPABASE_URL. Add it in GitHub Settings > Secrets and variables > Actions > Variables or Secrets."
-            exit 1
-          fi
-          if [ -z "${VITE_SUPABASE_ANON_KEY}" ]; then
-            echo "Missing VITE_SUPABASE_ANON_KEY. Add it in GitHub Settings > Secrets and variables > Actions > Variables or Secrets."
-            exit 1
-          fi
-
-      - name: Build React project
+      - name: Build React project & API
         run: npm run build
 
-      - name: Confirm dist folder
+      - name: Confirm dist folder & backend assets
         run: |
           ls -la
           ls -la dist
+          test -f dist/index.html
           test -f dist/.htaccess
+          test -f dist/api/index.php
+          echo "Verified dist/ contains index.html, .htaccess, and api/index.php"
 
       - name: Deploy dist files to Hostinger public_html
         uses: easingthemes/ssh-deploy@main

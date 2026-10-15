@@ -2,6 +2,9 @@
   RewriteEngine On
   RewriteBase /
 
+  # Route all API endpoints to Hostinger PHP backend
+  RewriteRule ^api/?(.*)$ api/index.php?route=$1 [QSA,L]
+
   # Redirect Trailing Slashes If not a Folder...
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_URI} (.+)/$

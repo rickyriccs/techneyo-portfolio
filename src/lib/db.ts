@@ -16,6 +16,18 @@ type Order = {
   ascending?: boolean;
 };
 
+async function parseApiResponse(res: Response) {
+  const contentType = res.headers.get("content-type") || "";
+  if (!contentType.includes("application/json")) {
+    const text = await res.text();
+    if (text.includes("<!doctype") || text.includes("<html")) {
+      throw new Error(`API returned HTML (status ${res.status}). Ensure the Hostinger backend is properly routed.`);
+    }
+    throw new Error(`API error (${res.status}): ${text.slice(0, 100)}`);
+  }
+  return await res.json();
+}
+
 export class MySQLQueryBuilder implements PromiseLike<any> {
   private table: string;
   private action: "select" | "insert" | "update" | "delete" = "select";
@@ -134,7 +146,7 @@ export class MySQLQueryBuilder implements PromiseLike<any> {
             filters: this.filters,
           }),
         });
-        const json = await res.json();
+        const json = await parseApiResponse(res);
         return { count: json.count ?? 0, data: null, error: json.error || null };
       }
 
@@ -152,7 +164,7 @@ export class MySQLQueryBuilder implements PromiseLike<any> {
             single: this.isSingle,
           }),
         });
-        const json = await res.json();
+        const json = await parseApiResponse(res);
         return { data: json.data, error: json.error || null };
       }
 
@@ -165,7 +177,7 @@ export class MySQLQueryBuilder implements PromiseLike<any> {
             rows: this.payload,
           }),
         });
-        const json = await res.json();
+        const json = await parseApiResponse(res);
         return { data: json.data, error: json.error || null };
       }
 
@@ -179,7 +191,7 @@ export class MySQLQueryBuilder implements PromiseLike<any> {
             filters: this.filters,
           }),
         });
-        const json = await res.json();
+        const json = await parseApiResponse(res);
         return { data: json.data, error: json.error || null };
       }
 
@@ -192,7 +204,7 @@ export class MySQLQueryBuilder implements PromiseLike<any> {
             filters: this.filters,
           }),
         });
-        const json = await res.json();
+        const json = await parseApiResponse(res);
         return { error: json.error || null };
       }
     } catch (err: any) {
@@ -228,7 +240,7 @@ const auth = {
         body: JSON.stringify({ email, password }),
       });
 
-      const json = await res.json();
+      const json = await parseApiResponse(res);
       if (!res.ok || json.error) {
         return { data: { user: null, session: null }, error: { message: json.error || "Invalid email or password" } };
       }
