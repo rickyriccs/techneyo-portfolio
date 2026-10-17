@@ -2,6 +2,7 @@ import { Router } from "express";
 import crypto from "crypto";
 import { query } from "../db.js";
 import { requireAdmin } from "../middleware/auth.js";
+import { sendMetaCapiEvent } from "../lib/meta-capi.js";
 
 const router = Router();
 
@@ -82,6 +83,22 @@ router.post("/", async (req, res) => {
       referrer || null,
       device_type || null,
     ]);
+
+    // Dispatch Meta Conversions API (CAPI) Purchase event
+    sendMetaCapiEvent({
+      eventName: "Purchase",
+      email: customer_email,
+      phone: customer_phone,
+      firstName: customer_name?.split(" ")[0],
+      lastName: customer_name?.split(" ").slice(1).join(" "),
+      sourceUrl: source_page_url || landing_page_url,
+      value: advance_amount_paid || 999,
+      currency: "INR",
+      customData: {
+        order_id: razorpay_order_id || id,
+        payment_id: razorpay_payment_id || null,
+      },
+    });
 
     return res.status(201).json({ success: true, id, message: "Booking recorded" });
   } catch (err) {

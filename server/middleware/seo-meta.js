@@ -22,8 +22,83 @@ const BOT_USER_AGENTS = [
   "pinterestbot",
 ];
 
+const industryMetadata = {
+  "healthcare-clinics": {
+    title: "Healthcare, Clinics & Doctor Website Solutions | Techneyo Solutions",
+    description: "Get more patients and automated appointment bookings for your clinic with high-speed healthcare websites, Google Maps local dominance, and WhatsApp lead flow.",
+    keywords: "clinic website designer india, doctor appointment website, healthcare web development, hospital website design ludhiana",
+  },
+  "manufacturing-industrial": {
+    title: "Industrial & Manufacturing Business Websites | Techneyo Solutions",
+    description: "B2B manufacturing websites and product catalog portals designed for generating high-ticket commercial inquiries, export leads, and distributor partnerships.",
+    keywords: "manufacturing website design, b2b industrial website india, factory website developer, machinery catalog portal",
+  },
+  "real-estate-builders": {
+    title: "Real Estate & Property Developer Websites | Techneyo Solutions",
+    description: "High-converting property project landing pages, 3D floor plan showcases, and instant WhatsApp booking bots for real estate agents and developers.",
+    keywords: "real estate website builder, property listing website india, builder project landing page, real estate crm",
+  },
+  "education-coaching-institutes": {
+    title: "Education & Coaching Institute Website Design | Techneyo Solutions",
+    description: "Attract more student admissions with high-converting coaching institute websites, course brochures, and automated WhatsApp inquiry pipelines.",
+    keywords: "coaching institute website design, school college website developer, student admission landing page, education portal india",
+  },
+  "retail-ecommerce": {
+    title: "Retail & Direct-to-Consumer (D2C) Store Solutions | Techneyo Solutions",
+    description: "Fast, mobile-friendly online stores, WhatsApp shopping catalogs, and payment gateway setups for local retailers and growing D2C brands.",
+    keywords: "ecommerce website design india, retail shop website, d2c store builder, whatsapp store catalog",
+  },
+  "restaurants-hospitality": {
+    title: "Restaurant, Cafe & Hospitality Websites | Techneyo Solutions",
+    description: "Interactive digital menus, direct online food ordering with zero commission, table reservation systems, and local Google Map dominance.",
+    keywords: "restaurant website design, cafe digital menu, online table booking system, food ordering website ludhiana",
+  },
+  "professional-consultants": {
+    title: "Consultant, CA & Legal Practice Websites | Techneyo Solutions",
+    description: "Build authority and high-ticket client trust with professional corporate websites, client portals, and automated consultation scheduling.",
+    keywords: "consultant website developer, ca lawyer website design, legal practice website india, appointment booking website",
+  },
+};
+
+const staticPageMetadata = {
+  "/services": {
+    title: "Website, CRM & Automation Services in India | Techneyo Solutions",
+    description: "Explore Techneyo Solutions: High-converting business websites, custom CRM development, WhatsApp lead automation, and local Google ranking.",
+    keywords: "website development services india, crm software company, whatsapp automation agency, local seo services",
+  },
+  "/offers": {
+    title: "Special Business Website & Automation Offers | Techneyo Solutions",
+    description: "Explore active promotional packages including the ₹999/month Business Website Subscription, free domain, cloud hosting, and WhatsApp lead setup.",
+    keywords: "website offers india, 999 website subscription, affordable web design packages, business automation offers",
+  },
+  "/portfolio": {
+    title: "Client Portfolio & Live Case Studies | Techneyo Solutions",
+    description: "Browse websites, CRM systems, and custom automation platforms built by Techneyo Solutions for businesses across India.",
+    keywords: "techneyo portfolio, website development case studies, live client websites, crm software examples",
+  },
+  "/industries": {
+    title: "Industry-Specific Website & Digital Growth Solutions | Techneyo",
+    description: "Tailored digital growth systems for healthcare, manufacturing, real estate, education, retail, restaurants, and professional consultants.",
+    keywords: "industry website solutions, specialized b2b web design, clinic websites, manufacturing websites india",
+  },
+  "/about": {
+    title: "About Techneyo Solutions | India's Fast-Growing Tech Agency",
+    description: "Learn about Techneyo Solutions, our mission, leadership, and how we help local and national businesses grow with modern web technologies.",
+    keywords: "about techneyo, techneyo solutions team, web development company ludhiana india",
+  },
+  "/contact": {
+    title: "Contact Techneyo Solutions | Discuss Your Project Today",
+    description: "Get in touch with Techneyo Solutions. Call or WhatsApp +91 99887 73122 or send your project enquiry for a free proposal and estimate.",
+    keywords: "contact techneyo, hire website developer, whatsapp techneyo, web design enquiry india",
+  },
+  "/tools": {
+    title: "Free Business & Digital ROI Tools | Techneyo Solutions",
+    description: "Calculate your website ROI, estimate project costs, and check your digital presence score with Techneyo free business tools.",
+    keywords: "website roi calculator, free seo tools, digital presence audit, web design cost estimator",
+  },
+};
+
 export async function seoMetaMiddleware(req, res, next) {
-  // Only intercept GET requests that do NOT start with /api or static file extensions
   if (req.method !== "GET" || req.path.startsWith("/api") || req.path.includes(".")) {
     return next();
   }
@@ -33,11 +108,13 @@ export async function seoMetaMiddleware(req, res, next) {
 
   const offerMatch = req.path.match(/^\/offers\/([a-zA-Z0-9_-]+)/);
   const serviceMatch = req.path.match(/^\/services\/([a-zA-Z0-9_-]+)/);
+  const industryMatch = req.path.match(/^\/industries\/([a-zA-Z0-9_-]+)/);
   const blogMatch = req.path.match(/^\/blog\/([a-zA-Z0-9_-]+)/);
   const isLudhiana = req.path === "/website-development-company-ludhiana";
+  const staticMatch = staticPageMetadata[req.path];
 
-  // If not a bot and not an SEO-critical content page, let Express static handle it normally
-  if (!isBot && !offerMatch && !serviceMatch && !blogMatch && !isLudhiana) {
+  // If not a bot and not an SEO-critical content route, let Express static handle it normally
+  if (!isBot && !offerMatch && !serviceMatch && !industryMatch && !blogMatch && !isLudhiana && !staticMatch) {
     return next();
   }
 
@@ -80,6 +157,18 @@ export async function seoMetaMiddleware(req, res, next) {
           url: `https://techneyo.com/services/${slug}`,
         };
       }
+    } else if (industryMatch) {
+      const slug = industryMatch[1];
+      const ind = industryMetadata[slug];
+      if (ind) {
+        seoData = {
+          title: ind.title,
+          description: ind.description,
+          keywords: ind.keywords,
+          image: "https://techneyo.com/banner.jpeg",
+          url: `https://techneyo.com/industries/${slug}`,
+        };
+      }
     } else if (blogMatch) {
       const slug = blogMatch[1];
       const rows = await query(
@@ -103,6 +192,14 @@ export async function seoMetaMiddleware(req, res, next) {
         keywords: "website development company ludhiana, web designer ludhiana, website design punjab, best it company ludhiana",
         image: "https://techneyo.com/banner.jpeg",
         url: "https://techneyo.com/website-development-company-ludhiana",
+      };
+    } else if (staticMatch) {
+      seoData = {
+        title: staticMatch.title,
+        description: staticMatch.description,
+        keywords: staticMatch.keywords,
+        image: "https://techneyo.com/banner.jpeg",
+        url: `https://techneyo.com${req.path}`,
       };
     }
 

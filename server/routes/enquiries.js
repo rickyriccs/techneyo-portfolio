@@ -4,6 +4,7 @@ import { query } from "../db.js";
 import { requireAdmin } from "../middleware/auth.js";
 import { enquiryRateLimiter, botDetectionFilter } from "../middleware/botProtection.js";
 import { logActivity } from "../logger.js";
+import { sendMetaCapiEvent } from "../lib/meta-capi.js";
 
 const router = Router();
 
@@ -176,6 +177,24 @@ router.post("/", enquiryRateLimiter, botDetectionFilter, async (req, res) => {
 
     // Dispatch Slack alert asynchronously
     dispatchSlackNotification(payload);
+
+    // Dispatch Meta Conversions API (CAPI) Lead event asynchronously
+    sendMetaCapiEvent({
+      eventName: "Lead",
+      email: payload.email,
+      phone: payload.phone,
+      firstName: payload.name?.split(" ")[0],
+      lastName: payload.name?.split(" ").slice(1).join(" "),
+      city: payload.city,
+      state: payload.state,
+      sourceUrl: payload.source_page_url || payload.landing_page_url,
+      clientIp: payload.ip_address,
+      clientUserAgent: payload.user_agent,
+      customData: {
+        service_required: payload.service_required,
+        lead_id: id,
+      },
+    });
 
     logActivity({
       actionType: "created",
