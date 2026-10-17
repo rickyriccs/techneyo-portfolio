@@ -19,35 +19,59 @@ const system = [
   "landing page designer India",
 ];
 
+const ludhianaBusinessSchema = {
+  ...localBusinessSchema,
+  "@type": "LocalBusiness",
+  name: "Techneyo Solutions - Website Development Company in Ludhiana",
+  url: `${businessInfo.website}/website-development-company-ludhiana`,
+  telephone: businessInfo.phoneDisplay,
+  email: businessInfo.email,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Ludhiana",
+    addressLocality: "Ludhiana",
+    addressRegion: "Punjab",
+    postalCode: "141001",
+    addressCountry: "IN",
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: "30.9010",
+    longitude: "75.8573",
+  },
+  areaServed: ["Ludhiana", "Punjab", "Chandigarh", "India"],
+  priceRange: "₹₹",
+};
+
 const LocalSeoPage = () => {
   const schema = graphSchema(
-    localBusinessSchema,
+    ludhianaBusinessSchema,
     breadcrumbSchema([
       { name: "Home", url: businessInfo.website },
-      { name: "Website Development Company in India", url: `${businessInfo.website}/website-development-company-ludhiana` },
+      { name: "Website Development Company in Ludhiana", url: `${businessInfo.website}/website-development-company-ludhiana` },
     ]),
   );
 
   return (
     <div className="public-premium min-h-screen overflow-hidden text-white">
       <PageMeta
-        title="Website Development Company in India | Techneyo Solutions"
-        description="Techneyo Solutions is an India-based website development agency serving businesses across India with websites, CRM, SEO, automation, and software solutions."
-        keywords="website development company India, business website design India, CRM development India, software company India, SEO services India"
+        title="Top Website Development Company in Ludhiana | Techneyo Solutions"
+        description="Looking for the best website development company in Ludhiana, Punjab? Techneyo Solutions builds fast, lead-generating business websites, CRM software, and WhatsApp automation for local businesses."
+        keywords="website development company ludhiana, web designer ludhiana, website development punjab, best it company ludhiana, business website design ludhiana, lead generation website ludhiana"
         canonicalPath="/website-development-company-ludhiana"
         schema={schema}
       />
       <section className="premium-hero relative overflow-hidden pb-16 pt-32">
         <div className="premium-grid-bg" />
         <div className="section-container relative z-10">
-          <Breadcrumbs items={[{ label: "Home", path: "/" }, { label: "India Website Development", path: "/website-development-company-ludhiana" }]} />
+          <Breadcrumbs items={[{ label: "Home", path: "/" }, { label: "Ludhiana Website Development", path: "/website-development-company-ludhiana" }]} />
           <div className="max-w-4xl">
-            <p className="premium-eyebrow">Serving Businesses Across India</p>
+            <p className="premium-eyebrow">Local Presence & Pan-India Scale</p>
             <h1 className="font-display text-4xl font-bold leading-tight text-white sm:text-6xl">
-              Website Development Company in India for Growing Businesses
+              Website Development Company in Ludhiana for Growing Businesses
             </h1>
             <p className="mt-6 text-lg leading-8 text-white/68">
-              Techneyo Solutions is a digital agency serving clients across India with websites, CRM systems, WhatsApp enquiry flows, SEO foundations, admin dashboards, and custom software that support real customer enquiries.
+              Techneyo Solutions helps businesses in Ludhiana, Punjab, and across India grow with modern business websites, CRM systems, WhatsApp enquiry automation, local Google rankings, and digital sales funnels.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/contact" className="premium-btn premium-btn-primary">
@@ -110,7 +134,7 @@ const LocalSeoPage = () => {
             </div>
           </section>
 
-          <SeoCta title="Need a website development company in India?" />
+          <SeoCta title="Need a website development company in Ludhiana?" />
         </div>
       </section>
     </div>

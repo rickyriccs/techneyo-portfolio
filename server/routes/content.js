@@ -5,6 +5,17 @@ import { requireAdmin } from "../middleware/auth.js";
 
 const router = Router();
 
+// Asynchronous search engine notification helper
+async function pingSearchEngines() {
+  const sitemapUrl = encodeURIComponent("https://techneyo.com/sitemap.xml");
+  try {
+    fetch(`https://www.google.com/ping?sitemap=${sitemapUrl}`).catch(() => {});
+    fetch(`https://www.bing.com/ping?sitemap=${sitemapUrl}`).catch(() => {});
+  } catch (e) {
+    // Non-blocking silent catch
+  }
+}
+
 // ==========================================
 // OFFERS
 // ==========================================
@@ -42,6 +53,7 @@ router.post("/offers", requireAdmin, async (req, res) => {
 
     const placeholders = cols.map(() => "?").join(", ");
     await query(`INSERT INTO offers (${cols.join(", ")}) VALUES (${placeholders})`, vals);
+    pingSearchEngines();
 
     return res.status(201).json({ success: true, id });
   } catch (err) {
@@ -71,6 +83,7 @@ router.put("/offers/:id", requireAdmin, async (req, res) => {
     if (updateCols.length === 0) return res.json({ success: true });
     vals.push(id);
     await query(`UPDATE offers SET ${updateCols.join(", ")} WHERE id = ?`, vals);
+    pingSearchEngines();
 
     return res.json({ success: true });
   } catch (err) {
@@ -82,6 +95,7 @@ router.delete("/offers/:id", requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     await query("DELETE FROM offers WHERE id = ?", [id]);
+    pingSearchEngines();
     return res.json({ success: true });
   } catch (err) {
     return res.status(500).json({ error: err.message });
@@ -143,6 +157,7 @@ router.post("/blogs", requireAdmin, async (req, res) => {
 
     const placeholders = cols.map(() => "?").join(", ");
     await query(`INSERT INTO blogs (${cols.join(", ")}) VALUES (${placeholders})`, vals);
+    pingSearchEngines();
 
     return res.status(201).json({ success: true, id });
   } catch (err) {
@@ -172,6 +187,7 @@ router.put("/blogs/:id", requireAdmin, async (req, res) => {
     if (updateCols.length === 0) return res.json({ success: true });
     vals.push(id);
     await query(`UPDATE blogs SET ${updateCols.join(", ")} WHERE id = ?`, vals);
+    pingSearchEngines();
 
     return res.json({ success: true });
   } catch (err) {
@@ -183,6 +199,7 @@ router.delete("/blogs/:id", requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     await query("DELETE FROM blogs WHERE id = ?", [id]);
+    pingSearchEngines();
     return res.json({ success: true });
   } catch (err) {
     return res.status(500).json({ error: err.message });
@@ -205,7 +222,7 @@ router.post("/services", requireAdmin, async (req, res) => {
   try {
     const data = req.body;
     const id = data.id || crypto.randomUUID();
-    const cols = ["id", "title", "description", "icon_name", "features", "status", "display_order"];
+    const cols = ["id", "title", "slug", "description", "icon_name", "features", "status", "display_order", "seo_title", "seo_description", "target_keywords"];
     const vals = cols.map((c) => {
       if (c === "id") return id;
       const val = data[c];
@@ -214,6 +231,7 @@ router.post("/services", requireAdmin, async (req, res) => {
       return val;
     });
     await query(`INSERT INTO services (${cols.join(", ")}) VALUES (${cols.map(() => "?").join(", ")})`, vals);
+    pingSearchEngines();
     return res.status(201).json({ success: true, id });
   } catch (err) {
     return res.status(500).json({ error: err.message });
@@ -237,6 +255,7 @@ router.put("/services/:id", requireAdmin, async (req, res) => {
     }
     vals.push(id);
     await query(`UPDATE services SET ${updateCols.join(", ")} WHERE id = ?`, vals);
+    pingSearchEngines();
     return res.json({ success: true });
   } catch (err) {
     return res.status(500).json({ error: err.message });
@@ -247,6 +266,7 @@ router.delete("/services/:id", requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     await query("DELETE FROM services WHERE id = ?", [id]);
+    pingSearchEngines();
     return res.json({ success: true });
   } catch (err) {
     return res.status(500).json({ error: err.message });

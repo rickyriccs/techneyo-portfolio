@@ -4,6 +4,7 @@ import { supabase } from "./supabase";
 declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void;
+    fbq?: (...args: unknown[]) => void;
   }
 }
 
@@ -76,7 +77,41 @@ export const trackEvent = (eventName: string, params: AnalyticsParams = {}) => {
       window.gtag("event", eventName, fullParams);
     }
 
-    // 2. Log to in-database real-time analytics table
+    // 2. Dispatch to Meta (Facebook) Pixel
+    if (typeof window !== "undefined" && typeof window.fbq === "function") {
+      if (
+        eventName === "whatsapp_click" ||
+        eventName === "contact_form_submit" ||
+        eventName === "proposal_form_submit" ||
+        eventName === "lead_submitted"
+      ) {
+        window.fbq("track", "Lead", {
+          content_name: (fullParams.item_name as string) || (fullParams.offer_title as string) || "General Enquiry",
+          content_category: (fullParams.cta_location as string) || "Lead Generation",
+          currency: "INR",
+        });
+      } else if (eventName === "offer_view") {
+        window.fbq("track", "ViewContent", {
+          content_name: (fullParams.offer_title as string) || (fullParams.offer_slug as string),
+          content_type: "product",
+        });
+      } else if (eventName === "booking_initiated" || eventName === "proposal_modal_open") {
+        window.fbq("track", "InitiateCheckout", {
+          content_name: (fullParams.offer_title as string) || "Service Package",
+          currency: "INR",
+        });
+      } else if (eventName === "booking_success" || eventName === "payment_success") {
+        window.fbq("track", "Purchase", {
+          value: Number(fullParams.booking_amount) || 999,
+          currency: "INR",
+          content_name: (fullParams.offer_title as string) || "Booking Deposit",
+        });
+      } else {
+        window.fbq("trackCustom", eventName, fullParams);
+      }
+    }
+
+    // 3. Log to in-database real-time analytics table
     logToSupabase(eventName, fullParams);
   } catch {
     // Analytics must never break UX
@@ -89,6 +124,10 @@ export const trackPageView = () => {
 
     if (typeof window !== "undefined" && typeof window.gtag === "function") {
       window.gtag("event", "page_view", fullParams);
+    }
+
+    if (typeof window !== "undefined" && typeof window.fbq === "function") {
+      window.fbq("track", "PageView");
     }
 
     logToSupabase("page_view", fullParams);

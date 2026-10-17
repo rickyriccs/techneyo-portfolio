@@ -11,6 +11,8 @@ import enquiriesRoutes from "./routes/enquiries.js";
 import bookingsRoutes from "./routes/bookings.js";
 import contentRoutes from "./routes/content.js";
 import dbRoutes from "./routes/db.js";
+import sitemapRoutes from "./routes/sitemap.js";
+import { seoMetaMiddleware } from "./middleware/seo-meta.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -27,6 +29,9 @@ app.set("trust proxy", 1);
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json({ limit: "15mb" }));
 app.use(express.urlencoded({ extended: true, limit: "15mb" }));
+
+// Dynamic XML Sitemap (served fresh from MySQL directly)
+app.use(sitemapRoutes);
 
 // Health check endpoint
 app.get("/api/health", async (req, res) => {
@@ -45,10 +50,14 @@ app.use("/api/bookings", bookingsRoutes);
 app.use("/api/db", dbRoutes);
 app.use("/api", contentRoutes);
 
-// Static frontend serving (Single Server Setup)
+// Static frontend serving with dynamic SEO & Open Graph meta injection
 const distPath = path.resolve(__dirname, "../dist");
 if (fs.existsSync(distPath)) {
   app.use(express.static(distPath));
+
+  // Dynamic server-side SEO meta injection for bots & social scrapers
+  app.use(seoMetaMiddleware);
+
   app.use((req, res, next) => {
     if (req.path.startsWith("/api")) {
       return res.status(404).json({ error: "Endpoint not found" });
@@ -56,6 +65,9 @@ if (fs.existsSync(distPath)) {
     res.sendFile(path.join(distPath, "index.html"));
   });
 } else {
+  // Even if dist is not built yet, allow SEO meta middleware to work with root index.html
+  app.use(seoMetaMiddleware);
+
   app.get("/", (req, res) => {
     res.send("Techneyo API Server is running. Frontend build not found in /dist (run npm run build).");
   });
