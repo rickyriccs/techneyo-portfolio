@@ -245,9 +245,15 @@ export const offerFaqSchema = (offer: any) => {
   }
 
   if (offer.billing_period) {
+    const isFree =
+      offer.booking_amount === 0 ||
+      offer.booking_amount_usd === 0 ||
+      offer.is_free_booking === true;
     faqs.push({
       question: `How does the billing and advance booking work?`,
-      answer: `The plan is billed ${offer.billing_period}. You can book your slot instantly with an advance setup payment of Rs. ${(offer.booking_amount || offer.setup_fee || offer.discount_price || 999).toLocaleString("en-IN")}.`,
+      answer: isFree
+        ? `The plan is billed ${offer.billing_period}. You can reserve your project slot with 100% free booking (zero advance payment required). Our team will contact you within 24 hours to review business requirements before any billing.`
+        : `The plan is billed ${offer.billing_period}. You can book your slot instantly with an advance setup payment of Rs. ${(offer.booking_amount || offer.setup_fee || offer.discount_price || 999).toLocaleString("en-IN")}.`,
     });
   }
 

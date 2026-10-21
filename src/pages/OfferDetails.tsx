@@ -119,11 +119,19 @@ export const OfferDetails = () => {
     !offer.discount_price_usd &&
     !offer.starting_price_usd;
 
+  const isFreeBooking =
+    !settings.payment_required ||
+    (currency === "USD"
+      ? offer.booking_amount_usd === 0 || (!offer.booking_amount_usd && offer.booking_amount === 0)
+      : offer.booking_amount === 0);
+
   const customWhatsappUrl = `https://wa.me/919988773122?text=${encodeURIComponent(
     `Hello Techneyo, I would like to get a custom quote and discuss requirements for "${offer.title}".`
   )}`;
 
-  const advanceAmount = offer.booking_amount || offer.setup_fee || offer.discount_price || 0;
+  const advanceAmount = isFreeBooking
+    ? 0
+    : offer.booking_amount || offer.setup_fee || offer.discount_price || 0;
   const currentPrice = offer.discount_price || offer.starting_price || 0;
   const offerUrl = `${businessInfo.website}/offers/${offer.slug}`;
 
@@ -205,6 +213,8 @@ export const OfferDetails = () => {
       q: `How do I book this offer and what happens next?`,
       a: isCustom
         ? `Click 'Chat on WhatsApp for Custom Quote' to discuss your specific requirements. Our team will review your project scope and provide a tailored proposal within 24 hours.`
+        : isFreeBooking
+        ? `Click 'Book Now — Free' to reserve your slot with zero upfront payment. Our team will contact you within 24 hours to gather business requirements and plan your project before any billing.`
         : `Click 'Book Now' to reserve your slot with an advance of ${formatPrice(
             advanceAmount,
             offer.booking_amount_usd || offer.setup_fee_usd || offer.discount_price_usd
@@ -353,6 +363,14 @@ export const OfferDetails = () => {
                 </div>
               )}
 
+              {!isCustom && isFreeBooking && (
+                <div className="border-l border-white/10 pl-4 py-1">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 px-3 py-1 text-xs font-semibold text-emerald-300">
+                    <Sparkles size={13} className="text-emerald-400" /> Zero Advance Required • 100% Free Booking
+                  </span>
+                </div>
+              )}
+
               {isCustom ? (
                 <a
                   href={customWhatsappUrl}
@@ -366,24 +384,30 @@ export const OfferDetails = () => {
                 <button
                   onClick={() => setIsBookingOpen(true)}
                   className={`premium-btn sm:ml-auto w-full sm:w-auto ${
-                    currency === "USD"
+                    isFreeBooking
+                      ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-500/20"
+                      : currency === "USD"
                       ? "bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white shadow-cyan-500/20"
-                      : settings.payment_required
-                      ? "premium-btn-primary"
-                      : "bg-emerald-600 hover:bg-emerald-500 text-white"
+                      : "premium-btn-primary"
                   }`}
                 >
-                  {currency === "USD" ? (
+                  {isFreeBooking ? (
+                    currency === "USD" ? (
+                      <>
+                        <Sparkles size={18} /> Reserve Project Slot — Free
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles size={18} /> Book Now — Free
+                      </>
+                    )
+                  ) : currency === "USD" ? (
                     <>
                       <Sparkles size={18} /> Reserve Project Slot & Get USD Quote
                     </>
-                  ) : settings.payment_required ? (
-                    <>
-                      <CreditCard size={18} /> Book with {formatPrice(advanceAmount, offer.booking_amount_usd || offer.setup_fee_usd || offer.discount_price_usd)} Advance
-                    </>
                   ) : (
                     <>
-                      <Sparkles size={18} /> Book Now — Free
+                      <CreditCard size={18} /> Book with {formatPrice(advanceAmount, offer.booking_amount_usd || offer.setup_fee_usd || offer.discount_price_usd)} Advance
                     </>
                   )}
                 </button>
@@ -653,24 +677,30 @@ export const OfferDetails = () => {
                 <button
                   onClick={() => setIsBookingOpen(true)}
                   className={`premium-btn text-xs px-4 py-2 ${
-                    currency === "USD"
+                    isFreeBooking
+                      ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-500/20"
+                      : currency === "USD"
                       ? "bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white shadow-cyan-500/20"
-                      : settings.payment_required
-                      ? "premium-btn-primary"
-                      : "bg-emerald-600 hover:bg-emerald-500 text-white"
+                      : "premium-btn-primary"
                   }`}
                 >
-                  {currency === "USD" ? (
+                  {isFreeBooking ? (
+                    currency === "USD" ? (
+                      <>
+                        <Sparkles size={15} /> Reserve Slot — Free
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles size={15} /> Book Now — Free
+                      </>
+                    )
+                  ) : currency === "USD" ? (
                     <>
                       <Sparkles size={15} /> Reserve Slot — USD Quote
                     </>
-                  ) : settings.payment_required ? (
-                    <>
-                      <CreditCard size={15} /> Book with {formatPrice(advanceAmount, offer.booking_amount_usd || offer.setup_fee_usd || offer.discount_price_usd)} Advance
-                    </>
                   ) : (
                     <>
-                      <Sparkles size={15} /> Book Now — Free
+                      <CreditCard size={15} /> Book with {formatPrice(advanceAmount, offer.booking_amount_usd || offer.setup_fee_usd || offer.discount_price_usd)} Advance
                     </>
                   )}
                 </button>

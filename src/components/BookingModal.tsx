@@ -38,6 +38,11 @@ export const BookingModal = ({
 
   if (!isOpen) return null;
 
+  const isOfferFree = isUsd
+    ? offer.booking_amount_usd === 0 || (!offer.booking_amount_usd && offer.booking_amount === 0)
+    : offer.booking_amount === 0;
+  const isFreeBooking = !paymentRequired || isOfferFree;
+
   const inrAdvance = offer.booking_amount || offer.setup_fee || offer.discount_price || 999;
   const advancePriceObj = getRawPrice(
     inrAdvance,
@@ -121,7 +126,7 @@ export const BookingModal = ({
     }
 
     // 2. Free booking flow in INR
-    if (!paymentRequired) {
+    if (isFreeBooking) {
       try {
         const bookingId = await saveLeadRecord("INR", 0);
         setIsProcessing(false);
@@ -232,7 +237,7 @@ export const BookingModal = ({
           {isUsd ? (
             <>
               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-[11px] font-bold uppercase tracking-wider mb-2">
-                <Sparkles size={12} /> International Priority Reservation
+                <Sparkles size={12} /> {isFreeBooking ? "Free Project Reservation" : "International Priority Reservation"}
               </div>
               <h2 className="mt-1 font-display text-2xl font-bold text-white">{offer.title}</h2>
               <p className="mt-1 text-sm text-white/65">
@@ -244,7 +249,7 @@ export const BookingModal = ({
                 . Reserve your slot below with zero upfront charge.
               </p>
             </>
-          ) : paymentRequired ? (
+          ) : !isFreeBooking ? (
             <>
               <span className="text-xs font-semibold uppercase tracking-wider text-cyan-400">
                 Razorpay Secure Online Booking
@@ -265,7 +270,7 @@ export const BookingModal = ({
               </span>
               <h2 className="mt-1 font-display text-2xl font-bold text-white">{offer.title}</h2>
               <p className="mt-1 text-sm text-white/65">
-                Fill in your details and we'll contact you to get started. No payment required.
+                Fill in your details and we'll contact you to get started. No advance payment required.
               </p>
             </>
           )}
@@ -339,7 +344,7 @@ export const BookingModal = ({
                 Zero upfront payment required right now. Reserve your slot and our team will share a detailed milestone proposal with Stripe/Wise invoice options.
               </p>
             </div>
-          ) : paymentRequired ? (
+          ) : !isFreeBooking ? (
             <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-xs text-white/70 space-y-1.5">
               <div className="flex justify-between items-center text-sm font-semibold text-white">
                 <span>Advance Payable Now</span>
@@ -357,10 +362,10 @@ export const BookingModal = ({
             <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4 text-xs text-white/70 space-y-1.5">
               <div className="flex items-center gap-2 text-sm font-semibold text-emerald-300">
                 <CheckCircle2 size={16} />
-                <span>No Advance Payment Required</span>
+                <span>Zero Advance Payment Required</span>
               </div>
               <p className="text-[11px] text-white/50 pl-6">
-                Our team will reach out to discuss requirements and next steps.
+                Our team will reach out within 24 hours to review your requirements before any billing.
               </p>
             </div>
           )}
@@ -371,24 +376,24 @@ export const BookingModal = ({
             className={`w-full h-12 rounded-xl font-semibold text-white shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-60 ${
               isUsd
                 ? "bg-gradient-to-r from-cyan-600 to-blue-600 shadow-cyan-500/20 hover:from-cyan-500 hover:to-blue-500"
-                : paymentRequired
+                : !isFreeBooking
                 ? "bg-gradient-to-r from-orange-500 to-amber-500 shadow-orange-500/20 hover:from-orange-400 hover:to-amber-400"
                 : "bg-gradient-to-r from-emerald-600 to-teal-600 shadow-emerald-500/20 hover:from-emerald-500 hover:to-teal-500"
             }`}
           >
             {isProcessing ? (
-              isUsd ? "Reserving Slot..." : paymentRequired ? "Opening Razorpay Gateway..." : "Saving your booking..."
+              isUsd ? "Reserving Slot..." : !isFreeBooking ? "Opening Razorpay Gateway..." : "Saving your booking..."
             ) : isUsd ? (
               <>
-                <Sparkles size={18} /> Reserve Project Slot & Request USD Proposal
+                <Sparkles size={18} /> {isFreeBooking ? "Reserve Project Slot — Free" : "Reserve Project Slot & Request USD Proposal"}
               </>
-            ) : paymentRequired ? (
+            ) : !isFreeBooking ? (
               <>
                 <CreditCard size={18} /> Pay Rs. {advancePriceObj.amount.toLocaleString("en-IN")} & Confirm Booking
               </>
             ) : (
               <>
-                <MessageCircle size={18} /> Book Now — We'll Contact You
+                <Sparkles size={18} /> Book Now — Free
               </>
             )}
           </button>

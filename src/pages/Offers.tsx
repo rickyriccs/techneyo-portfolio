@@ -301,6 +301,12 @@ export const Offers = () => {
                         !offer.discount_price_usd &&
                         !offer.starting_price_usd;
 
+                      const isFreeBooking =
+                        !settings.payment_required ||
+                        (currency === "USD"
+                          ? offer.booking_amount_usd === 0 || (!offer.booking_amount_usd && offer.booking_amount === 0)
+                          : offer.booking_amount === 0);
+
                       const customWhatsappUrl = `https://wa.me/919988773122?text=${encodeURIComponent(
                         `Hello Techneyo, I would like to get a custom quote and discuss requirements for "${offer.title}".`
                       )}`;
@@ -327,6 +333,12 @@ export const Offers = () => {
                           {!isCustom && offer.setup_fee && (
                             <span className="mt-1 text-xs text-cyan-300/80 font-medium">
                               + {formatPrice(offer.setup_fee, offer.setup_fee_usd, { fallback: "" })} one-time setup fee
+                            </span>
+                          )}
+
+                          {!isCustom && isFreeBooking && (
+                            <span className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20 w-fit">
+                              <Sparkles size={11} /> Zero Advance Required • Free Booking
                             </span>
                           )}
 
@@ -359,24 +371,30 @@ export const Offers = () => {
                               <button
                                 onClick={() => setSelectedOfferForBooking(offer)}
                                 className={`w-full h-11 rounded-xl font-semibold text-xs text-white transition-all flex items-center justify-center gap-2 shadow-lg ${
-                                  currency === "USD"
+                                  isFreeBooking
+                                    ? "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/10"
+                                    : currency === "USD"
                                     ? "bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-cyan-500/20"
-                                    : settings.payment_required
-                                    ? "bg-orange-500 hover:bg-orange-400 shadow-orange-500/10"
-                                    : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/10"
+                                    : "bg-orange-500 hover:bg-orange-400 shadow-orange-500/10"
                                 }`}
                               >
-                                {currency === "USD" ? (
+                                {isFreeBooking ? (
+                                  currency === "USD" ? (
+                                    <>
+                                      <Sparkles size={15} /> Reserve Project Slot — Free
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Sparkles size={15} /> Book Now — Free
+                                    </>
+                                  )
+                                ) : currency === "USD" ? (
                                   <>
                                     <Sparkles size={15} /> Reserve Slot — USD Quote
                                   </>
-                                ) : settings.payment_required ? (
-                                  <>
-                                    <CreditCard size={15} /> Book with {formatPrice(advanceAmount, offer.booking_amount_usd || offer.setup_fee_usd || offer.discount_price_usd)} Advance
-                                  </>
                                 ) : (
                                   <>
-                                    <Sparkles size={15} /> Book Now — Free
+                                    <CreditCard size={15} /> Book with {formatPrice(advanceAmount, offer.booking_amount_usd || offer.setup_fee_usd || offer.discount_price_usd)} Advance
                                   </>
                                 )}
                               </button>
