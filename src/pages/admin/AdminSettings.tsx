@@ -196,7 +196,7 @@ alter table public.app_settings add column if not exists slack_notify_onboarding
         slack_notify_proposals: form.slack_notify_proposals,
         slack_notify_onboarding: form.slack_notify_onboarding,
         updated_by: user?.id || null,
-        updated_at: new Date().toISOString(),
+        updated_at: new Date().toISOString().slice(0, 19).replace("T", " "),
       };
 
       let saveErr = null;
@@ -330,7 +330,7 @@ alter table public.app_settings add column if not exists slack_notify_onboarding
       slack_notify_proposals: form.slack_notify_proposals,
       slack_notify_onboarding: form.slack_notify_onboarding,
       updated_by: user?.id || null,
-      updated_at: new Date().toISOString(),
+      updated_at: new Date().toISOString().slice(0, 19).replace("T", " "),
     };
 
     const { error: saveError } = form.id

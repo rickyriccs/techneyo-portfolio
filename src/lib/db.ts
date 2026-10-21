@@ -28,6 +28,28 @@ async function parseApiResponse(res: Response) {
   return await res.json();
 }
 
+function sanitizePayloadForMySQL(val: any): any {
+  if (val === null || val === undefined) return val;
+  if (Array.isArray(val)) {
+    return val.map(sanitizePayloadForMySQL);
+  }
+  if (typeof val === "object" && !(val instanceof Date)) {
+    const sanitized: Record<string, any> = {};
+    for (const [k, v] of Object.entries(val)) {
+      if (typeof v === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?$/.test(v)) {
+        const d = new Date(v);
+        if (!isNaN(d.getTime())) {
+          sanitized[k] = d.toISOString().slice(0, 19).replace("T", " ");
+          continue;
+        }
+      }
+      sanitized[k] = v;
+    }
+    return sanitized;
+  }
+  return val;
+}
+
 export class MySQLQueryBuilder implements PromiseLike<any> {
   private table: string;
   private action: "select" | "insert" | "update" | "delete" = "select";
@@ -174,7 +196,7 @@ export class MySQLQueryBuilder implements PromiseLike<any> {
           headers,
           body: JSON.stringify({
             table: this.table,
-            rows: this.payload,
+            rows: sanitizePayloadForMySQL(this.payload),
           }),
         });
         const json = await parseApiResponse(res);
@@ -188,7 +210,7 @@ export class MySQLQueryBuilder implements PromiseLike<any> {
           headers,
           body: JSON.stringify({
             table: this.table,
-            values: this.payload,
+            values: sanitizePayloadForMySQL(this.payload),
             filters: this.filters,
           }),
         });

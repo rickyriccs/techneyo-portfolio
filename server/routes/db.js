@@ -164,6 +164,19 @@ router.post("/count", async (req, res) => {
   }
 });
 
+function normalizeDbValue(val) {
+  if (val === undefined || val === null) return null;
+  if (typeof val === "object") return JSON.stringify(val);
+  if (typeof val === "boolean") return val ? 1 : 0;
+  if (typeof val === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?$/.test(val)) {
+    const d = new Date(val);
+    if (!isNaN(d.getTime())) {
+      return d.toISOString().slice(0, 19).replace("T", " ");
+    }
+  }
+  return val;
+}
+
 // POST /api/db/insert
 router.post("/insert", async (req, res) => {
   try {
@@ -187,13 +200,7 @@ router.post("/insert", async (req, res) => {
       const keys = Object.keys(data).filter((k) => /^[a-zA-Z0-9_]+$/.test(k));
       const cols = keys.map((k) => `\`${k}\``).join(", ");
       const placeholders = keys.map(() => "?").join(", ");
-      const vals = keys.map((k) => {
-        const v = data[k];
-        if (v === undefined || v === null) return null;
-        if (typeof v === "object") return JSON.stringify(v);
-        if (typeof v === "boolean") return v ? 1 : 0;
-        return v;
-      });
+      const vals = keys.map((k) => normalizeDbValue(data[k]));
 
       const sql = `INSERT INTO \`${actualTable}\` (${cols}) VALUES (${placeholders})`;
       await query(sql, vals);
@@ -222,15 +229,7 @@ router.post("/update", async (req, res) => {
     for (const [key, val] of Object.entries(values || {})) {
       if (key === "id" || key === "created_at" || !/^[a-zA-Z0-9_]+$/.test(key)) continue;
       updateClauses.push(`\`${key}\` = ?`);
-      if (val === undefined || val === null) {
-        params.push(null);
-      } else if (typeof val === "object") {
-        params.push(JSON.stringify(val));
-      } else if (typeof val === "boolean") {
-        params.push(val ? 1 : 0);
-      } else {
-        params.push(val);
-      }
+      params.push(normalizeDbValue(val));
     }
 
     if (updateClauses.length === 0) {
@@ -244,7 +243,7 @@ router.post("/update", async (req, res) => {
       for (const f of filters) {
         if (!/^[a-zA-Z0-9_]+$/.test(f.column)) continue;
         whereClauses.push(`\`${f.column}\` = ?`);
-        params.push(f.value);
+        params.push(normalizeDbValue(f.value));
       }
       if (whereClauses.length > 0) {
         sql += ` WHERE ${whereClauses.join(" AND ")}`;

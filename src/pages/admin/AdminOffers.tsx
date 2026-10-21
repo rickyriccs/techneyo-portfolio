@@ -203,7 +203,7 @@ export const AdminOffers = () => {
       display_order: Number(form.display_order) || 0,
       seo_title: form.seo_title.trim() || null,
       seo_description: form.seo_description.trim() || null,
-      updated_at: new Date().toISOString(),
+      updated_at: new Date().toISOString().slice(0, 19).replace("T", " "),
     };
 
     if (form.id) {

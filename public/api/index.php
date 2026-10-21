@@ -480,6 +480,24 @@ if ($route === 'db/count' && $method === 'POST') {
     json_response(['count' => (int)($res['count'] ?? 0), 'error' => null]);
 }
 
+// Helper to normalize values for MySQL parameter binding
+function normalize_db_val($v) {
+    if ($v === null) return null;
+    if (is_array($v)) {
+        return json_encode($v, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    }
+    if (is_bool($v)) {
+        return $v ? 1 : 0;
+    }
+    if (is_string($v) && preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?$/', $v)) {
+        $ts = strtotime($v);
+        if ($ts !== false) {
+            return date('Y-m-d H:i:s', $ts);
+        }
+    }
+    return $v;
+}
+
 // -------------------------------------------------------------
 // Route: /api/db/insert
 // -------------------------------------------------------------
@@ -510,14 +528,7 @@ if ($route === 'db/insert' && $method === 'POST') {
         $vals = [];
 
         foreach ($keys as $k) {
-            $v = $item[$k];
-            if (is_array($v)) {
-                $vals[] = json_encode($v, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-            } elseif (is_bool($v)) {
-                $vals[] = $v ? 1 : 0;
-            } else {
-                $vals[] = $v;
-            }
+            $vals[] = normalize_db_val($item[$k]);
         }
 
         try {
@@ -559,13 +570,7 @@ if ($route === 'db/update' && $method === 'POST') {
     foreach ($values as $k => $v) {
         if ($k === 'id' || $k === 'created_at' || !preg_match('/^[a-zA-Z0-9_]+$/', $k)) continue;
         $updates[] = "`{$k}` = ?";
-        if (is_array($v)) {
-            $params[] = json_encode($v, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        } elseif (is_bool($v)) {
-            $params[] = $v ? 1 : 0;
-        } else {
-            $params[] = $v;
-        }
+        $params[] = normalize_db_val($v);
     }
 
     if (empty($updates)) {
@@ -580,7 +585,7 @@ if ($route === 'db/update' && $method === 'POST') {
             $col = $f['column'] ?? '';
             if (!preg_match('/^[a-zA-Z0-9_]+$/', $col)) continue;
             $whereClauses[] = "`{$col}` = ?";
-            $params[] = $f['value'] ?? null;
+            $params[] = normalize_db_val($f['value'] ?? null);
         }
         if (!empty($whereClauses)) {
             $sql .= " WHERE " . implode(' AND ', $whereClauses);
