@@ -56,17 +56,26 @@ const AdminPortfolio = () => {
     setError("");
     const { data, error: loadError } = await supabase
       .from("portfolio_clients")
-      .select("id,company_name,company_logo_url,company_description,company_website_url,projects,display_order")
-      .order("display_order", { ascending: true });
+      .select("id,company_name,company_logo_url,company_description,company_website_url,projects,display_order,created_at")
+      .order("display_order", { ascending: false });
 
     if (loadError) {
       setError(loadError.message);
     } else {
-      // Cast the projects field to Project[] after fetching
-      const formattedData = (data ?? []).map((row) => ({
-        ...row,
-        projects: Array.isArray(row.projects) ? (row.projects as Project[]) : [],
-      }));
+      // Cast the projects field to Project[] after fetching and sort DESC
+      const formattedData = (data ?? [])
+        .map((row) => ({
+          ...row,
+          projects: Array.isArray(row.projects) ? (row.projects as Project[]) : [],
+        }))
+        .sort((a, b) => {
+          const orderA = a.display_order ?? 0;
+          const orderB = b.display_order ?? 0;
+          if (orderB !== orderA) return orderB - orderA;
+          const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+          const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+          return dateB - dateA;
+        });
       setRows(formattedData as ClientRow[]);
     }
     setIsLoading(false);

@@ -17,6 +17,7 @@ type Client = {
   company_website_url?: string | null;
   projects: Project[];
   display_order: number;
+  created_at?: string;
 };
 
 const fadeUp = {
@@ -43,14 +44,25 @@ const ClientsSection = () => {
       try {
         const { data, error } = await supabase
           .from("portfolio_clients")
-          .select("id,company_name,company_logo_url,company_description,company_website_url,projects,display_order")
-          .order("display_order", { ascending: true });
+          .select("id,company_name,company_logo_url,company_description,company_website_url,projects,display_order,created_at")
+          .order("display_order", { ascending: false });
 
         if (!error && data) {
-          const formatted = data.map((row) => ({
-            ...row,
-            projects: Array.isArray(row.projects) ? (row.projects as Project[]) : [],
-          }));
+          const formatted = data
+            .map((row) => ({
+              ...row,
+              projects: Array.isArray(row.projects) ? (row.projects as Project[]) : [],
+            }))
+            .sort((a, b) => {
+              const orderA = a.display_order ?? 0;
+              const orderB = b.display_order ?? 0;
+              if (orderB !== orderA) {
+                return orderB - orderA;
+              }
+              const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+              const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+              return dateB - dateA;
+            });
           setClients(formatted);
         }
       } catch (err) {
@@ -106,8 +118,21 @@ const ClientsSection = () => {
                 variants={fadeUp}
                 custom={index + 1}
                 onClick={() => setSelectedClient(client)}
-                className="premium-card premium-card-hover group flex flex-col items-center justify-between p-5 min-h-[145px] cursor-pointer text-center transition-all duration-300 hover:border-cyan-500/30"
+                className="premium-card premium-card-hover group relative flex flex-col items-center justify-between p-5 min-h-[145px] cursor-pointer text-center transition-all duration-300 hover:border-cyan-500/30"
               >
+                {client.company_website_url && (
+                  <a
+                    href={client.company_website_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="absolute top-2.5 right-2.5 p-1 rounded-md text-white/30 hover:text-cyan-300 hover:bg-white/5 transition-all z-10"
+                    title={`Visit ${client.company_name} website`}
+                    aria-label={`Visit ${client.company_name} website`}
+                  >
+                    <ExternalLink size={13} />
+                  </a>
+                )}
                 <div className="flex flex-1 items-center justify-center w-full min-h-[64px] max-h-[72px] mb-3">
                   {client.company_logo_url ? (
                     <img
