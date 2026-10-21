@@ -131,6 +131,59 @@ function log_activity($admin_id, $action_type, $module_name, $record_id = null, 
     }
 }
 
+/**
+ * Automatically checks and ensures dual-currency USD and missing columns exist.
+ * Self-heals when unknown columns are encountered in MySQL.
+ */
+function ensure_dual_currency_columns($pdo) {
+    $columnsToAdd = [
+        'offers' => [
+            'starting_price_usd' => "ALTER TABLE `offers` ADD COLUMN `starting_price_usd` DECIMAL(10,2) DEFAULT NULL AFTER `starting_price`",
+            'discount_price_usd' => "ALTER TABLE `offers` ADD COLUMN `discount_price_usd` DECIMAL(10,2) DEFAULT NULL AFTER `discount_price`",
+            'setup_fee_usd' => "ALTER TABLE `offers` ADD COLUMN `setup_fee_usd` DECIMAL(10,2) DEFAULT NULL AFTER `setup_fee`",
+            'booking_amount_usd' => "ALTER TABLE `offers` ADD COLUMN `booking_amount_usd` DECIMAL(10,2) DEFAULT NULL AFTER `booking_amount`",
+        ],
+        'services' => [
+            'slug' => "ALTER TABLE `services` ADD COLUMN `slug` VARCHAR(191) DEFAULT NULL AFTER `title`",
+            'starting_price' => "ALTER TABLE `services` ADD COLUMN `starting_price` DECIMAL(10,2) DEFAULT NULL",
+            'starting_price_usd' => "ALTER TABLE `services` ADD COLUMN `starting_price_usd` DECIMAL(10,2) DEFAULT NULL AFTER `starting_price`",
+            'seo_title' => "ALTER TABLE `services` ADD COLUMN `seo_title` VARCHAR(255) DEFAULT NULL",
+            'seo_description' => "ALTER TABLE `services` ADD COLUMN `seo_description` TEXT DEFAULT NULL",
+            'target_keywords' => "ALTER TABLE `services` ADD COLUMN `target_keywords` TEXT DEFAULT NULL",
+        ],
+        'service_packages' => [
+            'price_usd' => "ALTER TABLE `service_packages` ADD COLUMN `price_usd` DECIMAL(10,2) DEFAULT NULL AFTER `price`",
+            'offer_price_usd' => "ALTER TABLE `service_packages` ADD COLUMN `offer_price_usd` DECIMAL(10,2) DEFAULT NULL AFTER `offer_price`",
+        ],
+        'digital_tools' => [
+            'starting_price_usd' => "ALTER TABLE `digital_tools` ADD COLUMN `starting_price_usd` DECIMAL(10,2) DEFAULT NULL AFTER `starting_price`",
+        ],
+        'offer_bookings' => [
+            'currency' => "ALTER TABLE `offer_bookings` ADD COLUMN `currency` VARCHAR(10) DEFAULT 'INR' AFTER `advance_amount_paid`",
+        ],
+    ];
+
+    $results = [];
+    foreach ($columnsToAdd as $table => $cols) {
+        try {
+            $existing = [];
+            $stmt = $pdo->query("SHOW COLUMNS FROM `{$table}`");
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $existing[] = strtolower($row['Field']);
+            }
+            foreach ($cols as $colName => $sql) {
+                if (!in_array(strtolower($colName), $existing)) {
+                    $pdo->exec($sql);
+                    $results[] = "Added column `{$colName}` to table `{$table}`";
+                }
+            }
+        } catch (Exception $e) {
+            $results[] = "Error on table `{$table}`: " . $e->getMessage();
+        }
+    }
+    return $results;
+}
+
 // Resolve route path
 $route = '';
 if (!empty($_GET['route'])) {
@@ -186,7 +239,17 @@ if ($route === 'health' || $route === '') {
 }
 
 // -------------------------------------------------------------
-// Route: /api/auth/login
+// Route: /api/migrate
+// -------------------------------------------------------------
+if ($route === 'migrate') {
+    $pdo = get_db_connection();
+    $logs = ensure_dual_currency_columns($pdo);
+    json_response([
+        'status' => 'ok',
+        'message' => 'Schema migration check completed successfully.',
+        'details' => $logs
+    ]);
+}
 // -------------------------------------------------------------
 if ($route === 'auth/login' && $method === 'POST') {
     $body = get_json_body();
@@ -457,8 +520,20 @@ if ($route === 'db/insert' && $method === 'POST') {
             }
         }
 
-        $stmt = $pdo->prepare("INSERT INTO `{$actualTable}` ({$cols}) VALUES ({$placeholders})");
-        $stmt->execute($vals);
+        try {
+            $stmt = $pdo->prepare("INSERT INTO `{$actualTable}` ({$cols}) VALUES ({$placeholders})");
+            $stmt->execute($vals);
+        } catch (PDOException $e) {
+            $errCode = $e->getCode();
+            $errMsg = $e->getMessage();
+            if ($errCode === '42S22' || strpos($errMsg, 'Unknown column') !== false || (isset($e->errorInfo[1]) && $e->errorInfo[1] == 1054)) {
+                ensure_dual_currency_columns($pdo);
+                $stmt = $pdo->prepare("INSERT INTO `{$actualTable}` ({$cols}) VALUES ({$placeholders})");
+                $stmt->execute($vals);
+            } else {
+                throw $e;
+            }
+        }
         $inserted[] = $item;
     }
 
@@ -513,8 +588,20 @@ if ($route === 'db/update' && $method === 'POST') {
     }
 
     $pdo = get_db_connection();
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
+    try {
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+    } catch (PDOException $e) {
+        $errCode = $e->getCode();
+        $errMsg = $e->getMessage();
+        if ($errCode === '42S22' || strpos($errMsg, 'Unknown column') !== false || (isset($e->errorInfo[1]) && $e->errorInfo[1] == 1054)) {
+            ensure_dual_currency_columns($pdo);
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+        } else {
+            throw $e;
+        }
+    }
 
     json_response(['data' => [$values], 'error' => null]);
 }
