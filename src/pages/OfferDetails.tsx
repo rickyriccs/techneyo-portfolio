@@ -203,9 +203,12 @@ export const OfferDetails = () => {
     },
     {
       q: `How do I book this offer and what happens next?`,
-      a: `Click 'Book Now' to reserve your slot with an advance of Rs. ${advanceAmount.toLocaleString(
-        "en-IN"
-      )}. Our onboarding team will contact you within 24 hours to gather business requirements and begin layout setup.`,
+      a: isCustom
+        ? `Click 'Chat on WhatsApp for Custom Quote' to discuss your specific requirements. Our team will review your project scope and provide a tailored proposal within 24 hours.`
+        : `Click 'Book Now' to reserve your slot with an advance of ${formatPrice(
+            advanceAmount,
+            offer.booking_amount_usd || offer.setup_fee_usd || offer.discount_price_usd
+          )}. Our onboarding team will contact you within 24 hours to gather business requirements and begin layout setup.`,
     },
   ];
 

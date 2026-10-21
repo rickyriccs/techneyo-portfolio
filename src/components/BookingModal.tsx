@@ -349,7 +349,7 @@ export const BookingModal = ({
               </div>
               {offer.setup_fee && offer.discount_price && (
                 <p className="text-[11px] text-white/50">
-                  Setup fee: Rs. {offer.setup_fee} • Subscription: Rs. {offer.discount_price}/month
+                  Setup fee: {formatPrice(offer.setup_fee, offer.setup_fee_usd)} • Subscription: {formatPrice(offer.discount_price, offer.discount_price_usd)}/month
                 </p>
               )}
             </div>

@@ -19,6 +19,7 @@ import {
 import { usePersonalization } from "@/context/PersonalizationContext";
 import { createContactEnquiry } from "@/lib/contact-enquiries";
 import { notifySlackNewProposal } from "@/lib/slack";
+import { useCurrency } from "@/context/CurrencyContext";
 
 export const SmartProposalModal: React.FC = () => {
   const {
@@ -27,6 +28,8 @@ export const SmartProposalModal: React.FC = () => {
     proposalData,
     preferences,
   } = usePersonalization();
+
+  const { currency, formatPrice } = useCurrency();
 
   const [modalMountTime] = useState<number>(Date.now());
   const [formData, setFormData] = useState({
@@ -73,19 +76,19 @@ export const SmartProposalModal: React.FC = () => {
     const refCode = `PROP-${Math.floor(100000 + Math.random() * 900000)}`;
 
     const addonsText = selectedAddons.length > 0
-      ? selectedAddons.map((a) => `${a.name} (+₹${a.price.toLocaleString("en-IN")})`).join(", ")
+      ? selectedAddons.map((a) => `${a.name} (+${formatPrice(a.price)})`).join(", ")
       : "None selected";
 
     const formattedBudget = totalPrice
-      ? `₹${totalPrice.toLocaleString("en-IN")}`
+      ? formatPrice(totalPrice)
       : basePrice
-      ? `₹${basePrice.toLocaleString("en-IN")}`
+      ? formatPrice(basePrice)
       : "Custom Quote";
 
     const detailedMessage = `[PROPOSAL REF: ${refCode}]
 Service: ${targetService}
 Calculated Investment: ${formattedBudget}
-Base Price: ${basePrice ? `₹${basePrice.toLocaleString("en-IN")}` : "N/A"}
+Base Price: ${basePrice ? formatPrice(basePrice) : "N/A"}
 Selected Add-ons: ${addonsText}
 Included Bonus: ${bonusOffer}
 Goal: ${preferences.primaryGoal || "Not specified"}
@@ -98,7 +101,7 @@ User Notes: ${formData.notes || "None"}`;
         phone: formData.phone,
         email: formData.email,
         businessName: formData.businessName,
-        serviceRequired: `${targetService}${totalPrice ? ` (Total: ₹${totalPrice.toLocaleString("en-IN")})` : ""}`,
+        serviceRequired: `${targetService}${totalPrice ? ` (Total: ${formatPrice(totalPrice)})` : ""}`,
         budgetRange: formattedBudget,
         message: detailedMessage,
         sourcePage: window.location.pathname,
@@ -115,7 +118,7 @@ User Notes: ${formData.notes || "None"}`;
         businessName: formData.businessName,
         service: targetService,
         totalPrice: totalPrice || null,
-        addons: selectedAddons.map((a) => `${a.name} (+₹${a.price})`),
+        addons: selectedAddons.map((a) => `${a.name} (+${formatPrice(a.price)})`),
         notes: formData.notes,
       }).catch((e) => console.warn("Slack proposal dispatch error:", e));
     } catch (err: any) {
@@ -130,10 +133,10 @@ User Notes: ${formData.notes || "None"}`;
 
   const getFormattedWhatsAppUrl = () => {
     const addonsSummary = selectedAddons.length > 0
-      ? selectedAddons.map((a) => `• ${a.name} (+₹${a.price})`).join("\n")
+      ? selectedAddons.map((a) => `• ${a.name} (+${formatPrice(a.price)})`).join("\n")
       : "None";
 
-    const text = `Hello Techneyo Team, I generated my Custom AI Proposal on your website!\n\n📋 *Proposal Ref:* ${submittedRefCode}\n👤 *Name:* ${formData.name}\n📞 *Phone:* ${formData.phone}\n💼 *Service:* ${targetService}\n💰 *Calculated Total:* ${totalPrice ? `₹${totalPrice.toLocaleString("en-IN")}` : "Custom Quote"}\n➕ *Add-ons Selected:*\n${addonsSummary}\n🎁 *Included Bonus:* ${bonusOffer}\n🏢 *Business:* ${formData.businessName || "Not specified"}\n\nPlease review my proposal and share the execution roadmap.`;
+    const text = `Hello Techneyo Team, I generated my Custom AI Proposal on your website!\n\n📋 *Proposal Ref:* ${submittedRefCode}\n👤 *Name:* ${formData.name}\n📞 *Phone:* ${formData.phone}\n💼 *Service:* ${targetService}\n💰 *Calculated Total:* ${formattedBudget}\n➕ *Add-ons Selected:*\n${addonsSummary}\n🎁 *Included Bonus:* ${bonusOffer}\n🏢 *Business:* ${formData.businessName || "Not specified"}\n\nPlease review my proposal and share the execution roadmap.`;
     return `https://wa.me/919988773122?text=${encodeURIComponent(text)}`;
   };
 

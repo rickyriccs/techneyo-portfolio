@@ -27,10 +27,12 @@ import { businessInfo } from "@/lib/business-info";
 import { organizationSchema, breadcrumbSchema, graphSchema } from "@/lib/schema";
 import type { BlogPost } from "@/types/blog";
 import { fetchBlogBySlug, fetchPublishedBlogs } from "@/lib/blog-data";
+import { useCurrency } from "@/context/CurrencyContext";
 
 export const BlogPostPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const { currency } = useCurrency();
   const [post, setPost] = useState<BlogPost | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -349,7 +351,9 @@ export const BlogPostPage = () => {
           <div className="space-y-1 text-center sm:text-left">
             <span className="premium-badge">Featured Growth Plan</span>
             <h3 className="font-display text-xl sm:text-2xl font-bold text-white mt-1">
-              Ready to launch your business online for ₹999/month?
+              {currency === "USD"
+                ? "Ready to launch your business online from $19/month?"
+                : "Ready to launch your business online for ₹999/month?"}
             </h3>
             <p className="text-xs sm:text-sm text-white/70">
               Managed hosting, responsive UI, local SEO setup, and WhatsApp booking included.
@@ -359,7 +363,7 @@ export const BlogPostPage = () => {
             to="/offers/business-website-starting-999-month"
             className="premium-btn premium-btn-primary shrink-0 text-xs px-5 py-3 flex items-center gap-2"
           >
-            <Sparkles size={16} /> View ₹999 Offer
+            <Sparkles size={16} /> {currency === "USD" ? "View $19 Offer" : "View ₹999 Offer"}
           </Link>
         </div>
 

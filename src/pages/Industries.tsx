@@ -15,6 +15,7 @@ import {
 import PageMeta from "@/components/PageMeta";
 import { industryRegistry } from "@/lib/industry-data";
 import { usePersonalization } from "@/context/PersonalizationContext";
+import { useCurrency } from "@/context/CurrencyContext";
 
 const iconMap: Record<string, React.ElementType> = {
   Stethoscope,
@@ -36,6 +37,7 @@ const fadeUp = {
 
 export const Industries: React.FC = () => {
   const { openProposalModal } = usePersonalization();
+  const { formatPrice } = useCurrency();
   const industriesList = Object.values(industryRegistry);
 
   return (
@@ -101,7 +103,7 @@ export const Industries: React.FC = () => {
                         <IconComponent className="w-6 h-6" />
                       </div>
                       <span className="text-xs font-bold text-cyan-300 bg-cyan-500/10 px-2.5 py-1 rounded-full border border-cyan-500/20">
-                        From ₹{ind.startingPrice.toLocaleString("en-IN")}
+                        From {formatPrice(ind.startingPrice)}
                       </span>
                     </div>
 
