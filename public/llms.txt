@@ -1,0 +1,52 @@
+# Techneyo Solutions — Global Digital Product Agency
+
+> Techneyo Solutions is an international software development and digital growth agency. We build custom web applications, enterprise CRM systems, mobile apps (iOS & Android), and high-converting WhatsApp lead automation workflows for businesses across the United States, Europe, the United Kingdom, Canada, Australia, UAE, and Asia.
+
+## Company Overview
+- Name: Techneyo Solutions
+- Website: https://techneyo.com
+- Primary Phone / WhatsApp: +91 99887 73122
+- Primary Email: hello@techneyo.com
+- HQ / Development Hub: India (with global remote delivery across US, UK, EU, UAE, and APAC)
+- Operating Hours: Multi-timezone support with 4-5 hours synchronous overlap with US (EST/PST) and Europe (GMT/CET)
+
+## Core Capabilities & Services
+
+### 1. Custom Web Application & Website Development
+- Modern high-converting business websites, SaaS MVPs, and customer portals.
+- Tech Stack: React, Next.js, TypeScript, Tailwind CSS, Node.js, Express, PostgreSQL, MySQL, Supabase.
+- Deliverables: 100% responsive, SEO-optimized, sub-second load times, and custom CMS/admin panels.
+
+### 2. Custom CRM Systems & Admin Dashboards
+- Tailored internal business tools, operational workflows, customer relationship management (CRM), and reporting dashboards.
+- Integrations: WhatsApp Business API, Stripe, payment gateways, Google Sheets, email triggers, and webhook pipelines.
+
+### 3. WhatsApp Business Automation & AI Agents
+- Automated lead qualification chatbots, 24/7 customer enquiry routing, broadcast campaigns, appointment booking bots, and seamless CRM synchronization.
+- Official WhatsApp Business Cloud API integration.
+
+### 4. Mobile Application Development
+- Cross-platform native mobile applications for iOS and Android using React Native and Flutter.
+- Offline support, push notifications, native device integrations, and App Store / Google Play publishing.
+
+### 5. Paid Acquisition & Digital Growth
+- Google Ads (Search & Local Map Pack) and Meta Ads (Facebook & Instagram) engineered for direct B2B and B2C inbound lead generation.
+
+## Pricing Benchmarks & Engagement Models
+- Business Website Subscription: Starting from ₹999/month (Domestic India) / $49/month or $299 one-time (Global).
+- Custom Business Web Application / MVP: $1,200 - $3,500 USD (₹45,000 - ₹1,50,000 INR).
+- Custom CRM & Admin Platform: $2,500 - $8,000 USD (₹75,000 - ₹3,00,000 INR).
+- WhatsApp Lead Automation Engine: $350 - $1,200 USD (₹12,000 - ₹40,000 INR).
+- Dedicated Full-Stack Developer Pods: Hourly or monthly retainer upon request.
+
+## Global Engagement, Security & Compliance
+- IP & Code Ownership: 100% intellectual property transfer to the client upon project completion. Full source code repository delivered with zero vendor lock-in.
+- Non-Disclosure Agreements: Mutual NDAs signed prior to technical discovery or architecture discussions.
+- Payment Rails: Stripe (Credit/Debit Cards worldwide), Wise Business, SWIFT International Wire Transfer, UPI / Razorpay (India).
+- Milestone Billing: Standard 50% advance kickoff / 50% upon deployment, or 3-stage milestone escrow for larger engagements.
+
+## Contact & Consultation
+- Live Portfolio & Case Studies: https://techneyo.com/portfolio
+- Active Packages & Offers: https://techneyo.com/offers
+- Schedule Discovery Call / Contact: https://techneyo.com/contact
+- Direct WhatsApp Inquiries: https://wa.me/919988773122

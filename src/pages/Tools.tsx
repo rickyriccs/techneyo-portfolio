@@ -47,10 +47,7 @@ const fallbackTools: Tool[] = [
   },
 ];
 
-const formatPrice = (price: number | null) => {
-  if (!price) return "Custom";
-  return `Rs. ${Number(price).toLocaleString("en-IN")}`;
-};
+import { useCurrency } from "@/context/CurrencyContext";
 
 const ctaHref = (tool: Tool) => {
   if (tool.cta_type === "WhatsApp") return businessInfo.whatsappUrl;
@@ -63,6 +60,7 @@ const toolIcons = [LayoutDashboard, Workflow, MessageCircle, Bot, Wrench];
 
 const Tools = () => {
   const [tools, setTools] = useState<Tool[]>(fallbackTools);
+  const { formatPrice } = useCurrency();
 
   useEffect(() => {
     const loadTools = async () => {

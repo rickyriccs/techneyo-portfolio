@@ -34,8 +34,8 @@ router.post("/offers", requireAdmin, async (req, res) => {
     const id = data.id || crypto.randomUUID();
     const cols = [
       "id", "title", "slug", "short_description", "detailed_description",
-      "offer_type", "starting_price", "discount_price", "billing_period",
-      "setup_fee", "booking_amount_type", "booking_amount", "target_audience",
+      "offer_type", "starting_price", "starting_price_usd", "discount_price", "discount_price_usd", "billing_period",
+      "setup_fee", "setup_fee_usd", "booking_amount_type", "booking_amount", "booking_amount_usd", "target_audience",
       "whats_included", "whats_not_included", "update_policy", "ownership_policy",
       "terms", "target_keywords", "valid_from", "valid_till", "status",
       "is_featured", "button_text", "button_action", "button_url", "display_order",
@@ -222,7 +222,7 @@ router.post("/services", requireAdmin, async (req, res) => {
   try {
     const data = req.body;
     const id = data.id || crypto.randomUUID();
-    const cols = ["id", "title", "slug", "description", "icon_name", "features", "status", "display_order", "seo_title", "seo_description", "target_keywords"];
+    const cols = ["id", "title", "slug", "description", "icon_name", "features", "status", "display_order", "starting_price", "starting_price_usd", "seo_title", "seo_description", "target_keywords"];
     const vals = cols.map((c) => {
       if (c === "id") return id;
       const val = data[c];

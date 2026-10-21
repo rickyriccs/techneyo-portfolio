@@ -17,6 +17,7 @@ router.post("/", async (req, res) => {
       business_name,
       total_plan_price,
       advance_amount_paid,
+      currency = "INR",
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
@@ -44,13 +45,13 @@ router.post("/", async (req, res) => {
     const sql = `
       INSERT INTO offer_bookings (
         id, offer_id, customer_name, customer_email, customer_phone, business_name,
-        total_plan_price, advance_amount_paid, razorpay_order_id, razorpay_payment_id,
+        total_plan_price, advance_amount_paid, currency, razorpay_order_id, razorpay_payment_id,
         razorpay_signature, payment_status, onboarding_status, onboarding_details,
         utm_source, utm_medium, utm_campaign, utm_term, utm_content,
         source_page_url, landing_page_url, initial_referrer, referrer, device_type
       ) VALUES (
         ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?,
+        ?, ?, ?, ?, ?,
         ?, ?, ?, ?,
         ?, ?, ?, ?, ?,
         ?, ?, ?, ?, ?
@@ -66,6 +67,7 @@ router.post("/", async (req, res) => {
       business_name || null,
       total_plan_price || null,
       advance_amount_paid || 0,
+      currency || "INR",
       razorpay_order_id || null,
       razorpay_payment_id || null,
       razorpay_signature || null,

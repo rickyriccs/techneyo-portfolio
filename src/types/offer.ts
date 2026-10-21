@@ -12,11 +12,15 @@ export interface Offer {
   detailed_description: string | null;
   offer_type: OfferType;
   starting_price: number | null;
+  starting_price_usd?: number | null;
   discount_price: number | null;
+  discount_price_usd?: number | null;
   billing_period: BillingPeriod;
   setup_fee: number | null;
+  setup_fee_usd?: number | null;
   booking_amount_type: BookingAmountType;
   booking_amount: number | null;
+  booking_amount_usd?: number | null;
   target_audience: string[];
   whats_included: string[];
   whats_not_included: string[];
@@ -48,6 +52,7 @@ export interface OfferBooking {
   business_name?: string | null;
   total_plan_price?: number | null;
   advance_amount_paid: number;
+  currency?: string | null;
   razorpay_order_id?: string | null;
   razorpay_payment_id?: string | null;
   razorpay_signature?: string | null;

@@ -24,6 +24,7 @@ import { isInstagramLead } from "@/lib/utm";
 import { isIndiaUser } from "@/lib/geo";
 
 import { usePersonalization } from "@/context/PersonalizationContext";
+import { useCurrency } from "@/context/CurrencyContext";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -32,11 +33,6 @@ const fadeUp = {
     y: 0,
     transition: { delay: i * 0.07, duration: 0.5, ease: "easeOut" as const },
   }),
-};
-
-const formatPrice = (price: number | null) => {
-  if (!price) return "Custom";
-  return `Rs. ${Number(price).toLocaleString("en-IN")}`;
 };
 
 export const Offers = () => {
@@ -50,6 +46,7 @@ export const Offers = () => {
   const navigate = useNavigate();
   const { settings } = useAppSettings();
   const { openProposalModal } = usePersonalization();
+  const { currency, formatPrice } = useCurrency();
 
   useEffect(() => {
     const checkGeo = async () => {
@@ -297,69 +294,104 @@ export const Offers = () => {
                     )}
 
                     {/* Pricing */}
-                    <div className="mt-5 flex items-end gap-2">
-                      <span className="font-display text-3xl font-bold text-orange-300">
-                        {formatPrice(offer.discount_price || offer.starting_price)}
-                      </span>
-                      {offer.billing_period === "monthly" && (
-                        <span className="text-white/50 text-xs pb-1">/ month</span>
-                      )}
-                      {offer.discount_price && offer.starting_price && (
-                        <span className="pb-1 text-xs text-white/35 line-through ml-1">
-                          {formatPrice(offer.starting_price)}
-                        </span>
-                      )}
-                    </div>
+                    {(() => {
+                      const isCustom =
+                        !offer.discount_price &&
+                        !offer.starting_price &&
+                        !offer.discount_price_usd &&
+                        !offer.starting_price_usd;
 
-                    {offer.setup_fee && (
-                      <span className="mt-1 text-xs text-cyan-300/80 font-medium">
-                        + Rs. {offer.setup_fee.toLocaleString("en-IN")} one-time setup fee
-                      </span>
-                    )}
+                      const customWhatsappUrl = `https://wa.me/919988773122?text=${encodeURIComponent(
+                        `Hello Techneyo, I would like to get a custom quote and discuss requirements for "${offer.title}".`
+                      )}`;
 
-                    {/* Features snippet */}
-                    <div className="mt-5 space-y-2 flex-grow">
-                      {(
-                        offer.whats_included?.slice(0, 3) || [
-                          offer.detailed_description || "Professional layout",
-                        ]
-                      ).map((f, i) => (
-                        <div key={i} className="flex items-start gap-2 text-xs text-white/70">
-                          <CheckCircle2 size={14} className="mt-0.5 shrink-0 text-emerald-300" />
-                          <span className="line-clamp-1">{f}</span>
-                        </div>
-                      ))}
-                    </div>
+                      return (
+                        <>
+                          <div className="mt-5 flex items-end gap-2">
+                            <span className="font-display text-3xl font-bold text-orange-300">
+                              {formatPrice(
+                                offer.discount_price || offer.starting_price,
+                                offer.discount_price_usd || offer.starting_price_usd
+                              )}
+                            </span>
+                            {!isCustom && offer.billing_period === "monthly" && (
+                              <span className="text-white/50 text-xs pb-1">/ month</span>
+                            )}
+                            {!isCustom && offer.discount_price && offer.starting_price && (
+                              <span className="pb-1 text-xs text-white/35 line-through ml-1">
+                                {formatPrice(offer.starting_price, offer.starting_price_usd, { fallback: "" })}
+                              </span>
+                            )}
+                          </div>
 
-                    {/* Actions */}
-                    <div className="mt-6 pt-4 border-t border-white/10 space-y-2.5">
-                      <button
-                        onClick={() => setSelectedOfferForBooking(offer)}
-                        className={`w-full h-11 rounded-xl font-semibold text-xs text-white transition-all flex items-center justify-center gap-2 shadow-lg ${
-                          settings.payment_required
-                            ? "bg-orange-500 hover:bg-orange-400 shadow-orange-500/10"
-                            : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/10"
-                        }`}
-                      >
-                        {settings.payment_required ? (
-                          <>
-                            <CreditCard size={15} /> Book with Rs.{" "}
-                            {advanceAmount.toLocaleString("en-IN")} Advance
-                          </>
-                        ) : (
-                          <>
-                            <Sparkles size={15} /> Book Now — Free
-                          </>
-                        )}
-                      </button>
+                          {!isCustom && offer.setup_fee && (
+                            <span className="mt-1 text-xs text-cyan-300/80 font-medium">
+                              + {formatPrice(offer.setup_fee, offer.setup_fee_usd, { fallback: "" })} one-time setup fee
+                            </span>
+                          )}
 
-                      <Link
-                        to={slugUrl}
-                        className="w-full h-10 rounded-xl border border-white/10 hover:border-cyan-400/50 hover:bg-cyan-500/10 font-semibold text-xs text-white/80 hover:text-white transition-all flex items-center justify-center gap-1.5"
-                      >
-                        View Full Details & Terms <ArrowRight size={14} />
-                      </Link>
-                    </div>
+                          {/* Features snippet */}
+                          <div className="mt-5 space-y-2 flex-grow">
+                            {(
+                              offer.whats_included?.slice(0, 3) || [
+                                offer.detailed_description || "Professional layout",
+                              ]
+                            ).map((f, i) => (
+                              <div key={i} className="flex items-start gap-2 text-xs text-white/70">
+                                <CheckCircle2 size={14} className="mt-0.5 shrink-0 text-emerald-300" />
+                                <span className="line-clamp-1">{f}</span>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Actions */}
+                          <div className="mt-6 pt-4 border-t border-white/10 space-y-2.5">
+                            {isCustom ? (
+                              <a
+                                href={customWhatsappUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full h-11 rounded-xl font-semibold text-xs text-white transition-all flex items-center justify-center gap-2 shadow-lg bg-[#25D366] hover:bg-[#20ba59] shadow-emerald-500/20"
+                              >
+                                <MessageCircle size={15} /> Chat on WhatsApp for Custom Quote
+                              </a>
+                            ) : (
+                              <button
+                                onClick={() => setSelectedOfferForBooking(offer)}
+                                className={`w-full h-11 rounded-xl font-semibold text-xs text-white transition-all flex items-center justify-center gap-2 shadow-lg ${
+                                  currency === "USD"
+                                    ? "bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-cyan-500/20"
+                                    : settings.payment_required
+                                    ? "bg-orange-500 hover:bg-orange-400 shadow-orange-500/10"
+                                    : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/10"
+                                }`}
+                              >
+                                {currency === "USD" ? (
+                                  <>
+                                    <Sparkles size={15} /> Reserve Slot — USD Quote
+                                  </>
+                                ) : settings.payment_required ? (
+                                  <>
+                                    <CreditCard size={15} /> Book with {formatPrice(advanceAmount, offer.booking_amount_usd || offer.setup_fee_usd || offer.discount_price_usd)} Advance
+                                  </>
+                                ) : (
+                                  <>
+                                    <Sparkles size={15} /> Book Now — Free
+                                  </>
+                                )}
+                              </button>
+                            )}
+
+                            <Link
+                              to={slugUrl}
+                              className="w-full h-10 rounded-xl border border-white/10 hover:border-cyan-400/50 hover:bg-cyan-500/10 font-semibold text-xs text-white/80 hover:text-white transition-all flex items-center justify-center gap-1.5"
+                            >
+                              View Full Details & Terms <ArrowRight size={14} />
+                            </Link>
+                          </div>
+                        </>
+                      );
+                    })()}
                   </motion.div>
                 );
               })}

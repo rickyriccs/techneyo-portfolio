@@ -8,6 +8,7 @@ import { businessInfo, pageDescriptions } from "@/lib/business-info";
 import { organizationSchema } from "@/lib/schema";
 import { trackEvent } from "@/lib/analytics";
 import { setLeadContext } from "@/lib/utm";
+import { useCurrency } from "@/context/CurrencyContext";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -38,6 +39,7 @@ const needOptions = [
 
 const Contact = () => {
   const navigate = useNavigate();
+  const { currency } = useCurrency();
   const fieldClass =
     "w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-sm text-white outline-none transition-all duration-200 placeholder:text-white/30 focus:border-cyan-400 focus:bg-white/[0.08] focus:ring-2 focus:ring-cyan-500/20";
   const labelClass = "mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cyan-300";
@@ -352,10 +354,21 @@ const Contact = () => {
                     className={`${fieldClass} bg-[#0b1329]`}
                   >
                     <option value="">Select budget preference</option>
-                    <option value="Starter (Rs. 2,999 - Rs. 9,999)">Starter (Rs. 2,999 - Rs. 9,999)</option>
-                    <option value="Growth (Rs. 10,000 - Rs. 25,000)">Growth (Rs. 10,000 - Rs. 25,000)</option>
-                    <option value="Scale-Up (Rs. 25,000 - Rs. 50,000)">Scale-Up (Rs. 25,000 - Rs. 50,000)</option>
-                    <option value="Enterprise (Rs. 50,000+)">Enterprise (Rs. 50,000+)</option>
+                    {currency === "USD" ? (
+                      <>
+                        <option value="Starter ($250 - $500)">Starter ($250 - $500 USD)</option>
+                        <option value="Growth ($500 - $1,500)">Growth ($500 - $1,500 USD)</option>
+                        <option value="Scale-Up ($1,500 - $3,500)">Scale-Up ($1,500 - $3,500 USD)</option>
+                        <option value="Enterprise ($3,500+)">Enterprise ($3,500+ USD)</option>
+                      </>
+                    ) : (
+                      <>
+                        <option value="Starter (Rs. 2,999 - Rs. 9,999)">Starter (Rs. 2,999 - Rs. 9,999)</option>
+                        <option value="Growth (Rs. 10,000 - Rs. 25,000)">Growth (Rs. 10,000 - Rs. 25,000)</option>
+                        <option value="Scale-Up (Rs. 25,000 - Rs. 50,000)">Scale-Up (Rs. 25,000 - Rs. 50,000)</option>
+                        <option value="Enterprise (Rs. 50,000+)">Enterprise (Rs. 50,000+)</option>
+                      </>
+                    )}
                   </select>
                 </div>
 

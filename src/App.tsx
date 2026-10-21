@@ -47,6 +47,7 @@ import Blog from "./pages/Blog";
 import BlogPostPage from "./pages/BlogPostPage";
 
 import { PersonalizationProvider } from "@/context/PersonalizationContext";
+import { CurrencyProvider } from "@/context/CurrencyContext";
 import SmartProposalModal from "@/components/interactive/SmartProposalModal";
 
 import Industries from "./pages/Industries";
@@ -120,11 +121,13 @@ const App = () => (
       <Sonner />
       <AdminAuthProvider>
         <PersonalizationProvider>
-          <BrowserRouter>
-            <ScrollToTop />
-            <AnalyticsRouteTracker />
-            <AppRoutes />
-          </BrowserRouter>
+          <CurrencyProvider>
+            <BrowserRouter>
+              <ScrollToTop />
+              <AnalyticsRouteTracker />
+              <AppRoutes />
+            </BrowserRouter>
+          </CurrencyProvider>
         </PersonalizationProvider>
       </AdminAuthProvider>
     </TooltipProvider>

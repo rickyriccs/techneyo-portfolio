@@ -34,6 +34,8 @@ import {
   Zap,
 } from "lucide-react";
 
+import { useCurrency } from "@/context/CurrencyContext";
+
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
   visible: (i = 0) => ({
@@ -51,8 +53,6 @@ const trustItems = [
   "Mobile-first design",
   "WhatsApp-ready enquiry flow",
 ];
-
-const heroBadges = ["Website from Rs. 499/month", "Global Coverage", "Fast Delivery", "SEO Friendly", "WhatsApp Ready", "Business-Focused UI"];
 
 const problems = [
   "No professional website",
@@ -79,7 +79,9 @@ type Offer = {
   detailed_description: string | null;
   offer_type: string;
   starting_price: number | null;
+  starting_price_usd?: number | null;
   discount_price: number | null;
+  discount_price_usd?: number | null;
   button_text: string;
   button_action: string;
   button_url: string | null;
@@ -206,13 +208,23 @@ const Index = () => {
   const [dbOffers, setDbOffers] = useState<Offer[]>([]);
   const [recentBlogs, setRecentBlogs] = useState<BlogPost[]>([]);
   const { openProposalModal, preferences } = usePersonalization();
+  const { currency, formatPrice } = useCurrency();
+
+  const heroBadges = [
+    currency === "USD" ? "Website from $19/month" : "Website from Rs. 499/month",
+    "Global Coverage",
+    "Fast Delivery",
+    "SEO Friendly",
+    "WhatsApp Ready",
+    "Business-Focused UI",
+  ];
 
   useEffect(() => {
     const loadOffers = async () => {
       if (!supabase) return;
       const { data, error } = await supabase
         .from("offers")
-        .select("id,title,short_description,detailed_description,offer_type,starting_price,discount_price,button_text,button_action,button_url,is_featured,valid_from,valid_till")
+        .select("id,title,short_description,detailed_description,offer_type,starting_price,starting_price_usd,discount_price,discount_price_usd,button_text,button_action,button_url,is_featured,valid_from,valid_till")
         .eq("status", "Active")
         .eq("is_featured", true)
         .order("display_order", { ascending: true });

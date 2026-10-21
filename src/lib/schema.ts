@@ -142,39 +142,67 @@ export const singleOfferSchema = (offer: any) => {
       telephone: businessInfo.phoneDisplay,
       image: `${businessInfo.website}/logo.png`,
     },
-    areaServed: {
-      "@type": "Country",
-      name: "India",
-    },
+    areaServed: ["Worldwide", "India", "United States", "United Kingdom", "United Arab Emirates", "Canada", "Australia"],
     audience: offer.target_audience?.length
       ? {
           "@type": "Audience",
           audienceType: offer.target_audience.join(", "),
         }
       : undefined,
-    offers: {
-      "@type": "Offer",
-      "@id": `${businessInfo.website}/offers/${offer.slug}#offer`,
-      url: `${businessInfo.website}/offers/${offer.slug}`,
-      name: offer.title,
-      description: offer.short_description,
-      price: price,
-      priceCurrency: "INR",
-      priceSpecification: {
-        "@type": "UnitPriceSpecification",
-        price: price,
-        priceCurrency: "INR",
-        unitText: offer.billing_period === "monthly" ? "MONTH" : "ONE-TIME",
-      },
-      availability: "https://schema.org/InStock",
-      validFrom: offer.valid_from || undefined,
-      priceValidUntil: offer.valid_till || undefined,
-      seller: {
-        "@type": "Organization",
-        name: businessInfo.name,
-        url: businessInfo.website,
-      },
-    },
+    offers: [
+      ...(price
+        ? [
+            {
+              "@type": "Offer",
+              "@id": `${businessInfo.website}/offers/${offer.slug}#offer-inr`,
+              url: `${businessInfo.website}/offers/${offer.slug}`,
+              name: offer.title,
+              description: offer.short_description,
+              price: price,
+              priceCurrency: "INR",
+              priceSpecification: {
+                "@type": "UnitPriceSpecification",
+                price: price,
+                priceCurrency: "INR",
+                unitText: offer.billing_period === "monthly" ? "MONTH" : "ONE-TIME",
+              },
+              availability: "https://schema.org/InStock",
+              validFrom: offer.valid_from || undefined,
+              priceValidUntil: offer.valid_till || undefined,
+              seller: {
+                "@type": "Organization",
+                name: businessInfo.name,
+                url: businessInfo.website,
+              },
+            },
+          ]
+        : []),
+      ...(offer.discount_price_usd || offer.starting_price_usd
+        ? [
+            {
+              "@type": "Offer",
+              "@id": `${businessInfo.website}/offers/${offer.slug}#offer-usd`,
+              url: `${businessInfo.website}/offers/${offer.slug}`,
+              name: `${offer.title} (Global / USD)`,
+              description: offer.short_description,
+              price: offer.discount_price_usd || offer.starting_price_usd,
+              priceCurrency: "USD",
+              priceSpecification: {
+                "@type": "UnitPriceSpecification",
+                price: offer.discount_price_usd || offer.starting_price_usd,
+                priceCurrency: "USD",
+                unitText: offer.billing_period === "monthly" ? "MONTH" : "ONE-TIME",
+              },
+              availability: "https://schema.org/InStock",
+              seller: {
+                "@type": "Organization",
+                name: businessInfo.name,
+                url: businessInfo.website,
+              },
+            },
+          ]
+        : []),
+    ],
   };
 };
 

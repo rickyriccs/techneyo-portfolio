@@ -124,19 +124,27 @@ export async function seoMetaMiddleware(req, res, next) {
     if (offerMatch) {
       const slug = offerMatch[1];
       const rows = await query(
-        "SELECT title, seo_title, seo_description, short_description, target_keywords, banner_image_url, discount_price, starting_price, billing_period FROM offers WHERE slug = ? LIMIT 1",
+        "SELECT title, seo_title, seo_description, short_description, target_keywords, banner_image_url, discount_price, starting_price, discount_price_usd, starting_price_usd, billing_period FROM offers WHERE slug = ? LIMIT 1",
         [slug]
       );
       if (rows && rows.length > 0) {
         const item = rows[0];
-        const price = item.discount_price || item.starting_price;
-        const priceText = price ? ` starting at Rs. ${Number(price).toLocaleString("en-IN")}` : "";
+        const priceInr = item.discount_price || item.starting_price;
+        const priceUsd = item.discount_price_usd || item.starting_price_usd;
+        let priceText = "";
+        if (priceUsd && priceInr) {
+          priceText = ` from $${Number(priceUsd)} / Rs. ${Number(priceInr).toLocaleString("en-IN")}`;
+        } else if (priceUsd) {
+          priceText = ` from $${Number(priceUsd)}`;
+        } else if (priceInr) {
+          priceText = ` starting at Rs. ${Number(priceInr).toLocaleString("en-IN")}`;
+        }
         seoData = {
           title: item.seo_title || `${item.title}${priceText} | Techneyo Solutions`,
           description: item.seo_description || item.short_description || `Exclusive promotional offer: ${item.title} by Techneyo Solutions.`,
           keywords: Array.isArray(item.target_keywords)
             ? item.target_keywords.join(", ")
-            : item.target_keywords || "business website offer, techneyo package, web development india",
+            : item.target_keywords || "business website offer, techneyo package, web development worldwide",
           image: item.banner_image_url || "https://techneyo.com/banner.jpeg",
           url: `https://techneyo.com/offers/${slug}`,
         };
@@ -144,15 +152,16 @@ export async function seoMetaMiddleware(req, res, next) {
     } else if (serviceMatch) {
       const slug = serviceMatch[1];
       const rows = await query(
-        "SELECT title, seo_title, seo_description, description, target_keywords FROM services WHERE slug = ? LIMIT 1",
+        "SELECT title, seo_title, seo_description, description, target_keywords, starting_price, starting_price_usd FROM services WHERE slug = ? LIMIT 1",
         [slug]
       );
       if (rows && rows.length > 0) {
         const item = rows[0];
+        const sUsd = item.starting_price_usd ? ` from $${Number(item.starting_price_usd)}` : "";
         seoData = {
-          title: item.seo_title || `${item.title} Services in India | Techneyo Solutions`,
-          description: item.seo_description || item.description || `Professional ${item.title} solutions by Techneyo Solutions for growing businesses.`,
-          keywords: item.target_keywords || `${item.title}, business automation, it solutions india`,
+          title: item.seo_title || `${item.title} Services${sUsd} | Techneyo Solutions`,
+          description: item.seo_description || item.description || `Professional ${item.title} solutions by Techneyo Solutions for growing businesses worldwide.`,
+          keywords: item.target_keywords || `${item.title}, custom software development, business automation worldwide`,
           image: "https://techneyo.com/banner.jpeg",
           url: `https://techneyo.com/services/${slug}`,
         };

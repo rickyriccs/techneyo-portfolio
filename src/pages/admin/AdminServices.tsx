@@ -11,6 +11,8 @@ type ServiceRow = {
   features: string[];
   status: "active" | "inactive";
   display_order: number;
+  starting_price?: number | null;
+  starting_price_usd?: number | null;
   seo_title?: string;
   seo_description?: string;
   target_keywords?: string;
@@ -25,6 +27,8 @@ type ServiceForm = {
   featuresText: string;
   status: "active" | "inactive";
   display_order: number;
+  starting_price: string;
+  starting_price_usd: string;
   seo_title: string;
   seo_description: string;
   target_keywords: string;
@@ -38,6 +42,8 @@ const blankForm: ServiceForm = {
   featuresText: "",
   status: "active",
   display_order: 0,
+  starting_price: "",
+  starting_price_usd: "",
   seo_title: "",
   seo_description: "",
   target_keywords: "",
@@ -54,6 +60,8 @@ const toForm = (service: ServiceRow): ServiceForm => ({
   featuresText: Array.isArray(service.features) ? service.features.join("\n") : "",
   status: service.status,
   display_order: service.display_order,
+  starting_price: service.starting_price !== null && service.starting_price !== undefined ? String(service.starting_price) : "",
+  starting_price_usd: service.starting_price_usd !== null && service.starting_price_usd !== undefined ? String(service.starting_price_usd) : "",
   seo_title: service.seo_title || "",
   seo_description: service.seo_description || "",
   target_keywords: service.target_keywords || "",
@@ -74,7 +82,7 @@ const AdminServices = () => {
     setError("");
     const { data, error: loadError } = await supabase
       .from("services")
-      .select("id,title,slug,description,icon_name,features,status,display_order,seo_title,seo_description,target_keywords")
+      .select("id,title,slug,description,icon_name,features,status,display_order,starting_price,starting_price_usd,seo_title,seo_description,target_keywords")
       .order("display_order", { ascending: true });
 
     if (loadError) {
@@ -132,6 +140,8 @@ const AdminServices = () => {
         .filter(Boolean),
       status: form.status,
       display_order: Number(form.display_order) || 0,
+      starting_price: form.starting_price.trim() ? Number(form.starting_price) : null,
+      starting_price_usd: form.starting_price_usd.trim() ? Number(form.starting_price_usd) : null,
       seo_title: form.seo_title.trim() || `${form.title} Services | Techneyo Solutions`,
       seo_description: form.seo_description.trim() || form.description.slice(0, 160),
       target_keywords: form.target_keywords.trim(),
@@ -257,6 +267,35 @@ const AdminServices = () => {
                 placeholder="Search result snippet (140-160 chars)"
                 className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/20"
               />
+            </label>
+          </div>
+
+          {/* Dual-Currency Starting Prices */}
+          <div className="grid gap-4 md:grid-cols-2 rounded-lg border border-cyan-500/30 bg-cyan-950/20 p-4">
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-foreground">Starting Price (INR ₹)</span>
+              <input
+                type="number"
+                value={form.starting_price}
+                onChange={(event) => setForm({ ...form, starting_price: event.target.value })}
+                placeholder="e.g. 14999"
+                className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/20"
+              />
+              <span className="mt-1 block text-xs text-muted-foreground">Domestic INR display for India</span>
+            </label>
+            <label className="block">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-sm font-bold text-cyan-300">Starting Price (USD $)</span>
+                <span className="text-[10px] text-cyan-400 font-semibold uppercase bg-cyan-500/10 px-1.5 py-0.5 rounded border border-cyan-500/20">Global Priority</span>
+              </div>
+              <input
+                type="number"
+                value={form.starting_price_usd}
+                onChange={(event) => setForm({ ...form, starting_price_usd: event.target.value })}
+                placeholder="e.g. 399"
+                className="h-10 w-full rounded-md border border-cyan-500/40 bg-background px-3 text-sm font-bold text-cyan-300 outline-none focus:ring-2 focus:ring-cyan-400/20"
+              />
+              <span className="mt-1 block text-xs text-slate-400">Takes priority for visitors outside India & AI search bots</span>
             </label>
           </div>
 

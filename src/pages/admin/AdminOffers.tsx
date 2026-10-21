@@ -12,10 +12,14 @@ type OfferForm = {
   detailed_description: string;
   offer_type: "Website Presence" | "Business Tool" | "Automation" | "Digital Growth" | "Custom";
   starting_price: string;
+  starting_price_usd: string;
   discount_price: string;
+  discount_price_usd: string;
   billing_period: "monthly" | "one-time" | "yearly";
   setup_fee: string;
+  setup_fee_usd: string;
   booking_amount: string;
+  booking_amount_usd: string;
   target_audience: string;
   whats_included: string;
   whats_not_included: string;
@@ -42,10 +46,14 @@ const blankForm: OfferForm = {
   detailed_description: "",
   offer_type: "Website Presence",
   starting_price: "",
+  starting_price_usd: "",
   discount_price: "",
+  discount_price_usd: "",
   billing_period: "monthly",
   setup_fee: "",
+  setup_fee_usd: "",
   booking_amount: "",
+  booking_amount_usd: "",
   target_audience: "",
   whats_included: "",
   whats_not_included: "",
@@ -73,10 +81,14 @@ const toForm = (offer: Offer): OfferForm => ({
   detailed_description: offer.detailed_description || "",
   offer_type: offer.offer_type || "Website Presence",
   starting_price: offer.starting_price !== null && offer.starting_price !== undefined ? String(offer.starting_price) : "",
+  starting_price_usd: offer.starting_price_usd !== null && offer.starting_price_usd !== undefined ? String(offer.starting_price_usd) : "",
   discount_price: offer.discount_price !== null && offer.discount_price !== undefined ? String(offer.discount_price) : "",
+  discount_price_usd: offer.discount_price_usd !== null && offer.discount_price_usd !== undefined ? String(offer.discount_price_usd) : "",
   billing_period: offer.billing_period || "monthly",
   setup_fee: offer.setup_fee !== null && offer.setup_fee !== undefined ? String(offer.setup_fee) : "",
+  setup_fee_usd: offer.setup_fee_usd !== null && offer.setup_fee_usd !== undefined ? String(offer.setup_fee_usd) : "",
   booking_amount: offer.booking_amount !== null && offer.booking_amount !== undefined ? String(offer.booking_amount) : "999",
+  booking_amount_usd: offer.booking_amount_usd !== null && offer.booking_amount_usd !== undefined ? String(offer.booking_amount_usd) : "",
   target_audience: offer.target_audience ? offer.target_audience.join(", ") : "",
   whats_included: offer.whats_included ? offer.whats_included.join("\n") : "",
   whats_not_included: offer.whats_not_included ? offer.whats_not_included.join("\n") : "",
@@ -166,10 +178,14 @@ export const AdminOffers = () => {
       detailed_description: form.detailed_description.trim() || null,
       offer_type: form.offer_type,
       starting_price: form.starting_price.trim() ? Number(form.starting_price) : null,
+      starting_price_usd: form.starting_price_usd.trim() ? Number(form.starting_price_usd) : null,
       discount_price: form.discount_price.trim() ? Number(form.discount_price) : null,
+      discount_price_usd: form.discount_price_usd.trim() ? Number(form.discount_price_usd) : null,
       billing_period: form.billing_period,
       setup_fee: form.setup_fee.trim() ? Number(form.setup_fee) : null,
+      setup_fee_usd: form.setup_fee_usd.trim() ? Number(form.setup_fee_usd) : null,
       booking_amount: form.booking_amount.trim() ? Number(form.booking_amount) : 999,
+      booking_amount_usd: form.booking_amount_usd.trim() ? Number(form.booking_amount_usd) : null,
       target_audience: form.target_audience ? form.target_audience.split(",").map((s) => s.trim()).filter(Boolean) : [],
       whats_included: form.whats_included ? form.whats_included.split("\n").map((s) => s.trim()).filter(Boolean) : [],
       whats_not_included: form.whats_not_included ? form.whats_not_included.split("\n").map((s) => s.trim()).filter(Boolean) : [],
@@ -278,7 +294,7 @@ export const AdminOffers = () => {
             </label>
           </div>
 
-          {/* Pricing & Billing */}
+          {/* Pricing & Billing (INR) */}
           <div className="grid gap-4 md:grid-cols-4 rounded-lg border border-border p-4 bg-muted/20">
             <label className="block">
               <span className="mb-1.5 block text-sm font-medium text-foreground">Billing Frequency</span>
@@ -326,6 +342,67 @@ export const AdminOffers = () => {
                 placeholder="999"
               />
             </label>
+          </div>
+
+          {/* Global / USD Pricing ($) - Priority for International / Outside India */}
+          <div className="rounded-lg border border-cyan-500/30 bg-cyan-950/20 p-4">
+            <div className="mb-3 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-cyan-500/20 text-xs font-bold text-cyan-300">$</span>
+                <span className="text-sm font-bold text-cyan-200">Global / International USD Pricing ($)</span>
+              </div>
+              <span className="text-xs text-cyan-300/80 font-medium bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">
+                Priority for USD & Outside India Search
+              </span>
+            </div>
+            <p className="text-xs text-slate-300 mb-3">
+              Set explicit USD ($) values here. When set, these numbers will take top priority for visitors outside India and global search bots. If left empty, intelligent tier auto-conversion applies automatically.
+            </p>
+            <div className="grid gap-4 md:grid-cols-4">
+              <label className="block">
+                <span className="mb-1.5 block text-xs font-semibold text-slate-200">Starting / Original Price ($)</span>
+                <input
+                  type="number"
+                  value={form.starting_price_usd}
+                  onChange={(e) => setForm({ ...form, starting_price_usd: e.target.value })}
+                  className="h-10 w-full rounded-md border border-cyan-500/30 bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-cyan-400/20"
+                  placeholder="e.g. 99"
+                />
+              </label>
+
+              <label className="block">
+                <span className="mb-1.5 block text-xs font-semibold text-emerald-300">Discounted / Active Price ($)</span>
+                <input
+                  type="number"
+                  value={form.discount_price_usd}
+                  onChange={(e) => setForm({ ...form, discount_price_usd: e.target.value })}
+                  className="h-10 w-full rounded-md border border-emerald-500/40 bg-background px-3 text-sm font-bold text-emerald-400 outline-none focus:ring-2 focus:ring-emerald-400/20"
+                  placeholder="e.g. 29"
+                />
+              </label>
+
+              <label className="block">
+                <span className="mb-1.5 block text-xs font-semibold text-slate-200">Setup Fee ($)</span>
+                <input
+                  type="number"
+                  value={form.setup_fee_usd}
+                  onChange={(e) => setForm({ ...form, setup_fee_usd: e.target.value })}
+                  className="h-10 w-full rounded-md border border-cyan-500/30 bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-cyan-400/20"
+                  placeholder="e.g. 49"
+                />
+              </label>
+
+              <label className="block">
+                <span className="mb-1.5 block text-xs font-semibold text-amber-300">USD Advance Deposit ($)</span>
+                <input
+                  type="number"
+                  value={form.booking_amount_usd}
+                  onChange={(e) => setForm({ ...form, booking_amount_usd: e.target.value })}
+                  className="h-10 w-full rounded-md border border-amber-500/40 bg-background px-3 text-sm font-bold text-amber-300 outline-none focus:ring-2 focus:ring-amber-400/20"
+                  placeholder="e.g. 29"
+                />
+              </label>
+            </div>
           </div>
 
           <label className="block">

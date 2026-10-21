@@ -4,6 +4,7 @@ import { Sparkles, Menu, MessageCircle, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { businessInfo } from "@/lib/business-info";
 import { usePersonalization } from "@/context/PersonalizationContext";
+import CurrencyToggle from "@/components/CurrencyToggle";
 
 const navLinks = [
   { label: "Home", path: "/" },
@@ -61,10 +62,11 @@ const Header = () => {
           </nav>
 
           {/* CTA */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-2.5">
+            <CurrencyToggle />
             <button
               onClick={() => openProposalModal()}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-500 px-4 py-2 text-xs font-bold text-white shadow-md hover:brightness-110 transition-all"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-500 px-3.5 py-2 text-xs font-bold text-white shadow-md hover:brightness-110 transition-all"
             >
               <Sparkles size={14} />
               AI Proposal
@@ -74,7 +76,7 @@ const Header = () => {
               target="_blank"
               rel="noopener noreferrer"
               data-cta-location="header"
-              className="inline-flex items-center gap-2 rounded-lg border border-cyan-200/20 bg-white/10 px-4 py-2 text-xs font-bold text-white transition-colors duration-200 hover:bg-cyan-300/15"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-cyan-200/20 bg-white/10 px-3.5 py-2 text-xs font-bold text-white transition-colors duration-200 hover:bg-cyan-300/15"
             >
               <MessageCircle size={14} />
               WhatsApp
@@ -115,6 +117,9 @@ const Header = () => {
                   {link.label}
                 </Link>
               ))}
+              <div className="pt-2">
+                <CurrencyToggle isMobile />
+              </div>
               <a
                 href={businessInfo.whatsappUrl}
                 target="_blank"

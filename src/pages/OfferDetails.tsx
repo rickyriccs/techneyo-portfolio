@@ -35,10 +35,10 @@ import {
   offerFaqSchema,
   graphSchema,
 } from "@/lib/schema";
-import type { Offer } from "@/types/offer";
 import { BookingModal } from "@/components/BookingModal";
 import { useAppSettings } from "@/hooks/use-app-settings";
 import { isInstagramLead } from "@/lib/utm";
+import { useCurrency } from "@/context/CurrencyContext";
 import {
   Accordion,
   AccordionContent,
@@ -63,6 +63,7 @@ export const OfferDetails = () => {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [hasCopied, setHasCopied] = useState(false);
   const { settings } = useAppSettings();
+  const { currency, formatPrice } = useCurrency();
 
   useEffect(() => {
     const fetchOffer = async () => {
@@ -112,8 +113,18 @@ export const OfferDetails = () => {
     );
   }
 
-  const advanceAmount = offer.booking_amount || offer.setup_fee || offer.discount_price || 999;
-  const currentPrice = offer.discount_price || offer.starting_price || 999;
+  const isCustom =
+    !offer.discount_price &&
+    !offer.starting_price &&
+    !offer.discount_price_usd &&
+    !offer.starting_price_usd;
+
+  const customWhatsappUrl = `https://wa.me/919988773122?text=${encodeURIComponent(
+    `Hello Techneyo, I would like to get a custom quote and discuss requirements for "${offer.title}".`
+  )}`;
+
+  const advanceAmount = offer.booking_amount || offer.setup_fee || offer.discount_price || 0;
+  const currentPrice = offer.discount_price || offer.starting_price || 0;
   const offerUrl = `${businessInfo.website}/offers/${offer.slug}`;
 
   // Structured Data Graph
@@ -146,9 +157,11 @@ export const OfferDetails = () => {
     }
   };
 
-  const shareText = `Check out this promotional offer by Techneyo Solutions: ${offer.title} starting at Rs. ${currentPrice.toLocaleString("en-IN")}${
-    offer.billing_period === "monthly" ? "/month" : ""
-  }!`;
+  const shareText = isCustom
+    ? `Check out this offer by Techneyo Solutions: ${offer.title} - Custom Quote & Details: ${offerUrl}`
+    : `Check out this promotional offer by Techneyo Solutions: ${offer.title} starting at ${formatPrice(currentPrice, offer.discount_price_usd || offer.starting_price_usd)}${
+        offer.billing_period === "monthly" ? "/month" : ""
+      }!`;
 
   const whatsappShareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
     `${shareText}\n\n👉 Learn more & book your slot: ${offerUrl}`
@@ -305,52 +318,73 @@ export const OfferDetails = () => {
             >
               <div>
                 <span className="text-xs uppercase tracking-wider text-white/50 block">
-                  {offer.billing_period === "monthly" ? "Subscription Fee" : "Package Price"}
+                  {isCustom
+                    ? "Pricing"
+                    : offer.billing_period === "monthly"
+                    ? "Subscription Fee"
+                    : "Package Price"}
                 </span>
                 <div className="flex items-baseline gap-2 mt-1">
                   <span className="font-display text-3xl sm:text-4xl font-bold text-orange-300">
-                    Rs. {currentPrice.toLocaleString("en-IN")}
+                    {formatPrice(currentPrice, offer.discount_price_usd || offer.starting_price_usd)}
                   </span>
-                  {offer.billing_period === "monthly" && (
+                  {!isCustom && offer.billing_period === "monthly" && (
                     <span className="text-white/60 text-sm">/ Month</span>
                   )}
-                  {offer.discount_price && offer.starting_price && (
+                  {!isCustom && offer.discount_price && offer.starting_price && (
                     <span className="text-sm text-white/40 line-through ml-2">
-                      Rs. {offer.starting_price.toLocaleString("en-IN")}
+                      {formatPrice(offer.starting_price, offer.starting_price_usd, { fallback: "" })}
                     </span>
                   )}
                 </div>
               </div>
 
-              {offer.setup_fee && (
+              {!isCustom && offer.setup_fee && (
                 <div className="border-l border-white/10 pl-4 py-1">
                   <span className="text-xs uppercase tracking-wider text-white/50 block">
                     One-time Setup Fee
                   </span>
                   <span className="font-display text-lg sm:text-xl font-bold text-white mt-0.5 block">
-                    Rs. {offer.setup_fee.toLocaleString("en-IN")}
+                    {formatPrice(offer.setup_fee, offer.setup_fee_usd, { fallback: "" })}
                   </span>
                 </div>
               )}
 
-              <button
-                onClick={() => setIsBookingOpen(true)}
-                className={`premium-btn sm:ml-auto w-full sm:w-auto ${
-                  settings.payment_required
-                    ? "premium-btn-primary"
-                    : "bg-emerald-600 hover:bg-emerald-500 text-white"
-                }`}
-              >
-                {settings.payment_required ? (
-                  <>
-                    <CreditCard size={18} /> Book with Rs. {advanceAmount.toLocaleString("en-IN")} Advance
-                  </>
-                ) : (
-                  <>
-                    <Sparkles size={18} /> Book Now — Free
-                  </>
-                )}
-              </button>
+              {isCustom ? (
+                <a
+                  href={customWhatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="premium-btn sm:ml-auto w-full sm:w-auto bg-[#25D366] hover:bg-[#20ba59] text-white shadow-emerald-500/20"
+                >
+                  <MessageCircle size={18} /> Chat on WhatsApp for Custom Quote
+                </a>
+              ) : (
+                <button
+                  onClick={() => setIsBookingOpen(true)}
+                  className={`premium-btn sm:ml-auto w-full sm:w-auto ${
+                    currency === "USD"
+                      ? "bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white shadow-cyan-500/20"
+                      : settings.payment_required
+                      ? "premium-btn-primary"
+                      : "bg-emerald-600 hover:bg-emerald-500 text-white"
+                  }`}
+                >
+                  {currency === "USD" ? (
+                    <>
+                      <Sparkles size={18} /> Reserve Project Slot & Get USD Quote
+                    </>
+                  ) : settings.payment_required ? (
+                    <>
+                      <CreditCard size={18} /> Book with {formatPrice(advanceAmount, offer.booking_amount_usd || offer.setup_fee_usd || offer.discount_price_usd)} Advance
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles size={18} /> Book Now — Free
+                    </>
+                  )}
+                </button>
+              )}
             </motion.div>
           </motion.div>
         </div>
@@ -594,32 +628,51 @@ export const OfferDetails = () => {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            <a
-              href={businessInfo.whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="premium-btn premium-btn-ghost text-xs px-3 py-2 hidden sm:inline-flex"
-            >
-              <MessageCircle size={16} /> WhatsApp
-            </a>
-            <button
-              onClick={() => setIsBookingOpen(true)}
-              className={`premium-btn text-xs px-4 py-2 ${
-                settings.payment_required
-                  ? "premium-btn-primary"
-                  : "bg-emerald-600 hover:bg-emerald-500 text-white"
-              }`}
-            >
-              {settings.payment_required ? (
-                <>
-                  <CreditCard size={15} /> Book with Rs. {advanceAmount.toLocaleString("en-IN")} Advance
-                </>
-              ) : (
-                <>
-                  <Sparkles size={15} /> Book Now — Free
-                </>
-              )}
-            </button>
+            {isCustom ? (
+              <a
+                href={customWhatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="premium-btn text-xs px-4 py-2 bg-[#25D366] hover:bg-[#20ba59] text-white shadow-emerald-500/20 flex items-center gap-1.5"
+              >
+                <MessageCircle size={15} /> Chat on WhatsApp for Custom Quote
+              </a>
+            ) : (
+              <>
+                <a
+                  href={businessInfo.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="premium-btn premium-btn-ghost text-xs px-3 py-2 hidden sm:inline-flex"
+                >
+                  <MessageCircle size={16} /> WhatsApp
+                </a>
+                <button
+                  onClick={() => setIsBookingOpen(true)}
+                  className={`premium-btn text-xs px-4 py-2 ${
+                    currency === "USD"
+                      ? "bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white shadow-cyan-500/20"
+                      : settings.payment_required
+                      ? "premium-btn-primary"
+                      : "bg-emerald-600 hover:bg-emerald-500 text-white"
+                  }`}
+                >
+                  {currency === "USD" ? (
+                    <>
+                      <Sparkles size={15} /> Reserve Slot — USD Quote
+                    </>
+                  ) : settings.payment_required ? (
+                    <>
+                      <CreditCard size={15} /> Book with {formatPrice(advanceAmount, offer.booking_amount_usd || offer.setup_fee_usd || offer.discount_price_usd)} Advance
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles size={15} /> Book Now — Free
+                    </>
+                  )}
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
