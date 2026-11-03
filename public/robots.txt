@@ -22,6 +22,18 @@ Disallow: /admin
 Disallow: /dashboard
 Disallow: /api
 
+User-agent: Meta-ExternalAgent
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /api
+
+User-agent: facebookcatalog
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /api
+
 User-agent: GPTBot
 Allow: /
 Disallow: /admin

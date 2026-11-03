@@ -11,6 +11,8 @@ const BOT_USER_AGENTS = [
   "googlebot",
   "bingbot",
   "facebookexternalhit",
+  "meta-externalagent",
+  "facebookcatalog",
   "whatsapp",
   "twitterbot",
   "linkedinbot",
@@ -95,6 +97,26 @@ const staticPageMetadata = {
     title: "Free Business & Digital ROI Tools | Techneyo Solutions",
     description: "Calculate your website ROI, estimate project costs, and check your digital presence score with Techneyo free business tools.",
     keywords: "website roi calculator, free seo tools, digital presence audit, web design cost estimator",
+  },
+  "/privacy-policy": {
+    title: "Privacy Policy | Techneyo Solutions",
+    description: "Read the Techneyo Solutions privacy policy to understand how we collect, use, and protect enquiry and contact information.",
+    keywords: "techneyo privacy policy, data protection, privacy terms",
+  },
+  "/terms-and-conditions": {
+    title: "Terms & Conditions | Techneyo Solutions",
+    description: "Read the terms and conditions for using the Techneyo Solutions website and services.",
+    keywords: "techneyo terms of service, terms and conditions",
+  },
+  "/refund-cancellation-policy": {
+    title: "Refund & Cancellation Policy | Techneyo Solutions",
+    description: "Understand the refund and cancellation policy for Techneyo Solutions website, software, CRM, and digital service projects.",
+    keywords: "refund policy, cancellation policy, techneyo solutions",
+  },
+  "/support": {
+    title: "Customer Support & Service Desk | Techneyo Solutions",
+    description: "Get 24/7 client support, technical assistance, and enquiry resolution from Techneyo Solutions.",
+    keywords: "techneyo support, customer care, tech support",
   },
 };
 
@@ -207,6 +229,14 @@ export async function seoMetaMiddleware(req, res, next) {
         title: staticMatch.title,
         description: staticMatch.description,
         keywords: staticMatch.keywords,
+        image: "https://techneyo.com/banner.jpeg",
+        url: `https://techneyo.com${req.path}`,
+      };
+    } else if (isBot) {
+      seoData = {
+        title: "Techneyo Solutions | Website, CRM & Business Automation Services",
+        description: "Techneyo Solutions helps businesses across Bharat & Asia build professional websites, CRM systems, admin dashboards, WhatsApp automation workflows, and digital growth solutions.",
+        keywords: "website development, crm development, business automation",
         image: "https://techneyo.com/banner.jpeg",
         url: `https://techneyo.com${req.path}`,
       };
