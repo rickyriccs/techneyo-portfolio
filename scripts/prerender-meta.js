@@ -8,7 +8,8 @@ const distPath = path.resolve(__dirname, "../dist");
 const indexPath = path.join(distPath, "index.html");
 
 const BASE_URL = "https://techneyo.com";
-const FB_APP_ID = "1062712686089923";
+// If you have a registered Facebook App ID from developers.facebook.com/apps, specify it below. Leave null if only using standard Open Graph tags.
+const FB_APP_ID = process.env.FB_APP_ID || null;
 
 const pages = [
   {
@@ -163,12 +164,15 @@ function runPrerender() {
       `<link rel="canonical" href="${escapeHtml(pageUrl)}" />`
     );
 
-    // Inject fb:app_id if not present
-    if (!html.includes('property="fb:app_id"')) {
-      html = html.replace(
-        '<meta property="og:site_name"',
-        `<meta property="fb:app_id" content="${FB_APP_ID}" />\n    <meta property="og:site_name"`
-      );
+    // Clean up or inject fb:app_id
+    if (FB_APP_ID) {
+      if (html.includes('property="fb:app_id"')) {
+        html = html.replace(/<meta\s+property=["']fb:app_id["']\s+content=["'][^"']*["']\s*\/?>/i, `<meta property="fb:app_id" content="${FB_APP_ID}" />`);
+      } else {
+        html = html.replace('<meta property="og:site_name"', `<meta property="fb:app_id" content="${FB_APP_ID}" />\n    <meta property="og:site_name"`);
+      }
+    } else {
+      html = html.replace(/<meta\s+property=["']fb:app_id["']\s+content=["'][^"']*["']\s*\/?>\s*/gi, "");
     }
 
     const targetFile = path.join(pageDir, "index.html");
@@ -176,16 +180,16 @@ function runPrerender() {
     console.log(`✅ Pre-rendered: ${page.path}/index.html (og:url: ${pageUrl})`);
   }
 
-  // Also ensure root index.html has fb:app_id
+  // Also ensure root index.html is clean
   let rootHtml = baseHtml;
-  if (!rootHtml.includes('property="fb:app_id"')) {
-    rootHtml = rootHtml.replace(
-      '<meta property="og:site_name"',
-      `<meta property="fb:app_id" content="${FB_APP_ID}" />\n    <meta property="og:site_name"`
-    );
-    fs.writeFileSync(indexPath, rootHtml, "utf-8");
-    console.log(`✅ Added fb:app_id to root dist/index.html`);
+  if (FB_APP_ID) {
+    if (!rootHtml.includes('property="fb:app_id"')) {
+      rootHtml = rootHtml.replace('<meta property="og:site_name"', `<meta property="fb:app_id" content="${FB_APP_ID}" />\n    <meta property="og:site_name"`);
+    }
+  } else {
+    rootHtml = rootHtml.replace(/<meta\s+property=["']fb:app_id["']\s+content=["'][^"']*["']\s*\/?>\s*/gi, "");
   }
+  fs.writeFileSync(indexPath, rootHtml, "utf-8");
 
   console.log(`🎉 All ${pages.length} static routes successfully pre-rendered into dist/!`);
 }
