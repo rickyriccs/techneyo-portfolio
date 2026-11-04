@@ -9,6 +9,7 @@ import CurrencyToggle from "@/components/CurrencyToggle";
 const navLinks = [
   { label: "Home", path: "/" },
   { label: "Services", path: "/services" },
+  { label: "Free Audit", path: "/audit", isBadge: true },
   { label: "Industries", path: "/industries" },
   { label: "Offers", path: "/offers" },
   { label: "Blog", path: "/blog" },
@@ -53,9 +54,12 @@ const Header = () => {
                 className={`rounded-lg px-3 py-2 text-sm font-semibold transition-all duration-200 ${
                   isActive(link.path)
                     ? "bg-cyan-300/18 text-cyan-50 shadow-[0_0_24px_rgb(34_211_238_/_0.14)]"
+                    : (link as any).isBadge
+                    ? "text-cyan-300 bg-cyan-500/10 border border-cyan-500/30 hover:bg-cyan-500/20 shadow-sm shadow-cyan-500/20"
                     : "text-slate-300 hover:bg-white/10 hover:text-cyan-50"
                 }`}
               >
+                {(link as any).isBadge && <span className="inline-block mr-1">⚡</span>}
                 {link.label}
               </Link>
             ))}
@@ -111,9 +115,12 @@ const Header = () => {
                   className={`block px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                     isActive(link.path)
                       ? "bg-cyan-300/18 text-cyan-50"
+                      : (link as any).isBadge
+                      ? "text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 font-bold"
                       : "text-slate-300 hover:bg-white/10 hover:text-cyan-50"
                   }`}
                 >
+                  {(link as any).isBadge && <span className="inline-block mr-1.5">⚡</span>}
                   {link.label}
                 </Link>
               ))}

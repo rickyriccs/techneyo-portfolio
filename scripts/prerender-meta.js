@@ -13,6 +13,12 @@ const FB_APP_ID = process.env.FB_APP_ID || null;
 
 const pages = [
   {
+    path: "audit",
+    title: "Free 360° Website & Digital Presence Audit | Techneyo Solutions",
+    description: "Run an instant 360° health check on your business website and online presence. Discover mobile speed bottlenecks, SEO gaps, conversion leaks, and competitor benchmarks.",
+    keywords: "free website audit, digital presence audit, online business health check, website speed test, conversion rate audit, seo ranking check",
+  },
+  {
     path: "privacy-policy",
     title: "Privacy Policy | Techneyo Solutions",
     description: "Read the Techneyo Solutions privacy policy to understand how we collect, use, and protect enquiry and contact information.",

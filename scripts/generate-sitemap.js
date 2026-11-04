@@ -17,6 +17,7 @@ const TODAY = new Date().toISOString().split("T")[0];
 // Core Static Pages
 const staticPages = [
   { path: "", priority: "1.0", changefreq: "weekly" },
+  { path: "/audit", priority: "0.95", changefreq: "daily" },
   { path: "/about", priority: "0.8", changefreq: "monthly" },
   { path: "/services", priority: "0.9", changefreq: "weekly" },
   { path: "/offers", priority: "0.9", changefreq: "daily" },

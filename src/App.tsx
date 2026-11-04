@@ -52,6 +52,7 @@ import SmartProposalModal from "@/components/interactive/SmartProposalModal";
 
 import Industries from "./pages/Industries";
 import IndustryDetail from "./pages/IndustryDetail";
+import Audit from "./pages/Audit";
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -73,6 +74,8 @@ const AppRoutes = () => {
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/audit" element={<Audit />} />
+          <Route path="/website-audit" element={<Navigate to="/audit" replace />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/portfolio" element={<Portfolio />} />

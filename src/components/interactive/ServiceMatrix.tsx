@@ -175,6 +175,37 @@ const serviceCatalog: ServiceData[] = [
       { id: "ads-addon-reels", name: "3x High-Impact Video Ad Creatives", price: 2999, category: "Marketing & Media", description: "Short video ads engineered for maximum customer attention and clicks", icon: Video },
     ],
   },
+  {
+    id: "digital-audit",
+    categoryKey: "audit",
+    title: "360° Digital Health & Growth Audit",
+    tagline: "Expert analysis of your website speed, Google SEO rankings, conversion leaks, and online presence with a solution-oriented fix roadmap.",
+    icon: BarChart3,
+    gradient: "from-teal-500 to-cyan-600",
+    startingPrice: 1999,
+    estimatedDays: "24 - 48 Hours",
+    projectedRoi: "2x - 3x Conversion Uplift",
+    trustGuarantees: ["15-Min Video Teardown", "100% Money-Back Guarantee", "Developer Fix Checklist", "Competitor Benchmark"],
+    deliverables: [
+      "15-Minute Personalized Video Teardown of Your Live Website & Online Footprint",
+      "Itemized Strengths & Critical Bottlenecks Scorecard (Speed, SEO, UX, Security)",
+      "Head-to-Head Competitor Gap Analysis & Market Benchmark",
+      "Prioritized Developer & Designer Action Checklist (Ranked by Revenue Impact)",
+      "1-Tap Mobile WhatsApp & Lead Funnel Optimization Recommendations",
+      "Direct WhatsApp Consulting Support for Execution Follow-ups",
+    ],
+    features: [
+      "Mobile Core Web Vitals Sub-1.5s Speed Blueprint",
+      "Google Search Console & Local SEO Audit",
+      "Social Proof & Trust Badge CRO Redesign Suggestions",
+      "Free Instant Online Scorecard Tool at /audit",
+    ],
+    availableAddons: [
+      { id: "audit-addon-call", name: "30-Minute 1-on-1 Strategy & Implementation Call", price: 1499, category: "VIP Delivery", description: "Live screen-share strategy consultation with our lead technical architect", icon: Rocket },
+      { id: "audit-addon-wa", name: "Instant 1-Tap WhatsApp Lead Capture Integration", price: 2499, category: "Automation", description: "We implement the floating WhatsApp lead bot directly on your site", icon: MessageSquare },
+      { id: "audit-addon-speed", name: "Core Web Vitals Sub-1.5s Mobile Speed Sprint", price: 2999, category: "Industry Features", description: "Hands-on code & image optimization to boost page speed to 90+", icon: Zap },
+    ],
+  },
 ];
 
 export const ServiceMatrix: React.FC = () => {

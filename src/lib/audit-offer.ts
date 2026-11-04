@@ -1,0 +1,67 @@
+import type { Offer } from "@/types/offer";
+
+export const auditOffer: Offer = {
+  id: "360-digital-audit-offer",
+  title: "360° Digital Health & Growth Audit",
+  slug: "360-digital-health-growth-audit",
+  short_description:
+    "Comprehensive 360° website & online presence teardown with personalized 15-min video review, prioritized weakness fix checklist, and conversion optimization roadmap.",
+  detailed_description:
+    "Stop wondering why your website visitors aren't turning into paying customers. Our 360° Digital Health & Growth Audit delivers a ruthless, expert-guided teardown of your mobile page speed, Google search ranking signals, local map presence, and conversion leaks.\n\nYou receive a 15-minute personalized video review walking through every friction point on your live site, accompanied by a prioritized developer/designer action checklist and direct WhatsApp consulting to help you execute fixes immediately.",
+  offer_type: "Digital Growth",
+  starting_price: 4999,
+  starting_price_usd: 69,
+  discount_price: 1999,
+  discount_price_usd: 29,
+  billing_period: "one-time",
+  setup_fee: 0,
+  setup_fee_usd: 0,
+  booking_amount_type: "full",
+  booking_amount: 1999,
+  booking_amount_usd: 29,
+  target_audience: [
+    "Business Owners Looking to Double Inbound Leads",
+    "Founders with Low-Converting Websites",
+    "Clinics, Consultants & Local Service Providers",
+    "E-commerce Brands Losing Mobile Customers",
+    "Businesses Running Paid Google or Meta Ads",
+  ],
+  whats_included: [
+    "Personalized 15-Minute Video Teardown of Your Website & Online Footprint",
+    "Itemized Strengths & Weaknesses Scorecard (Speed, SEO, UX, Security)",
+    "Head-to-Head Competitor Benchmark & Gap Analysis",
+    "Step-by-Step Developer & Designer Fix Roadmap (Prioritized by ROI)",
+    "High-Converting Mobile Funnel & 1-Tap WhatsApp Architecture Recommendations",
+    "Direct WhatsApp Consultant Support for Follow-Up Implementation Questions",
+  ],
+  whats_not_included: [
+    "Full custom code re-engineering (available as an add-on implementation sprint)",
+    "Paid ad spend budgets",
+  ],
+  update_policy: "Delivered within 24 to 48 business hours directly to your email and WhatsApp.",
+  ownership_policy: "You receive 100% full ownership of the audit report, video walkthrough, and action checklists.",
+  terms: [
+    "100% Money-Back Guarantee if we cannot identify at least 3 critical revenue-leaking bottlenecks.",
+    "One website per audit package.",
+  ],
+  target_keywords: [
+    "website audit",
+    "digital presence audit",
+    "SEO audit",
+    "conversion rate audit",
+    "website speed analysis",
+    "online presence score",
+    "website teardown",
+  ],
+  valid_from: null,
+  valid_till: null,
+  status: "Active",
+  is_featured: true,
+  button_text: "Claim Deep-Dive Audit ($29 / ₹1,999)",
+  button_action: "Contact Form",
+  button_url: null,
+  display_order: 1,
+  seo_title: "360° Website & Digital Presence Audit | Techneyo Solutions",
+  seo_description:
+    "Audit your website and online presence. Discover mobile speed bottlenecks, SEO gaps, and conversion leaks with a 15-min personalized video teardown and action roadmap.",
+};

@@ -22,6 +22,7 @@ import { BookingModal } from "@/components/BookingModal";
 import { useAppSettings } from "@/hooks/use-app-settings";
 import { isInstagramLead } from "@/lib/utm";
 import { isIndiaUser } from "@/lib/geo";
+import { auditOffer } from "@/lib/audit-offer";
 
 import { usePersonalization } from "@/context/PersonalizationContext";
 import { useCurrency } from "@/context/CurrencyContext";
@@ -66,6 +67,7 @@ export const Offers = () => {
 
       if (error) {
         console.error("Failed to load offers", error);
+        setOffers([auditOffer]);
         return;
       }
 
@@ -76,11 +78,15 @@ export const Offers = () => {
         const day = String(d.getDate()).padStart(2, "0");
         const todayStr = `${year}-${month}-${day}`;
 
-        const activeOffers = (data as Offer[]).filter((offer) => {
+        let activeOffers = (data as Offer[]).filter((offer) => {
           if (offer.valid_from && offer.valid_from > todayStr) return false;
           if (offer.valid_till && offer.valid_till < todayStr) return false;
           return true;
         });
+
+        if (!activeOffers.some((o) => o.slug === auditOffer.slug || o.id === auditOffer.id)) {
+          activeOffers = [auditOffer, ...activeOffers];
+        }
 
         setOffers(activeOffers);
       }

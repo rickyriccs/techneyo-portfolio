@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  Globe, MapPin, MessageCircle, Star, Sparkles, ArrowRight, CheckCircle2, PhoneCall, ShieldCheck, Zap, HelpCircle
+  Globe, MapPin, MessageCircle, Star, Sparkles, ArrowRight, CheckCircle2, PhoneCall, ShieldCheck, Zap, HelpCircle, BarChart3
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import PageMeta from "@/components/PageMeta";
@@ -39,6 +39,11 @@ const businessOutcomes = [
     icon: Star,
     title: "4. Social Media & Video Branding",
     desc: "High-quality short video Reels and graphic posts for Instagram & Facebook that make your business look trusted and popular.",
+  },
+  {
+    icon: BarChart3,
+    title: "5. 360° Digital Health & Growth Audit",
+    desc: "Ruthless diagnosis of your website speed, Google SEO rankings, and conversion leaks, complete with a prioritized developer fix blueprint.",
   },
 ];
 
@@ -91,11 +96,17 @@ const Services = () => {
               No technical confusion. We build fast websites, mobile apps, viral social media Reels, and Google ads that turn online visitors into paying clients.
             </motion.p>
             <motion.div variants={fadeUp} custom={3} className="mt-8 flex flex-wrap gap-4">
+              <Link
+                to="/audit"
+                className="premium-btn border border-cyan-400/40 bg-cyan-500/15 text-cyan-200 hover:bg-cyan-500/25 flex items-center gap-2 shadow-lg shadow-cyan-500/10 font-bold"
+              >
+                <span>⚡ Free 360° Audit</span>
+              </Link>
               <button
                 onClick={() => openProposalModal()}
                 className="premium-btn premium-btn-primary flex items-center gap-2"
               >
-                <Sparkles size={18} /> Get Custom AI Proposal & Pricing <ArrowRight size={18} />
+                <Sparkles size={18} /> Get AI Proposal & Pricing <ArrowRight size={18} />
               </button>
               <a href={businessInfo.whatsappUrl} target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn-ghost flex items-center gap-2">
                 <MessageCircle size={18} /> Chat on WhatsApp

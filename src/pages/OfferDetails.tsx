@@ -39,6 +39,7 @@ import { BookingModal } from "@/components/BookingModal";
 import { useAppSettings } from "@/hooks/use-app-settings";
 import { isInstagramLead } from "@/lib/utm";
 import { useCurrency } from "@/context/CurrencyContext";
+import { auditOffer } from "@/lib/audit-offer";
 import {
   Accordion,
   AccordionContent,
@@ -77,7 +78,11 @@ export const OfferDetails = () => {
         .single();
 
       if (error || !data) {
-        console.error("Failed to load offer details:", error);
+        if (slug === auditOffer.slug) {
+          setOffer(auditOffer);
+        } else {
+          console.error("Failed to load offer details:", error);
+        }
       } else {
         setOffer(data as Offer);
       }
