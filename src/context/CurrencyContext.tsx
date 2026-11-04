@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { isIndiaUser } from "@/lib/geo";
 
 export type Currency = "INR" | "USD";
 
@@ -48,14 +49,14 @@ export const CurrencyProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [currency, setCurrencyState] = useState<Currency>("INR");
 
   useEffect(() => {
-    // 1. Check saved user preference in localStorage
-    const saved = localStorage.getItem(STORAGE_KEY) as Currency | null;
-    if (saved === "INR" || saved === "USD") {
-      setCurrencyState(saved);
-      return;
+    // Clear any past manual toggle stored in localStorage from testing
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // ignore
     }
 
-    // 2. Intelligent Auto-Detection via Browser Timezone
+    // 1. Instant heuristic via Browser Timezone
     try {
       const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
       const isIndiaTimezone =
@@ -66,39 +67,29 @@ export const CurrencyProvider: React.FC<{ children: ReactNode }> = ({ children }
       if (isIndiaTimezone) {
         setCurrencyState("INR");
       } else {
-        // Outside India: default to USD
         setCurrencyState("USD");
-        localStorage.setItem(STORAGE_KEY, "USD");
       }
     } catch {
       setCurrencyState("INR");
     }
 
-    // 3. Lightweight async Geo-IP verification (non-blocking)
-    if (!saved) {
-      fetch("https://api.country.is")
-        .then((res) => res.json())
-        .then((data) => {
-          if (data && data.country) {
-            const detected: Currency = data.country === "IN" ? "INR" : "USD";
-            setCurrencyState(detected);
-            localStorage.setItem(STORAGE_KEY, detected);
-          }
-        })
-        .catch(() => {
-          // Silent fallback to timezone detection
-        });
-    }
+    // 2. High-precision async Geo-IP country verification
+    isIndiaUser()
+      .then((isIndia) => {
+        setCurrencyState(isIndia ? "INR" : "USD");
+      })
+      .catch(() => {
+        // Fallback remains timezone heuristic
+      });
   }, []);
 
   const setCurrency = (c: Currency) => {
     setCurrencyState(c);
-    localStorage.setItem(STORAGE_KEY, c);
   };
 
   const toggleCurrency = () => {
     const next: Currency = currency === "INR" ? "USD" : "INR";
-    setCurrency(next);
+    setCurrencyState(next);
   };
 
   const getRawPrice = (
