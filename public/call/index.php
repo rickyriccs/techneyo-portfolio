@@ -25,7 +25,6 @@
       min-height: 100dvh;
       padding: 16px;
     }
-
     /* Card container */
     .call-wrapper {
       width: 100%;
