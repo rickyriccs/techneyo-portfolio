@@ -392,6 +392,12 @@ export const IndustryDetail: React.FC = () => {
             >
               <Sparkles size={20} /> Build My Custom {industry.title} Offer <ArrowRight size={20} />
             </button>
+            <Link
+              to="/solution-finder"
+              className="inline-flex items-center gap-2 rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-6 py-4 text-base font-semibold text-cyan-300 hover:bg-cyan-500/20 transition-all"
+            >
+              <Sparkles size={18} /> Take 30-Sec Needs Quiz
+            </Link>
             <a
               href="tel:+919988773122"
               className="premium-btn premium-btn-ghost flex items-center gap-2 text-base px-8 py-4"

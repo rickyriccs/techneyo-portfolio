@@ -16,6 +16,7 @@ const ALLOWED_TABLES = new Set([
   "portfolio_clients",
   "contact_enquiries",
   "offer_bookings",
+  "client_needs_assessments",
   "analytics_events",
   "activity_logs",
 ]);

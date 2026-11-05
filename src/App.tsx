@@ -43,8 +43,10 @@ import Onboarding from "./pages/Onboarding";
 import AdminBookings from "./pages/admin/AdminBookings";
 import AdminBlogs from "./pages/admin/AdminBlogs";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import AdminClientNeeds from "./pages/admin/AdminClientNeeds";
 import Blog from "./pages/Blog";
 import BlogPostPage from "./pages/BlogPostPage";
+import SolutionFinder from "./pages/SolutionFinder";
 
 import { PersonalizationProvider } from "@/context/PersonalizationContext";
 import { CurrencyProvider } from "@/context/CurrencyContext";
@@ -76,6 +78,8 @@ const AppRoutes = () => {
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/audit" element={<Audit />} />
           <Route path="/website-audit" element={<Navigate to="/audit" replace />} />
+          <Route path="/solution-finder" element={<SolutionFinder />} />
+          <Route path="/quiz" element={<Navigate to="/solution-finder" replace />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/portfolio" element={<Portfolio />} />
@@ -97,6 +101,7 @@ const AppRoutes = () => {
               <Route path="analytics" element={<AdminAnalytics />} />
               <Route path="blogs" element={<AdminBlogs />} />
               <Route path="enquiries" element={<AdminEnquiries />} />
+              <Route path="client-needs" element={<AdminClientNeeds />} />
               <Route path="services" element={<AdminServices />} />
               <Route path="offers" element={<AdminOffers />} />
               <Route path="bookings" element={<AdminBookings />} />

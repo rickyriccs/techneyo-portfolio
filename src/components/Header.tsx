@@ -7,8 +7,9 @@ import { usePersonalization } from "@/context/PersonalizationContext";
 
 const navLinks = [
   { label: "Home", path: "/" },
+  { label: "Find Solution", path: "/solution-finder", isBadge: true },
   { label: "Services", path: "/services" },
-  { label: "Free Audit", path: "/audit", isBadge: true },
+  { label: "Free Audit", path: "/audit" },
   { label: "Industries", path: "/industries" },
   { label: "Offers", path: "/offers" },
   { label: "Blog", path: "/blog" },

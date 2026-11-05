@@ -417,7 +417,56 @@ export const notifySlackOnboarding = async (onboarding: {
 };
 
 /**
- * 5. Test Webhook Verification
+ * 5. Alert for Industry Needs Diagnostic Quiz Completed
+ */
+export const notifySlackClientNeedsAssessment = async (assessment: {
+  customerName?: string;
+  customerPhone?: string;
+  customerEmail?: string;
+  businessName?: string;
+  industry: string;
+  bottleneck: string;
+  urgencyLevel: string;
+  urgencyScore: number;
+  timeline: string;
+  recommendedOfferTitle?: string;
+}) => {
+  const settings = await getSlackSettings();
+  if (!settings.slack_enabled && !import.meta.env.VITE_SLACK_WEBHOOK_URL) return;
+
+  const color =
+    assessment.urgencyLevel === "Critical"
+      ? "#ef4444"
+      : assessment.urgencyLevel === "Moderate"
+      ? "#f59e0b"
+      : "#10b981";
+
+  const fields: SlackField[] = [
+    { title: "⚡ Urgency Level", value: `${assessment.urgencyLevel} (${assessment.urgencyScore}/100)`, short: true },
+    { title: "🏢 Industry", value: assessment.industry, short: true },
+    { title: "👤 Contact", value: assessment.customerName || "Anonymous Lead", short: true },
+    { title: "📞 Phone/WhatsApp", value: assessment.customerPhone || "Not provided", short: true },
+    { title: "✉️ Email", value: assessment.customerEmail || "Not provided", short: true },
+    { title: "⏱️ Target Timeline", value: assessment.timeline, short: true },
+    { title: "🎯 Core Bottleneck", value: assessment.bottleneck, short: false },
+  ];
+
+  if (assessment.recommendedOfferTitle) {
+    fields.push({ title: "💡 Recommended Solution", value: assessment.recommendedOfferTitle, short: false });
+  }
+
+  await sendSlackNotification({
+    title: "🎯 New Client Needs Quiz Completed!",
+    text: `Diagnostic completed for *${assessment.businessName || assessment.customerName || assessment.industry}* with *${assessment.urgencyLevel}* urgency.`,
+    color,
+    fields,
+    ctaUrl: "https://techneyo.com/admin/client-needs",
+    ctaText: "View Quiz Submissions in Admin",
+  });
+};
+
+/**
+ * 6. Test Webhook Verification
  */
 export const testSlackWebhook = async (webhookUrl: string): Promise<boolean> => {
   return sendSlackNotification({

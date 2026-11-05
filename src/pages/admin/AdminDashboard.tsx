@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, FileText, Gift, Package, TrendingUp, Users, Wrench, Zap, Eye, BarChart3 } from "lucide-react";
+import { ArrowRight, FileText, Gift, Package, TrendingUp, Users, Wrench, Zap, Eye, BarChart3, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 
@@ -136,6 +136,25 @@ const AdminDashboard = () => {
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline self-start sm:self-auto"
         >
           Open Analytics Dashboard <ArrowRight size={14} />
+        </Link>
+      </div>
+
+      {/* Client Needs & Quiz Quick Banner */}
+      <div className="rounded-xl border border-purple-500/20 bg-gradient-to-r from-purple-950/20 via-card to-card p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/15 text-purple-400">
+            <Sparkles size={20} />
+          </div>
+          <div>
+            <h3 className="font-display text-base font-bold text-foreground">Client Needs & Solution Quiz Leads</h3>
+            <p className="text-xs text-muted-foreground">Review industry quiz diagnostic submissions, urgency flags, and tailored solutions.</p>
+          </div>
+        </div>
+        <Link
+          to="/admin/client-needs"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline self-start sm:self-auto"
+        >
+          View Client Needs <ArrowRight size={14} />
         </Link>
       </div>
 

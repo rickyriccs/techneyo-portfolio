@@ -318,6 +318,38 @@ const Index = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
             <HeroDiagnosticWidget />
           </motion.div>
+
+          {/* Solution Finder Quiz Banner */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="relative overflow-hidden rounded-3xl border border-cyan-500/30 bg-gradient-to-r from-cyan-950/40 via-blue-950/30 to-black p-6 sm:p-8 backdrop-blur-xl shadow-2xl"
+          >
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+              <div className="space-y-2 max-w-2xl">
+                <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-cyan-300">
+                  <Sparkles size={13} className="text-cyan-400" />
+                  <span>30-Second Diagnostic Quiz</span>
+                </div>
+                <h3 className="font-display text-2xl sm:text-3xl font-bold text-white">
+                  Not sure what your industry actually needs right now?
+                </h3>
+                <p className="text-sm text-gray-300 leading-relaxed">
+                  Take our interactive assessment to receive instant real-time urgency hints, competitor benchmarks, and an immediately purchasable solution package tailored to your exact bottleneck.
+                </p>
+              </div>
+
+              <div className="shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <Link
+                  to="/solution-finder"
+                  className="premium-btn premium-btn-primary inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-bold shadow-xl shadow-cyan-500/25"
+                >
+                  Find My Solution Now <ArrowRight size={16} />
+                </Link>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
