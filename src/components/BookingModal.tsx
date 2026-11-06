@@ -258,7 +258,7 @@ export const BookingModal = ({
               <p className="mt-1 text-sm text-white/65">
                 Book now with an advance payment of{" "}
                 <span className="font-semibold text-orange-300">
-                  Rs. {advancePriceObj.amount.toLocaleString("en-IN")}
+                  {advancePriceObj.symbol}{advancePriceObj.amount.toLocaleString(isUsd ? "en-US" : "en-IN")}
                 </span>
                 .
               </p>
@@ -349,7 +349,7 @@ export const BookingModal = ({
               <div className="flex justify-between items-center text-sm font-semibold text-white">
                 <span>Advance Payable Now</span>
                 <span className="text-orange-300 font-display text-lg">
-                  Rs. {advancePriceObj.amount.toLocaleString("en-IN")}
+                  {advancePriceObj.symbol}{advancePriceObj.amount.toLocaleString(isUsd ? "en-US" : "en-IN")}
                 </span>
               </div>
               {offer.setup_fee && offer.discount_price && (
@@ -389,7 +389,7 @@ export const BookingModal = ({
               </>
             ) : !isFreeBooking ? (
               <>
-                <CreditCard size={18} /> Pay Rs. {advancePriceObj.amount.toLocaleString("en-IN")} & Confirm Booking
+                <CreditCard size={18} /> Pay {advancePriceObj.symbol}{advancePriceObj.amount.toLocaleString(isUsd ? "en-US" : "en-IN")} & Confirm Booking
               </>
             ) : (
               <>

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { isIndiaUser } from "@/lib/geo";
+import { getUserCountryInfo, saveUserCountryPreference, type CountryInfo } from "@/lib/geo";
 
 export type Currency = "INR" | "USD";
 
@@ -8,6 +8,7 @@ interface CurrencyContextType {
   setCurrency: (c: Currency) => void;
   toggleCurrency: () => void;
   currencySymbol: string;
+  countryInfo: CountryInfo | null;
   formatPrice: (
     inrAmount: number | null | undefined,
     customUsdAmount?: number | null | undefined,
@@ -43,53 +44,45 @@ const CURATED_TIER_MAP: Record<number, number> = {
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
 
-const STORAGE_KEY = "techneyo_currency";
-
 export const CurrencyProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [currency, setCurrencyState] = useState<Currency>("INR");
+  const [countryInfo, setCountryInfo] = useState<CountryInfo | null>(null);
 
   useEffect(() => {
-    // Clear any past manual toggle stored in localStorage from testing
+    // 1. Instant check from localStorage
     try {
-      localStorage.removeItem(STORAGE_KEY);
+      const savedCurrency = localStorage.getItem("techneyo_currency");
+      if (savedCurrency === "USD" || savedCurrency === "INR") {
+        setCurrencyState(savedCurrency);
+      }
     } catch {
       // ignore
     }
 
-    // 1. Instant heuristic via Browser Timezone
-    try {
-      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
-      const isIndiaTimezone =
-        timeZone.includes("Calcutta") ||
-        timeZone.includes("Kolkata") ||
-        timeZone.includes("Colombo");
-
-      if (isIndiaTimezone) {
-        setCurrencyState("INR");
-      } else {
-        setCurrencyState("USD");
+    // 2. High-precision country detection
+    getUserCountryInfo().then((info) => {
+      setCountryInfo(info);
+      // Only set currency if user hasn't explicitly saved a preference in localStorage
+      try {
+        const saved = localStorage.getItem("techneyo_currency");
+        if (!saved) {
+          setCurrencyState(info.currency);
+        }
+      } catch {
+        setCurrencyState(info.currency);
       }
-    } catch {
-      setCurrencyState("INR");
-    }
-
-    // 2. High-precision async Geo-IP country verification
-    isIndiaUser()
-      .then((isIndia) => {
-        setCurrencyState(isIndia ? "INR" : "USD");
-      })
-      .catch(() => {
-        // Fallback remains timezone heuristic
-      });
+    });
   }, []);
 
   const setCurrency = (c: Currency) => {
     setCurrencyState(c);
+    const countryCode = c === "INR" ? "IN" : (countryInfo?.countryCode === "IN" ? "US" : countryInfo?.countryCode || "US");
+    saveUserCountryPreference(countryCode, c);
   };
 
   const toggleCurrency = () => {
     const next: Currency = currency === "INR" ? "USD" : "INR";
-    setCurrencyState(next);
+    setCurrency(next);
   };
 
   const getRawPrice = (
@@ -118,7 +111,7 @@ export const CurrencyProvider: React.FC<{ children: ReactNode }> = ({ children }
     return {
       amount: inrAmount ? Number(inrAmount) : 0,
       currency: "INR",
-      symbol: "Rs. ",
+      symbol: "₹",
     };
   };
 
@@ -143,7 +136,7 @@ export const CurrencyProvider: React.FC<{ children: ReactNode }> = ({ children }
     if (raw.currency === "USD") {
       formatted = `$${raw.amount.toLocaleString("en-US")}`;
     } else {
-      formatted = `Rs. ${raw.amount.toLocaleString("en-IN")}`;
+      formatted = `₹${raw.amount.toLocaleString("en-IN")}`;
     }
 
     if (options?.showPeriod && options?.billingPeriod === "monthly") {
@@ -159,7 +152,8 @@ export const CurrencyProvider: React.FC<{ children: ReactNode }> = ({ children }
         currency,
         setCurrency,
         toggleCurrency,
-        currencySymbol: currency === "USD" ? "$" : "Rs.",
+        currencySymbol: currency === "USD" ? "$" : "₹",
+        countryInfo,
         formatPrice,
         getRawPrice,
       }}

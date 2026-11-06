@@ -17,7 +17,6 @@ const services = [
 const quickLinks = [
   { label: "Global Tech Partner (Offshore)", path: "/global" },
   { label: "Needs Diagnostic Quiz (60s)", path: "/solution-finder" },
-  { label: "Instant Payment Portal (USD/INR)", path: "/pay" },
   { label: "Portfolio & Case Studies", path: "/portfolio" },
   { label: "Blog & Insights", path: "/blog" },
   { label: "About Us", path: "/about" },
@@ -199,12 +198,6 @@ const Footer = () => {
                 >
                   Direct WhatsApp Channel →
                 </a>
-              </li>
-              <li className="flex items-center gap-3 pt-2">
-                <CreditCard size={15} className="shrink-0 text-orange-400" />
-                <Link to="/pay" className="text-orange-300 hover:underline transition-colors font-medium">
-                  Custom Invoice Payment Portal →
-                </Link>
               </li>
             </ul>
 

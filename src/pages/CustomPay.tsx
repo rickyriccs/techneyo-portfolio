@@ -22,20 +22,29 @@ import { loadRazorpayScript } from "@/lib/razorpay";
 import { supabase } from "@/lib/supabase";
 import { notifySlackNewBooking } from "@/lib/slack";
 import { getSourceData } from "@/lib/utm";
+import { useCurrency } from "@/context/CurrencyContext";
 
 export default function CustomPay() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { currency: globalCurrency } = useCurrency();
 
   // Read params
   const title = searchParams.get("title") || "Techneyo Custom Digital Solution";
   const rawAmount = parseFloat(searchParams.get("amount") || "0");
-  const currency = (searchParams.get("currency") || "INR").toUpperCase();
+  const paramCurrency = searchParams.get("currency");
+  const defaultCurrency = (paramCurrency ? paramCurrency.toUpperCase() : globalCurrency) as "INR" | "USD";
   const refCode = searchParams.get("ref") || `INV-${Date.now().toString().slice(-6)}`;
   const prefillName = searchParams.get("name") || searchParams.get("customer_name") || "";
   const prefillEmail = searchParams.get("email") || searchParams.get("customer_email") || "";
   const prefillPhone = searchParams.get("phone") || searchParams.get("customer_phone") || "";
   const notes = searchParams.get("notes") || "";
+
+  const isFixedAmount = !isNaN(rawAmount) && rawAmount > 0;
+  const [currency, setCurrency] = useState<string>(defaultCurrency);
+  const [editableAmount, setEditableAmount] = useState<string>(
+    isFixedAmount ? rawAmount.toString() : defaultCurrency === "USD" ? "250" : "5000"
+  );
 
   const [customer, setCustomer] = useState({
     name: prefillName,
@@ -49,7 +58,7 @@ export default function CustomPay() {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentId, setPaymentId] = useState("");
 
-  const amount = isNaN(rawAmount) ? 0 : rawAmount;
+  const amount = isFixedAmount ? rawAmount : (parseFloat(editableAmount) || 0);
   const isUsd = currency === "USD";
   const formattedAmount = isUsd ? `$${amount.toLocaleString("en-US")}` : `₹${amount.toLocaleString("en-IN")}`;
 
@@ -270,12 +279,41 @@ export default function CustomPay() {
                 )}
               </div>
 
-              {/* Price Highlight */}
+              {/* Price Section */}
               <div className="my-6 rounded-2xl border border-white/10 bg-black/60 p-5 text-center">
-                <span className="text-xs uppercase tracking-wider text-gray-400">Total Amount Due</span>
-                <div className="text-3xl sm:text-4xl font-extrabold text-white mt-1">
-                  {formattedAmount} <span className="text-sm font-semibold text-cyan-300">{currency}</span>
-                </div>
+                {isFixedAmount ? (
+                  <>
+                    <span className="text-xs uppercase tracking-wider text-gray-400">Total Invoice Amount Due</span>
+                    <div className="text-3xl sm:text-4xl font-extrabold text-white mt-1">
+                      {formattedAmount} <span className="text-sm font-semibold text-cyan-300">{currency}</span>
+                    </div>
+                  </>
+                ) : (
+                  <div className="space-y-3">
+                    <span className="text-xs uppercase tracking-wider text-cyan-300 font-semibold">
+                      Enter Custom Invoice / Advance Amount
+                    </span>
+                    <div className="flex items-center justify-center">
+                      <div className="relative w-full max-w-xs">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-bold text-gray-400">
+                          {currency === "USD" ? "$" : "₹"}
+                        </span>
+                        <input
+                          type="number"
+                          min="1"
+                          step="any"
+                          value={editableAmount}
+                          onChange={(e) => setEditableAmount(e.target.value)}
+                          placeholder="Amount"
+                          className="w-full rounded-xl border border-cyan-500/30 bg-black/80 pl-10 pr-14 py-2.5 text-center text-3xl font-extrabold text-white focus:border-cyan-400 focus:outline-none"
+                        />
+                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-cyan-300 uppercase">
+                          {currency}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Customer Details Form */}
