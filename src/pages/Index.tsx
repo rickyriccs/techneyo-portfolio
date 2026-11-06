@@ -200,6 +200,12 @@ import HeroDiagnosticWidget from "@/components/interactive/HeroDiagnosticWidget"
 // import ServiceMatrix from "@/components/interactive/ServiceMatrix";
 import GlobalPresenceVisual from "@/components/interactive/GlobalPresenceVisual";
 import ProblemSolverSection from "@/components/ProblemSolverSection";
+import HeroShowcase from "@/components/hero/HeroShowcase";
+import BentoGridServices from "@/components/bento/BentoGridServices";
+import ROICalculator from "@/components/conversion/ROICalculator";
+import { MagneticButton } from "@/components/ui/MagneticButton";
+import { BadgePill } from "@/components/ui/BadgePill";
+import { Calendar } from "lucide-react";
 import { usePersonalization } from "@/context/PersonalizationContext";
 import { fetchPublishedBlogs } from "@/lib/blog-data";
 import type { BlogPost } from "@/types/blog";
@@ -270,54 +276,89 @@ const Index = () => {
         schema={pageSchema}
       />
 
-      <section className="premium-hero relative flex min-h-screen items-center overflow-hidden pt-28 pb-12">
-        <div className="premium-grid-bg" />
-        <div className="premium-orbit premium-orbit-a" />
-        <div className="premium-orbit premium-orbit-b" />
-        <div className="section-container relative z-10 space-y-12">
-          <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
-            <motion.div initial="hidden" animate="visible">
-              <motion.p variants={fadeUp} custom={0} className="premium-eyebrow">High-Converting IT & Digital Services Worldwide</motion.p>
-              <motion.h1 variants={fadeUp} custom={1} className="font-display text-4xl sm:text-6xl lg:text-7xl font-bold leading-[0.96] tracking-[-0.03em] text-white">
-                {preferences.primaryGoal ? (
-                  <>
-                    Customized <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300 capitalize">{preferences.primaryGoal.replace("_", " ")}</span> Solutions for Your Business
-                  </>
-                ) : (
-                  <>
-                    Website, Mobile Apps, Social Media & High-ROI Digital Marketing
-                  </>
-                )}
+      <section className="relative flex min-h-screen items-center overflow-hidden pt-28 pb-16 bg-[#020817]">
+        {/* Ambient brand lighting behind hero */}
+        <div
+          className="pointer-events-none absolute -top-24 right-0 h-[600px] w-[600px] rounded-full bg-gradient-to-br from-[#FE6F17]/15 to-transparent blur-[140px]"
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute top-1/3 -left-32 h-[600px] w-[600px] rounded-full bg-gradient-to-tr from-[#00A0E0]/15 to-transparent blur-[140px]"
+          aria-hidden="true"
+        />
+
+        <div className="section-container relative z-10 space-y-16">
+          <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.1fr]">
+            <motion.div initial="hidden" animate="visible" className="space-y-6">
+              <div className="flex flex-wrap items-center gap-2">
+                <BadgePill variant="orange" pulsing>
+                  ⚡ Silicon Valley High-Craft • 70% Offshore Cost Arbitrage
+                </BadgePill>
+              </div>
+
+              <motion.h1 variants={fadeUp} custom={1} className="font-display text-4xl sm:text-6xl lg:text-7xl font-bold leading-[1.0] tracking-[-0.03em] text-white">
+                We Build Digital Products That <span className="brand-gradient-text">Global Giants Envy.</span>
               </motion.h1>
-              <motion.p variants={fadeUp} custom={2} className="mt-6 max-w-3xl text-lg leading-8 text-white/68 sm:text-xl">
-                Techneyo Solutions builds high-impact websites, custom mobile apps, viral social media campaigns, and data-driven ad funnels to turn online traffic into loyal customers.
+
+              <motion.p variants={fadeUp} custom={2} className="max-w-2xl text-base sm:text-lg leading-relaxed text-slate-300">
+                High-velocity React, TypeScript, AI autonomous agents, and cloud platforms engineered for US & Canadian founders who refuse to compromise on design or speed.
               </motion.p>
-              <motion.div variants={fadeUp} custom={3} className="mt-8 flex flex-wrap gap-4">
-                <button
-                  onClick={() => openProposalModal()}
-                  className="premium-btn premium-btn-primary flex items-center gap-2"
-                >
-                  <Sparkles size={18} /> Get AI Proposal & Custom Offer <ArrowRight size={18} />
-                </button>
-                <a href={businessInfo.whatsappUrl} target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn-ghost flex items-center gap-2">
-                  <MessageCircle size={18} /> Instant WhatsApp Consultation
-                </a>
+
+              {/* Dual Action CTAs */}
+              <motion.div variants={fadeUp} custom={3} className="flex flex-wrap items-center gap-4 pt-2">
+                <Link to="/contact">
+                  <MagneticButton variant="primary" className="py-3 px-6 text-sm font-bold shadow-brand-orange">
+                    <Calendar size={16} />
+                    <span>Book 15-Min Strategy Call</span>
+                    <ArrowRight size={16} />
+                  </MagneticButton>
+                </Link>
+
+                <Link to="/solution-finder">
+                  <MagneticButton variant="secondary" className="py-3 px-5 text-sm font-bold text-cyan-200 hover:text-white">
+                    <Sparkles size={16} className="text-cyan-400" />
+                    <span>Take 60s Needs Quiz</span>
+                  </MagneticButton>
+                </Link>
               </motion.div>
-              <motion.div variants={fadeUp} custom={4} className="mt-8 flex flex-wrap gap-2">
-                {heroBadges.map((badge) => (
-                  <span key={badge} className="premium-badge">{badge}</span>
-                ))}
+
+              {/* Quick Trust Badges */}
+              <motion.div variants={fadeUp} custom={4} className="flex flex-wrap items-center gap-3 pt-2 text-xs font-mono text-slate-400">
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 size={13} className="text-emerald-400" />
+                  <span>100% Day-One IP Ownership</span>
+                </div>
+                <span>•</span>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 size={13} className="text-emerald-400" />
+                  <span>14-Day Risk-Free Trial</span>
+                </div>
+                <span>•</span>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 size={13} className="text-cyan-400" />
+                  <span>Delaware/Ontario Compliant</span>
+                </div>
               </motion.div>
             </motion.div>
-            <GlobalPresenceVisual />
+
+            {/* Interactive Hero Showcase Centerpiece */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="w-full"
+            >
+              <HeroShowcase />
+            </motion.div>
           </div>
-          {/* Problem Solver Interactive Section */}
-          <ProblemSolverSection />
 
           {/* Interactive Hero Diagnostic Widget */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
             <HeroDiagnosticWidget />
           </motion.div>
+
+          {/* Problem Solver Interactive Section */}
+          <ProblemSolverSection />
 
           {/* Solution Finder Quiz Banner */}
           <motion.div
@@ -343,13 +384,39 @@ const Index = () => {
               <div className="shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <Link
                   to="/solution-finder"
-                  className="premium-btn premium-btn-primary inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-bold shadow-xl shadow-cyan-500/25"
+                  className="btn-brand-primary inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-bold shadow-xl shadow-cyan-500/25"
                 >
                   Find My Solution Now <ArrowRight size={16} />
                 </Link>
               </div>
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Marquee Trust Bar */}
+      <div className="premium-marquee border-y border-white/10 bg-white/[0.03] py-4">
+        <div className="premium-marquee-track">
+          {trustItems.map((item) => (
+            <span key={item}><BadgeCheck size={16} /> {item}</span>
+          ))}
+        </div>
+      </div>
+
+      {/* Flagship Silicon Valley Bento Grid */}
+      <BentoGridServices />
+
+      {/* Interactive North America ROI Cost Arbitrage Calculator */}
+      <section className="relative py-12">
+        <div className="section-container">
+          <ROICalculator />
+        </div>
+      </section>
+
+      {/* Global Presence & Timezone Collaboration Visual */}
+      <section className="relative py-12">
+        <div className="section-container">
+          <GlobalPresenceVisual />
         </div>
       </section>
 

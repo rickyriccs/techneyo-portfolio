@@ -387,6 +387,46 @@
     content-visibility: auto;
     contain-intrinsic-size: 720px;
   }
+
+  /* --- Brand Logo-Derived Tokens & Silicon Valley Utilities --- */
+  .brand-gradient-text {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 50%, #FE6F17 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .brand-gradient-cyan {
+    background: linear-gradient(135deg, #00A0E0 0%, #38BDF8 60%, #FFFFFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .btn-brand-primary {
+    background: linear-gradient(135deg, #FE6F17 0%, #EA580C 100%);
+    box-shadow: 0 0 20px -3px rgba(254, 111, 23, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #FFFFFF;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .btn-brand-primary:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 0 30px 0 rgba(254, 111, 23, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+
+  .btn-brand-secondary {
+    background: rgba(6, 18, 43, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    color: #F8FAFC;
+    transition: all 0.25s ease;
+  }
+
+  .btn-brand-secondary:hover {
+    background: rgba(11, 30, 69, 0.85);
+    border-color: rgba(0, 160, 224, 0.4);
+    box-shadow: 0 0 20px -5px rgba(0, 160, 224, 0.3);
+  }
 }
 
 @layer utilities {

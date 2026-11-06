@@ -50,6 +50,27 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        brand: {
+          navy: {
+            DEFAULT: "#011B52",
+            canvas: "#020817",
+            card: "#06122B",
+            elevated: "#0B1E45",
+            border: "rgba(1, 27, 82, 0.4)",
+          },
+          orange: {
+            DEFAULT: "#FE6F17",
+            hover: "#EA580C",
+            glow: "rgba(254, 111, 23, 0.35)",
+            subtle: "rgba(254, 111, 23, 0.12)",
+          },
+          cyan: {
+            DEFAULT: "#00A0E0",
+            hover: "#0284C7",
+            glow: "rgba(0, 160, 224, 0.35)",
+            subtle: "rgba(0, 160, 224, 0.12)",
+          },
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -65,6 +86,11 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      boxShadow: {
+        "brand-orange": "0 0 25px -4px rgba(254, 111, 23, 0.45)",
+        "brand-cyan": "0 0 25px -4px rgba(0, 160, 224, 0.45)",
+        "glass-card": "0 8px 32px 0 rgba(1, 27, 82, 0.37), inset 0 1px 0 rgba(255, 255, 255, 0.08)",
       },
       keyframes: {
         "accordion-down": {
