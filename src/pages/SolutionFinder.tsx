@@ -26,6 +26,7 @@ import {
   Cpu,
   Store,
   HelpCircle,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 import PageMeta from "@/components/PageMeta";
@@ -90,6 +91,7 @@ export default function SolutionFinder() {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isSubmittingLead, setIsSubmittingLead] = useState(false);
   const [hasSavedLead, setHasSavedLead] = useState(false);
+  const [showWelcomeSuccessModal, setShowWelcomeSuccessModal] = useState(false);
 
   // Fetch active offers from Supabase / MySQL
   useEffect(() => {
@@ -179,7 +181,8 @@ export default function SolutionFinder() {
 
       if (res.success) {
         setHasSavedLead(true);
-        toast.success("Diagnostic saved! Our senior solution architect will review your needs.");
+        setShowWelcomeSuccessModal(true);
+        toast.success("Diagnostic saved! Your customized action plan is ready.");
       } else {
         toast.error("Could not save diagnostic, but you can still book or chat below.");
       }
@@ -906,6 +909,84 @@ export default function SolutionFinder() {
                     navigate(`/thank-you?booking_id=${bookingId}`);
                   }}
                 />
+              )}
+
+              {/* Instant WhatsApp & Email Welcome Modal */}
+              {showWelcomeSuccessModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="relative max-w-lg w-full rounded-3xl border border-cyan-500/40 bg-gradient-to-b from-[#0b1329] via-[#030711] to-[#030711] p-6 sm:p-8 text-center shadow-2xl space-y-6"
+                  >
+                    <button
+                      onClick={() => setShowWelcomeSuccessModal(false)}
+                      className="absolute right-4 top-4 rounded-xl p-1.5 text-gray-400 hover:bg-white/10 hover:text-white"
+                    >
+                      <X className="h-5 w-5" />
+                    </button>
+
+                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 shadow-lg shadow-emerald-500/20">
+                      <Sparkles className="h-8 w-8" />
+                    </div>
+
+                    <div>
+                      <span className="inline-block rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-emerald-300 border border-emerald-500/20 mb-2">
+                        Diagnosis Saved & Sent
+                      </span>
+                      <h3 className="text-2xl font-bold text-white">Your Action Plan is Ready!</h3>
+                      <p className="text-xs sm:text-sm text-gray-300 mt-2 leading-relaxed">
+                        {contact.email
+                          ? `A copy of your diagnosis report was dispatched to ${contact.email}.`
+                          : "Your requirements have been securely logged for our solutions team."}
+                        {" "}Our team is ready on WhatsApp to review your industry roadmap right now.
+                      </p>
+                    </div>
+
+                    <div className="rounded-2xl border border-white/10 bg-black/50 p-4 text-xs text-left space-y-1.5">
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Industry:</span>
+                        <span className="font-semibold text-white">{selectedIndustry.name}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Urgency:</span>
+                        <span className="font-bold text-cyan-300">{urgency.level} ({urgency.score}/100)</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Recommended Solution:</span>
+                        <span className="font-semibold text-emerald-300 line-clamp-1">{recommendedOffer?.title || "Custom Architecture"}</span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3 pt-2">
+                      <a
+                        href={buildClientWhatsAppUrl({
+                          industry: selectedIndustry.name,
+                          bottleneck: selectedBottleneck.title,
+                          urgencyLevel: urgency.level,
+                          businessName: contact.businessName || undefined,
+                        })}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setShowWelcomeSuccessModal(false)}
+                        className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 text-sm shadow-xl shadow-emerald-600/30 transition-all"
+                      >
+                        <MessageCircle className="h-5 w-5" />
+                        Open Action Plan on WhatsApp Now
+                      </a>
+
+                      <button
+                        onClick={() => {
+                          setShowWelcomeSuccessModal(false);
+                          setIsBookingModalOpen(true);
+                        }}
+                        className="w-full premium-btn premium-btn-ghost text-xs py-2.5 text-center"
+                      >
+                        Book Recommended Package Online
+                      </button>
+                    </div>
+                  </motion.div>
+                </div>
               )}
             </motion.div>
           )}

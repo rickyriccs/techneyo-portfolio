@@ -166,3 +166,118 @@ export const sendBookingConfirmationEmail = async ({
     }
   }
 };
+
+export interface DiagnosticEmailPayload {
+  customer_name?: string;
+  customer_email: string;
+  customer_phone?: string;
+  business_name?: string;
+  industry_name: string;
+  bottleneck_title: string;
+  digital_status: string;
+  timeline: string;
+  urgency_level: string;
+  urgency_score: number;
+  recommended_offer_title?: string;
+}
+
+export const sendDiagnosticReportEmail = async (payload: DiagnosticEmailPayload) => {
+  if (!payload.customer_email) return;
+
+  const clientName = payload.customer_name || "Business Leader";
+  const business = payload.business_name || payload.industry_name;
+  const isCritical = payload.urgency_level === "Critical";
+  const urgencyColor = isCritical ? "#ef4444" : payload.urgency_level === "Moderate" ? "#f59e0b" : "#10b981";
+
+  const subject = `Your Digital Diagnostic Report for ${business} - ${payload.urgency_level} Urgency`;
+  const whatsappUrl = `https://wa.me/919988773122?text=${encodeURIComponent(`Hi Techneyo! I received my Diagnostic Report for ${business} (${payload.urgency_level} - ${payload.urgency_score}/100). Let's review the recommended roadmap.`)}`;
+
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1e293b; line-height: 1.6; border: 1px solid #e2e8f0; border-radius: 12px; padding: 28px; background-color: #ffffff;">
+      <div style="text-align: center; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9;">
+        <h2 style="color: #0284c7; margin: 0; font-size: 22px;">${businessInfo.name}</h2>
+        <p style="color: #64748b; font-size: 13px; margin-top: 4px;">Industry Needs & Solution Diagnostic Report</p>
+      </div>
+
+      <div style="padding: 20px 0;">
+        <p style="font-size: 15px;">Hello <strong>${clientName}</strong>,</p>
+        <p style="font-size: 14px; color: #334155;">
+          Thank you for completing our 30-Second Industry Diagnostic. Below is the technical and market breakdown of your digital readiness for <strong>${business}</strong>.
+        </p>
+
+        <!-- Urgency Score Card -->
+        <div style="background-color: #f8fafc; border-left: 4px solid ${urgencyColor}; border-radius: 8px; padding: 18px; margin: 20px 0;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 11px; text-transform: uppercase; font-weight: bold; color: ${urgencyColor};">
+              Priority Rating: ${payload.urgency_level} Urgency
+            </span>
+            <span style="font-size: 14px; font-weight: bold; color: #0f172a;">${payload.urgency_score} / 100</span>
+          </div>
+          <p style="margin: 0; font-size: 13px; color: #475569;">
+            ${isCritical
+              ? "High revenue risk. Competitors in your sector are actively capturing high-intent search and WhatsApp leads that your business is missing."
+              : "Significant growth potential. Addressing this core bottleneck will unlock higher conversions and automated client intake."}
+          </p>
+        </div>
+
+        <!-- Diagnostic Summary Breakdown -->
+        <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+          <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #0f172a; border-bottom: 1px solid #f1f5f9; padding-bottom: 6px;">
+            Assessment Breakdown
+          </h4>
+          <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
+            <tr>
+              <td style="padding: 6px 0; color: #64748b; width: 40%;">Target Industry:</td>
+              <td style="padding: 6px 0; font-weight: 600; color: #0f172a;">${payload.industry_name}</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 0; color: #64748b;">Core Bottleneck:</td>
+              <td style="padding: 6px 0; font-weight: 600; color: #0f172a;">${payload.bottleneck_title}</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 0; color: #64748b;">Current Digital State:</td>
+              <td style="padding: 6px 0; font-weight: 600; color: #0f172a;">${payload.digital_status}</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 0; color: #64748b;">Launch Timeline:</td>
+              <td style="padding: 6px 0; font-weight: 600; color: #0f172a;">${payload.timeline}</td>
+            </tr>
+            ${payload.recommended_offer_title ? `
+            <tr>
+              <td style="padding: 6px 0; color: #64748b;">Matched Solution:</td>
+              <td style="padding: 6px 0; font-weight: 600; color: #0284c7;">${payload.recommended_offer_title}</td>
+            </tr>
+            ` : ""}
+          </table>
+        </div>
+
+        <!-- 1-Click WhatsApp Strategy Call Action -->
+        <div style="text-align: center; margin: 28px 0;">
+          <a href="${whatsappUrl}" style="background-color: #10b981; color: #ffffff; padding: 13px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px; display: inline-block; box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);">
+            💬 Review Action Plan on WhatsApp &rarr;
+          </a>
+          <p style="font-size: 12px; color: #64748b; margin-top: 8px;">Direct 1-on-1 discussion with our senior tech architect</p>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid #f1f5f9; padding-top: 20px; font-size: 12px; color: #94a3b8; text-align: center; margin-top: 20px;">
+        <p style="margin: 4px 0;"><strong>${businessInfo.name}</strong> • High-Converting Web, App & Digital Systems</p>
+        <p style="margin: 4px 0;">Direct WhatsApp/Call: ${businessInfo.phoneDisplay} • Email: ${businessInfo.email}</p>
+        <p style="margin: 4px 0;">Website: <a href="${businessInfo.website}" style="color: #0284c7; text-decoration: none;">${businessInfo.displayWebsite}</a></p>
+      </div>
+    </div>
+  `;
+
+  if (supabase) {
+    try {
+      await supabase.rpc("send_resend_email", {
+        p_to: payload.customer_email.trim(),
+        p_subject: subject,
+        p_html: html,
+      });
+      console.log("Diagnostic report email successfully sent to:", payload.customer_email);
+    } catch (err) {
+      console.warn("Failed to dispatch diagnostic email via RPC:", err);
+    }
+  }
+};

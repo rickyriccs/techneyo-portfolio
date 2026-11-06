@@ -90,6 +90,18 @@ const pages = [
     description: "Looking for the best website development company in Ludhiana? Techneyo Solutions builds fast, lead-generating business websites, CRM, and WhatsApp automation.",
     keywords: "website development company ludhiana, web designer ludhiana, website design punjab, best it company ludhiana",
   },
+  {
+    path: "solution-finder",
+    title: "Find Your Solution | Exact Industry Needs & Urgency Diagnostic | Techneyo",
+    description: "Determine what your business needs in your industry. Complete our 30-second diagnostic quiz for real-time urgency hints and instant matched solution packages.",
+    keywords: "business needs quiz, solution finder, digital agency diagnostic, industry solutions, techneyo",
+  },
+  {
+    path: "global",
+    title: "Offshore Software & Web Development Partner in India | Techneyo Solutions",
+    description: "Hire dedicated top 1% senior full-stack developers and squads in India. Save 70% compared to US/UK agencies with 4-8 hours daily timezone overlap and 100% IP ownership.",
+    keywords: "hire developers india, offshore software development, dedicated tech team, offshore developers usa uk uae, techneyo global",
+  },
 ];
 
 function escapeHtml(string) {

@@ -2,6 +2,7 @@ import { supabase } from "./supabase";
 import { ClientNeedsAssessment, UrgencyLevel } from "@/types/client-needs";
 import { notifySlackClientNeedsAssessment } from "./slack";
 import { businessInfo } from "./business-info";
+import { sendDiagnosticReportEmail } from "./email";
 
 export interface SubmitAssessmentPayload {
   customer_name?: string;
@@ -103,6 +104,23 @@ export async function submitClientNeedsAssessment(payload: SubmitAssessmentPaylo
       timeline: payload.timeline,
       recommendedOfferTitle: payload.recommended_offer_title || undefined,
     }).catch((err) => console.warn("Slack notification failed:", err));
+
+    // Fire Automated Client Confirmation Email asynchronously
+    if (payload.customer_email) {
+      sendDiagnosticReportEmail({
+        customer_name: payload.customer_name,
+        customer_email: payload.customer_email,
+        customer_phone: payload.customer_phone,
+        business_name: payload.business_name,
+        industry_name: payload.industry_name,
+        bottleneck_title: payload.bottleneck_title,
+        digital_status: payload.digital_status,
+        timeline: payload.timeline,
+        urgency_level: payload.urgency_level,
+        urgency_score: payload.urgency_score,
+        recommended_offer_title: payload.recommended_offer_title || undefined,
+      }).catch((err) => console.warn("Diagnostic email dispatch failed:", err));
+    }
 
     return { id: assessmentId, success: true };
   } catch (err: any) {

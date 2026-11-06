@@ -14,6 +14,8 @@ const services = [
 ];
 
 const quickLinks = [
+  { label: "Global Tech Partner (Offshore)", path: "/global" },
+  { label: "Needs Diagnostic Quiz", path: "/solution-finder" },
   { label: "Techneyo Portfolio & Tech Services", path: "/portfolio" },
   { label: "Blog & Insights", path: "/blog" },
   { label: "About Us", path: "/about" },

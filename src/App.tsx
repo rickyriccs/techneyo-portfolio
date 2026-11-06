@@ -47,6 +47,8 @@ import AdminClientNeeds from "./pages/admin/AdminClientNeeds";
 import Blog from "./pages/Blog";
 import BlogPostPage from "./pages/BlogPostPage";
 import SolutionFinder from "./pages/SolutionFinder";
+import CustomPay from "./pages/CustomPay";
+import Global from "./pages/Global";
 
 import { PersonalizationProvider } from "@/context/PersonalizationContext";
 import { CurrencyProvider } from "@/context/CurrencyContext";
@@ -80,6 +82,10 @@ const AppRoutes = () => {
           <Route path="/website-audit" element={<Navigate to="/audit" replace />} />
           <Route path="/solution-finder" element={<SolutionFinder />} />
           <Route path="/quiz" element={<Navigate to="/solution-finder" replace />} />
+          <Route path="/pay" element={<CustomPay />} />
+          <Route path="/global" element={<Global />} />
+          <Route path="/offshore" element={<Navigate to="/global" replace />} />
+          <Route path="/hire-developers-india" element={<Navigate to="/global" replace />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/portfolio" element={<Portfolio />} />

@@ -18,6 +18,10 @@ import {
   Calendar,
   X,
   FileText,
+  CreditCard,
+  Copy,
+  DollarSign,
+  Send,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -41,6 +45,69 @@ export default function AdminClientNeeds() {
   const [activeModalItem, setActiveModalItem] = useState<ClientNeedsAssessment | null>(null);
   const [adminNotes, setAdminNotes] = useState("");
   const [isUpdatingNotes, setIsUpdatingNotes] = useState(false);
+
+  // Instant Invoice / Payment Link Generator State
+  const [invoiceModalItem, setInvoiceModalItem] = useState<ClientNeedsAssessment | null>(null);
+  const [invoiceAmount, setInvoiceAmount] = useState<string>("8999");
+  const [invoiceCurrency, setInvoiceCurrency] = useState<"INR" | "USD">("INR");
+  const [invoiceTitle, setInvoiceTitle] = useState<string>("");
+  const [invoiceNotes, setInvoiceNotes] = useState<string>("");
+
+  const openInvoiceModal = (item: ClientNeedsAssessment) => {
+    const matched = offers.find((o) => o.id === item.recommended_offer_id);
+    setInvoiceModalItem(item);
+    setInvoiceTitle(matched?.title || `${item.industry_name || item.industry} Solution Package`);
+    setInvoiceAmount(matched?.discount_price ? String(matched.discount_price) : "8999");
+    setInvoiceCurrency("INR");
+    setInvoiceNotes(`Target Timeline: ${item.timeline}. Core priority: ${item.bottleneck_title}`);
+  };
+
+  const getGeneratedPaymentUrl = () => {
+    if (!invoiceModalItem) return "";
+    const origin = typeof window !== "undefined" ? window.location.origin : "https://techneyo.com";
+    const ref = `INV-${invoiceModalItem.id.slice(0, 8).toUpperCase()}`;
+    const params = new URLSearchParams({
+      title: invoiceTitle,
+      amount: invoiceAmount,
+      currency: invoiceCurrency,
+      ref,
+      name: invoiceModalItem.customer_name || "",
+      phone: invoiceModalItem.customer_phone || "",
+      email: invoiceModalItem.customer_email || "",
+    });
+    if (invoiceNotes) params.set("notes", invoiceNotes);
+    return `${origin}/pay?${params.toString()}`;
+  };
+
+  const copyPaymentUrl = () => {
+    const url = getGeneratedPaymentUrl();
+    if (!url) return;
+    navigator.clipboard.writeText(url);
+    toast.success("Payment link copied to clipboard!");
+  };
+
+  const getInvoiceWhatsAppUrl = () => {
+    if (!invoiceModalItem) return "";
+    const phone = invoiceModalItem.customer_phone?.replace(/[^0-9]/g, "") || "";
+    const name = invoiceModalItem.customer_name || "there";
+    const url = getGeneratedPaymentUrl();
+    const symbol = invoiceCurrency === "USD" ? "$" : "₹";
+
+    const text = `Hello ${name}! 👋
+
+Here is your customized digital solution invoice from *Techneyo Solutions*:
+
+• *Package:* ${invoiceTitle}
+• *Amount:* ${symbol}${invoiceAmount} (${invoiceCurrency})
+• *Reference ID:* INV-${invoiceModalItem.id.slice(0, 8).toUpperCase()}
+
+You can complete your secure online booking payment via UPI, Cards, or NetBanking directly using this link:
+${url}
+
+Our senior engineering team will begin your project onboarding immediately upon confirmation. Let us know if you have any questions!`;
+
+    return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+  };
 
   const loadData = async () => {
     setLoading(true);
@@ -354,6 +421,14 @@ export default function AdminClientNeeds() {
 
                       {/* Actions */}
                       <td className="p-3.5 text-right space-x-1.5 whitespace-nowrap">
+                        <button
+                          onClick={() => openInvoiceModal(item)}
+                          className="inline-flex items-center justify-center h-8 w-8 rounded-lg bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-500/20 transition-colors"
+                          title="Generate Instant Payment Link / Invoice"
+                        >
+                          <CreditCard className="h-4 w-4" />
+                        </button>
+
                         {item.customer_phone && (
                           <a
                             href={buildAdminReplyWhatsAppUrl(item)}
@@ -509,6 +584,17 @@ export default function AdminClientNeeds() {
                 </div>
 
                 <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      const item = activeModalItem;
+                      setActiveModalItem(null);
+                      openInvoiceModal(item);
+                    }}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-cyan-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-cyan-700 transition-colors"
+                  >
+                    <CreditCard className="h-3.5 w-3.5" />
+                    Create Payment Link
+                  </button>
                   {activeModalItem.customer_phone && (
                     <a
                       href={buildAdminReplyWhatsAppUrl(activeModalItem)}
@@ -525,6 +611,133 @@ export default function AdminClientNeeds() {
                     className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-foreground hover:bg-muted"
                   >
                     Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Instant Payment Link & Invoice Generator Modal */}
+      {invoiceModalItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+          <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-card p-6 shadow-2xl">
+            <button
+              onClick={() => setInvoiceModalItem(null)}
+              className="absolute right-4 top-4 rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <div className="space-y-5">
+              <div>
+                <span className="inline-block rounded-full bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 px-3 py-1 text-xs font-semibold uppercase tracking-wider mb-2">
+                  Instant Payment Link Generator
+                </span>
+                <h3 className="text-xl font-bold text-foreground">
+                  Create Invoice for {invoiceModalItem.customer_name || invoiceModalItem.business_name || "Client"}
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Generate a custom Razorpay payment link to dispatch directly via WhatsApp or email.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-medium text-foreground mb-1">Invoice / Package Title</label>
+                  <input
+                    type="text"
+                    value={invoiceTitle}
+                    onChange={(e) => setInvoiceTitle(e.target.value)}
+                    placeholder="e.g. High-Converting Website Sprint (50% Deposit)"
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-foreground mb-1">Currency</label>
+                    <select
+                      value={invoiceCurrency}
+                      onChange={(e) => setInvoiceCurrency(e.target.value as "INR" | "USD")}
+                      className="w-full rounded-lg border border-border bg-background px-3 py-2 text-xs text-foreground focus:outline-none"
+                    >
+                      <option value="INR">INR (₹ Rupees)</option>
+                      <option value="USD">USD ($ US Dollar)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-foreground mb-1">Amount</label>
+                    <input
+                      type="number"
+                      value={invoiceAmount}
+                      onChange={(e) => setInvoiceAmount(e.target.value)}
+                      placeholder="8999"
+                      className="w-full rounded-lg border border-border bg-background px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-foreground mb-1">Internal Notes / Scope Summary</label>
+                  <textarea
+                    rows={2}
+                    value={invoiceNotes}
+                    onChange={(e) => setInvoiceNotes(e.target.value)}
+                    placeholder="e.g. Launch within 10 days, includes domain + hosting"
+                    className="w-full rounded-lg border border-border bg-background p-2.5 text-xs text-foreground focus:outline-none"
+                  />
+                </div>
+
+                {/* Generated URL Box */}
+                <div className="rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-3 space-y-2">
+                  <div className="text-[11px] font-semibold text-cyan-600 dark:text-cyan-400 flex items-center justify-between">
+                    <span>Generated Payment URL</span>
+                    <button
+                      onClick={copyPaymentUrl}
+                      className="inline-flex items-center gap-1 text-[11px] text-primary hover:underline font-bold"
+                    >
+                      <Copy className="h-3 w-3" />
+                      Copy Link
+                    </button>
+                  </div>
+                  <div className="break-all font-mono text-[11px] text-muted-foreground bg-background/80 p-2 rounded border border-border">
+                    {getGeneratedPaymentUrl()}
+                  </div>
+                </div>
+              </div>
+
+              {/* Actions Footer */}
+              <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+                <button
+                  onClick={copyPaymentUrl}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground hover:bg-muted"
+                >
+                  <Copy className="h-3.5 w-3.5" />
+                  Copy Link
+                </button>
+
+                <div className="flex items-center gap-2">
+                  {invoiceModalItem.customer_phone ? (
+                    <a
+                      href={getInvoiceWhatsAppUrl()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-xs font-semibold text-white hover:bg-emerald-700 transition-colors shadow-sm"
+                    >
+                      <MessageCircle className="h-3.5 w-3.5" />
+                      Send Invoice on WhatsApp
+                    </a>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">Add phone to WhatsApp</span>
+                  )}
+                  <button
+                    onClick={() => setInvoiceModalItem(null)}
+                    className="rounded-lg border border-border px-3 py-2 text-xs font-medium text-foreground hover:bg-muted"
+                  >
+                    Done
                   </button>
                 </div>
               </div>
