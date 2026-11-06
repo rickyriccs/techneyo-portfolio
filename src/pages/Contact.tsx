@@ -22,8 +22,8 @@ const fadeUp = {
 const contactInfo = [
   { icon: Phone, title: "Call / WhatsApp Direct", detail: businessInfo.phoneDisplay, href: businessInfo.phoneHref },
   { icon: Mail, title: "Official Email", detail: businessInfo.email, href: `mailto:${businessInfo.email}` },
-  { icon: MapPin, title: "Primary Service Area", detail: `${businessInfo.location} | Serving Nationwide`, href: businessInfo.website },
-  { icon: Clock, title: "Business Support Hours", detail: "Mon - Sat: 9:00 AM - 7:00 PM" },
+  { icon: MapPin, title: "Primary Service Area", detail: `${businessInfo.location} | Serving Nationwide & Worldwide`, href: businessInfo.website },
+  { icon: Clock, title: "Business Support Hours", detail: "Mon - Sat: 11:00 AM - 7:00 PM" },
 ];
 
 const needOptions = [

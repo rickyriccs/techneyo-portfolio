@@ -9,8 +9,10 @@ export const businessInfo = {
   ogImage: "https://techneyo.com/banner.jpeg",
   whatsappUrl:
     "https://wa.me/919988773122?text=Hello%20Techneyo%20Solutions%2C%20I%20want%20to%20discuss%20growing%20my%20business%20online.",
-  areaServed: "India",
+  areaServed: "India & Worldwide",
   location: "India",
+  workingHours: "Monday - Saturday: 11:00 AM - 7:00 PM IST",
+  hoursDisplay: "Mon - Sat: 11:00 AM - 7:00 PM",
   socialProfiles: [
     { label: "Facebook", url: "https://www.facebook.com/techneyo" },
     { label: "Instagram", url: "https://www.instagram.com/techneyo" },

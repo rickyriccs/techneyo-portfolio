@@ -51,9 +51,42 @@ export async function submitClientNeedsAssessment(payload: SubmitAssessmentPaylo
     };
 
     if (supabase) {
-      const { error } = await supabase.from("client_needs_assessments").insert(record);
-      if (error) {
-        console.warn("Could not insert to client_needs_assessments:", error);
+      // 1. Insert into specialized client_needs_assessments table
+      const { error: assessmentError } = await supabase.from("client_needs_assessments").insert(record);
+      if (assessmentError) {
+        console.warn("Could not insert to client_needs_assessments:", assessmentError);
+      }
+
+      // 2. Also insert into contact_enquiries so the lead immediately surfaces on main AdminDashboard and AdminEnquiries
+      const enquiryPayload = {
+        id: crypto.randomUUID(),
+        name: payload.customer_name?.trim() || "Solution Finder Lead",
+        phone: payload.customer_phone?.trim() || "Not provided",
+        email: payload.customer_email?.trim() || null,
+        business_name: payload.business_name?.trim() || null,
+        service_required: `${payload.industry_name}: ${payload.bottleneck_title}`,
+        message: `[Needs Quiz Assessment]
+• Industry: ${payload.industry_name}
+• Bottleneck: ${payload.bottleneck_title}
+• Digital Status: ${payload.digital_status}
+• Target Timeline: ${payload.timeline}
+• Urgency Level: ${payload.urgency_level} (${payload.urgency_score}/100)
+• Recommended Solution: ${payload.recommended_offer_title || "Standard Consultation"}`,
+        source_page: "/solution-finder",
+        lead_status: "New",
+      };
+
+      const { error: enquiryError } = await supabase.from("contact_enquiries").insert(enquiryPayload);
+      if (enquiryError) {
+        console.warn("Could not insert lead to contact_enquiries:", enquiryError);
+      }
+
+      if (assessmentError && enquiryError) {
+        return {
+          id: assessmentId,
+          success: false,
+          error: assessmentError?.message || enquiryError?.message || "Database insert failed",
+        };
       }
     }
 

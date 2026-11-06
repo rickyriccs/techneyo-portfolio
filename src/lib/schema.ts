@@ -51,7 +51,15 @@ export const organizationSchema = {
 export const localBusinessSchema = {
   ...organizationSchema,
   "@type": "LocalBusiness",
-  areaServed: ["India"],
+  areaServed: ["India", "United States", "United Kingdom", "United Arab Emirates", "Canada", "Australia"],
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      opens: "11:00",
+      closes: "19:00",
+    },
+  ],
 };
 
 export const faqSchema = (faqs: FaqItem[]) => ({

@@ -41,6 +41,14 @@ const ludhianaBusinessSchema = {
   },
   areaServed: ["Ludhiana", "Punjab", "Chandigarh", "India"],
   priceRange: "₹₹",
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      opens: "11:00",
+      closes: "19:00",
+    },
+  ],
 };
 
 const LocalSeoPage = () => {

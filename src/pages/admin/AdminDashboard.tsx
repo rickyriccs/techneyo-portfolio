@@ -30,6 +30,18 @@ type RecentLog = {
   created_at: string;
 };
 
+type RecentNeed = {
+  id: string;
+  customer_name: string | null;
+  business_name: string | null;
+  customer_phone: string | null;
+  industry_name: string | null;
+  bottleneck_title: string | null;
+  urgency_level: string;
+  urgency_score: number;
+  created_at: string;
+};
+
 const statCards = [
   { key: "enquiries", label: "Total enquiries", icon: FileText },
   { key: "newLeads", label: "New leads", icon: Users },
@@ -66,6 +78,8 @@ const AdminDashboard = () => {
   });
   const [enquiries, setEnquiries] = useState<RecentEnquiry[]>([]);
   const [logs, setLogs] = useState<RecentLog[]>([]);
+  const [needs, setNeeds] = useState<RecentNeed[]>([]);
+  const [needsCount, setNeedsCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -83,6 +97,8 @@ const AdminDashboard = () => {
         tools,
         recentEnquiries,
         recentLogs,
+        recentNeeds,
+        totalNeedsCount,
       ] = await Promise.all([
         getCount("contact_enquiries"),
         getCount("contact_enquiries", { column: "lead_status", value: "New" }),
@@ -94,11 +110,15 @@ const AdminDashboard = () => {
         getCount("digital_tools", { column: "status", value: "active" }),
         supabase.from("contact_enquiries").select("id,name,phone,service_required,lead_status,created_at").order("created_at", { ascending: false }).limit(5),
         supabase.from("activity_logs").select("id,action_type,module_name,created_at").order("created_at", { ascending: false }).limit(5),
+        supabase.from("client_needs_assessments").select("id,customer_name,business_name,customer_phone,industry_name,bottleneck_title,urgency_level,urgency_score,created_at").order("created_at", { ascending: false }).limit(5),
+        getCount("client_needs_assessments"),
       ]);
 
       setCounts({ enquiries: enquiriesCount, newLeads, followUps, converted, closed, offers, packages, tools });
       setEnquiries((recentEnquiries.data ?? []) as RecentEnquiry[]);
       setLogs((recentLogs.data ?? []) as RecentLog[]);
+      setNeeds((recentNeeds.data ?? []) as RecentNeed[]);
+      setNeedsCount(totalNeedsCount ?? 0);
       setIsLoading(false);
     };
 
@@ -171,6 +191,56 @@ const AdminDashboard = () => {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-2">
+        {/* Recent Client Needs Diagnostic Submissions */}
+        <section className="rounded-lg border border-purple-500/20 bg-card">
+          <div className="flex items-center justify-between border-b border-border p-4 bg-purple-500/5">
+            <div className="flex items-center gap-2">
+              <Sparkles size={16} className="text-purple-400" />
+              <h2 className="font-display text-lg font-semibold text-foreground">Recent Client Needs Quiz ({needsCount})</h2>
+            </div>
+            <Link to="/admin/client-needs" className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
+              View all <ArrowRight size={14} />
+            </Link>
+          </div>
+          <div className="divide-y divide-border">
+            {needs.length === 0 ? (
+              <p className="p-4 text-sm text-muted-foreground">No quiz assessments yet.</p>
+            ) : (
+              needs.map((item) => (
+                <div key={item.id} className="grid gap-1 p-4 sm:grid-cols-[1fr_auto] hover:bg-muted/30 transition-colors">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-semibold text-foreground">
+                        {item.customer_name || item.business_name || "Diagnostic Lead"}
+                      </p>
+                      {item.business_name && item.customer_name && (
+                        <span className="text-xs text-muted-foreground">({item.business_name})</span>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {item.customer_phone ? `${item.customer_phone} · ` : ""}
+                      <span className="text-foreground font-medium">{item.industry_name}</span>: {item.bottleneck_title}
+                    </p>
+                  </div>
+                  <div className="flex items-center sm:justify-end">
+                    <span
+                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                        item.urgency_level === "Critical"
+                          ? "bg-red-500/15 text-red-500 border border-red-500/30"
+                          : item.urgency_level === "Moderate"
+                          ? "bg-amber-500/15 text-amber-500 border border-amber-500/30"
+                          : "bg-emerald-500/15 text-emerald-500 border border-emerald-500/30"
+                      }`}
+                    >
+                      {item.urgency_level} ({item.urgency_score})
+                    </span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </section>
+
         <section className="rounded-lg border border-border bg-card">
           <div className="flex items-center justify-between border-b border-border p-4">
             <h2 className="font-display text-lg font-semibold text-foreground">Recent enquiries</h2>
