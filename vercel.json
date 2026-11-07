@@ -1,4 +1,15 @@
 {
+  "headers": [
+    {
+      "source": "/(checkin|visitor-checkin)(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     {
       "source": "/((?!assets/|favicon.ico|icon.png|logo.png|robots.txt|sitemap.xml).*)",

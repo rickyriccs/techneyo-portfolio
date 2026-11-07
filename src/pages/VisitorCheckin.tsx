@@ -16,8 +16,11 @@ import {
   Clock,
   ShieldCheck,
   RotateCcw,
+  QrCode,
+  ExternalLink,
 } from "lucide-react";
 import PageMeta from "@/components/PageMeta";
+import WifiQrCode from "@/components/WifiQrCode";
 import { createContactEnquiry } from "@/lib/contact-enquiries";
 import { trackEvent } from "@/lib/analytics";
 import { toast } from "sonner";
@@ -31,7 +34,7 @@ const PURPOSES = [
 ];
 
 const HOSTS = [
-  "Ricky / Leadership Team",
+  "Nitesh Sharma / Leadership Team",
   "Engineering / Tech Lead",
   "Design & Product Team",
   "Operations / HR",
@@ -54,8 +57,8 @@ export default function VisitorCheckin() {
   const [notes, setNotes] = useState("");
   const [honeypot, setHoneypot] = useState("");
 
-  const wifiSsid = "TechNeyo-Guest";
-  const wifiPass = "TechNeyo@Ldh2026";
+  const wifiSsid = "Techneyo Solutions_5G";
+  const wifiPass = "TS964635";
 
   const handleCopyWifi = () => {
     navigator.clipboard.writeText(wifiPass);
@@ -78,9 +81,12 @@ export default function VisitorCheckin() {
         phone: phone.trim(),
         email: email.trim() || undefined,
         businessName: company.trim() || undefined,
+        city: "Ludhiana (Head Office)",
+        state: "Punjab",
         serviceRequired: `Office Visitor Check-in: ${purpose}`,
         message: [
           `🏢 TechNeyo Ludhiana Office Visitor Check-In`,
+          `Office: Ludhiana (Head Office)`,
           `Host Requested: ${host}`,
           `Purpose: ${purpose}`,
           company ? `Organization: ${company}` : "",
@@ -124,7 +130,8 @@ export default function VisitorCheckin() {
     <div className="relative min-h-screen bg-slate-950 px-4 py-10 text-white sm:px-6 lg:px-8">
       <PageMeta
         title="Visitor Check-in | TechNeyo Ludhiana Studio"
-        description="Welcome to TechNeyo Studio in Ludhiana. Quick digital check-in for clients, candidates, and guests."
+        description="Internal office visitor check-in."
+        robots="noindex, nofollow, noarchive"
       />
 
       {/* Background Glow */}
@@ -344,14 +351,23 @@ export default function VisitorCheckin() {
                       <p className="text-xs text-slate-400">Complimentary 300 Mbps Fiber Access</p>
                     </div>
                   </div>
-                  <span className="rounded-full bg-cyan-500/20 px-2 py-0.5 text-[11px] font-medium text-cyan-300">
+                  <span className="rounded-full bg-cyan-500/20 px-2.5 py-0.5 text-[11px] font-medium text-cyan-300">
                     Active
                   </span>
                 </div>
 
-                <div className="mt-4 space-y-2 text-xs">
+                {/* QR Code with TechNeyo Center Icon */}
+                <div className="py-4 text-center">
+                  <WifiQrCode ssid={wifiSsid} password={wifiPass} size={190} logoSrc="/icon.png" />
+                  <p className="mt-2 text-[11px] text-slate-400">
+                    Point your camera at this QR code to connect instantly without typing passwords.
+                  </p>
+                </div>
+
+                {/* Wi-Fi Details */}
+                <div className="space-y-2 rounded-lg border border-white/5 bg-slate-900/60 p-3 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-400">Network Name (SSID):</span>
+                    <span className="text-slate-400">Network Name:</span>
                     <span className="font-mono font-medium text-white">{wifiSsid}</span>
                   </div>
                   <div className="flex items-center justify-between">
@@ -360,20 +376,21 @@ export default function VisitorCheckin() {
                   </div>
                 </div>
 
+                {/* Join Wi-Fi Action Button */}
                 <button
                   type="button"
                   onClick={handleCopyWifi}
-                  className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-cyan-500/40 bg-cyan-500/10 py-2.5 text-xs font-medium text-cyan-300 transition hover:bg-cyan-500/20 active:scale-[0.99]"
+                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 py-3 text-xs font-semibold text-white shadow-lg shadow-cyan-500/20 transition hover:from-cyan-400 hover:to-blue-500 active:scale-[0.99]"
                 >
                   {copiedWifi ? (
                     <>
-                      <Check className="h-3.5 w-3.5 text-emerald-400" />
-                      <span>Copied to Clipboard!</span>
+                      <Check className="h-4 w-4 text-white" />
+                      <span>Password Copied! Open Wi-Fi Settings</span>
                     </>
                   ) : (
                     <>
-                      <Copy className="h-3.5 w-3.5" />
-                      <span>Copy Wi-Fi Password</span>
+                      <Wifi className="h-4 w-4" />
+                      <span>Join Wi-Fi (Tap to Copy & Connect)</span>
                     </>
                   )}
                 </button>

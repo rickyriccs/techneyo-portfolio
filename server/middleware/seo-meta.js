@@ -125,6 +125,12 @@ export async function seoMetaMiddleware(req, res, next) {
     return next();
   }
 
+  // Strictly block indexing/crawling for internal office checkin
+  if (req.path === "/checkin" || req.path === "/visitor-checkin") {
+    res.setHeader("X-Robots-Tag", "noindex, nofollow, noarchive");
+    return next();
+  }
+
   const userAgent = (req.headers["user-agent"] || "").toLowerCase();
   const isBot = BOT_USER_AGENTS.some((bot) => userAgent.includes(bot));
 

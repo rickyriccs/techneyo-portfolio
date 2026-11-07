@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, FileText, Gift, Package, TrendingUp, Users, Wrench, Zap, Eye, BarChart3, Sparkles } from "lucide-react";
+import { ArrowRight, FileText, Gift, Package, TrendingUp, Users, Wrench, Zap, Eye, BarChart3, Sparkles, UserCheck, Building2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 
@@ -137,6 +137,30 @@ const AdminDashboard = () => {
           className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:opacity-90 transition-all"
         >
           <TrendingUp size={16} /> View Analytics Hub
+        </Link>
+      </div>
+
+      {/* Office Visitors Quick Banner */}
+      <div className="rounded-xl border border-emerald-500/20 bg-gradient-to-r from-emerald-950/20 via-card to-card p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-400">
+            <UserCheck size={20} />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="font-display text-base font-bold text-foreground">Office Visitors Management</h3>
+              <span className="rounded-full bg-cyan-500/15 px-2 py-0.5 text-[10px] font-bold text-cyan-400 border border-cyan-500/30">
+                Ludhiana (Head Office)
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground">Manage in-studio check-ins, guest Wi-Fi access logs, and in-person meeting records.</p>
+          </div>
+        </div>
+        <Link
+          to="/admin/visitors"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline self-start sm:self-auto"
+        >
+          Manage Office Visitors <ArrowRight size={14} />
         </Link>
       </div>
 

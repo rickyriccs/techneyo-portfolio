@@ -3,65 +3,87 @@ Allow: /
 Disallow: /admin
 Disallow: /dashboard
 Disallow: /api
+Disallow: /checkin
+Disallow: /visitor-checkin
 
 User-agent: Bingbot
 Allow: /
 Disallow: /admin
 Disallow: /dashboard
 Disallow: /api
+Disallow: /checkin
+Disallow: /visitor-checkin
 
 User-agent: Twitterbot
 Allow: /
 Disallow: /admin
 Disallow: /dashboard
 Disallow: /api
+Disallow: /checkin
+Disallow: /visitor-checkin
 
 User-agent: facebookexternalhit
 Allow: /
 Disallow: /admin
 Disallow: /dashboard
 Disallow: /api
+Disallow: /checkin
+Disallow: /visitor-checkin
 
 User-agent: Meta-ExternalAgent
 Allow: /
 Disallow: /admin
 Disallow: /dashboard
 Disallow: /api
+Disallow: /checkin
+Disallow: /visitor-checkin
 
 User-agent: facebookcatalog
 Allow: /
 Disallow: /admin
 Disallow: /dashboard
 Disallow: /api
+Disallow: /checkin
+Disallow: /visitor-checkin
 
 User-agent: GPTBot
 Allow: /
 Disallow: /admin
 Disallow: /dashboard
 Disallow: /api
+Disallow: /checkin
+Disallow: /visitor-checkin
 
 User-agent: PerplexityBot
 Allow: /
 Disallow: /admin
 Disallow: /dashboard
 Disallow: /api
+Disallow: /checkin
+Disallow: /visitor-checkin
 
 User-agent: ClaudeBot
 Allow: /
 Disallow: /admin
 Disallow: /dashboard
 Disallow: /api
+Disallow: /checkin
+Disallow: /visitor-checkin
 
 User-agent: Applebot
 Allow: /
 Disallow: /admin
 Disallow: /dashboard
 Disallow: /api
+Disallow: /checkin
+Disallow: /visitor-checkin
 
 User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /dashboard
 Disallow: /api
+Disallow: /checkin
+Disallow: /visitor-checkin
 
 Sitemap: https://techneyo.com/sitemap.xml

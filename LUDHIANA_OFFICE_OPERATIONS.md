@@ -70,15 +70,17 @@ Rather than using third-party paid visitor software or an unhygienic, outdated p
    - Mobile / WhatsApp Number
    - Company / Organization (optional)
    - Purpose of Visit (Client Consultation, Project Review, Job Candidate / Interview, Vendor / Delivery, Coffee Chat)
-   - Host Person (Ricky / Leadership, Dev Team, HR, General)
+   - Host Person (Nitesh Sharma/ Leadership, Dev Team, HR, General)
    - Optional Message / Notes
 4. **Instant Team Alert:**
    - On submission, the entry is automatically stored in `contact_enquiries` with tag `Office Visitor Check-in`.
    - Triggers automated Slack alerts to the team (`#leads` / visitor channel).
 5. **Visitor Perks Screen:**
    - Upon completing the form, the visitor is instantly shown the **Guest Wi-Fi SSID & Password** with a one-click copy button, plus a warm welcome message.
-6. **Admin Review:**
-   - The admin can view all visits in `/admin/enquiries` filtered by `Office Visitor Check-in`.
+6. **Admin Office-Wise Management:**
+   - Dedicated administrative screen at `/admin/visitors`.
+   - Filter by **🏢 Ludhiana (Head Office)** or branch offices.
+   - Live check-in feed, meeting status tracker (`Checked In`, `In Meeting`, `Meeting Done`, `Follow-up Needed`), notes, and CSV export.
 
 ---
 
