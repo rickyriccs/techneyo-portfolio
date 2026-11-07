@@ -19,6 +19,8 @@ import {
   Wifi,
   Crown,
   FileSpreadsheet,
+  MessageSquare,
+  Quote,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
@@ -53,6 +55,46 @@ const VISITOR_STATUSES = [
   { id: "follow_up", label: "Follow-up Needed", color: "bg-purple-500/15 text-purple-400 border-purple-500/30" },
   { id: "closed", label: "Completed / Left", color: "bg-slate-500/15 text-slate-400 border-slate-500/30" },
 ];
+
+export const extractVisitorDetails = (message: string | null) => {
+  if (!message) return { host: "Ricky / Team", clientRemarks: null };
+
+  const lines = message.split("\n");
+  let host = "Ricky / Team";
+  let clientRemarks: string | null = null;
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed.toLowerCase().startsWith("host requested:")) {
+      host = trimmed.replace(/host requested:/i, "").trim();
+    } else if (trimmed.toLowerCase().startsWith("notes / agenda:") || trimmed.toLowerCase().startsWith("notes:")) {
+      const remark = trimmed.replace(/notes(\s*\/\s*agenda)?:\s*/i, "").trim();
+      if (remark) clientRemarks = remark;
+    }
+  }
+
+  // Fallback: If no structured "Notes / Agenda:" prefix was found, extract non-system text
+  if (!clientRemarks) {
+    const customLines = lines
+      .filter(
+        (l) =>
+          !l.includes("🏢") &&
+          !l.toLowerCase().startsWith("office:") &&
+          !l.toLowerCase().startsWith("host requested:") &&
+          !l.toLowerCase().startsWith("purpose:") &&
+          !l.toLowerCase().startsWith("organization:") &&
+          !l.toLowerCase().startsWith("check-in time:")
+      )
+      .map((l) => l.trim())
+      .filter(Boolean);
+
+    if (customLines.length > 0) {
+      clientRemarks = customLines.join(" ");
+    }
+  }
+
+  return { host, clientRemarks };
+};
 
 export default function AdminVisitors() {
   const [visitors, setVisitors] = useState<VisitorRecord[]>([]);
@@ -208,18 +250,35 @@ export default function AdminVisitors() {
       return;
     }
 
-    const headers = ["Date & Time", "Name", "Phone", "Email", "Company", "Office", "Purpose", "Status", "Notes"];
-    const rows = filteredVisitors.map((v) => [
-      new Date(v.created_at).toLocaleString("en-IN"),
-      v.name,
-      v.phone,
-      v.email || "",
-      v.business_name || "",
-      v.city || "Ludhiana (Head Office)",
-      v.service_required || "",
-      v.lead_status,
-      (v.admin_notes || "").replace(/"/g, '""'),
-    ]);
+    const headers = [
+      "Date & Time",
+      "Name",
+      "Phone",
+      "Email",
+      "Company",
+      "Office",
+      "Purpose",
+      "Host Requested",
+      "Client Remarks",
+      "Status",
+      "Admin Notes",
+    ];
+    const rows = filteredVisitors.map((v) => {
+      const { host, clientRemarks } = extractVisitorDetails(v.message);
+      return [
+        new Date(v.created_at).toLocaleString("en-IN"),
+        v.name,
+        v.phone,
+        v.email || "",
+        v.business_name || "",
+        v.city || "Ludhiana (Head Office)",
+        v.service_required ? v.service_required.replace("Office Visitor Check-in:", "").trim() : "General Visit",
+        host,
+        (clientRemarks || "").replace(/"/g, '""'),
+        v.lead_status,
+        (v.admin_notes || "").replace(/"/g, '""'),
+      ];
+    });
 
     const csvContent = [headers.join(","), ...rows.map((r) => r.map((cell) => `"${cell}"`).join(","))].join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
@@ -422,10 +481,11 @@ export default function AdminVisitors() {
                 <tr>
                   <th className="px-4 py-3 font-semibold">Visitor & Contact</th>
                   <th className="px-4 py-3 font-semibold">Purpose & Host</th>
+                  <th className="px-4 py-3 font-semibold">Client Remarks / Agenda</th>
                   <th className="px-4 py-3 font-semibold">Office Location</th>
                   <th className="px-4 py-3 font-semibold">Check-in Time</th>
                   <th className="px-4 py-3 font-semibold">Status</th>
-                  <th className="px-4 py-3 font-semibold">Admin Notes & Remarks</th>
+                  <th className="px-4 py-3 font-semibold">Internal Staff Notes</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -433,6 +493,7 @@ export default function AdminVisitors() {
                   const cleanedPhone = v.phone.replace(/[^0-9]/g, "");
                   const whatsappPhone = cleanedPhone.startsWith("91") ? cleanedPhone : `91${cleanedPhone}`;
                   const isEditingNotes = editingNotesId === v.id;
+                  const { host, clientRemarks } = extractVisitorDetails(v.message);
 
                   return (
                     <tr key={v.id} className="transition-colors hover:bg-muted/30">
@@ -472,17 +533,32 @@ export default function AdminVisitors() {
                         <span className="inline-block rounded-md border border-cyan-500/20 bg-cyan-500/10 px-2 py-0.5 text-[11px] font-medium text-cyan-300">
                           {v.service_required ? v.service_required.replace("Office Visitor Check-in:", "").trim() : "General Visit"}
                         </span>
-                        <div className="mt-1 text-[11px] text-muted-foreground">
-                          {v.message && v.message.split("\n").find((line) => line.includes("Host Requested:")) ? (
-                            <span>{v.message.split("\n").find((line) => line.includes("Host Requested:"))}</span>
-                          ) : (
-                            <span>Host: Ricky / Team</span>
-                          )}
+                        <div className="mt-1.5 text-[11px] text-muted-foreground">
+                          Host: <span className="font-medium text-foreground">{host}</span>
                         </div>
                       </td>
 
+                      {/* Client-Side Remarks / Agenda */}
+                      <td className="px-4 py-3.5 max-w-[260px]">
+                        {clientRemarks ? (
+                          <div className="rounded-lg border border-cyan-500/30 bg-cyan-950/40 p-2.5 text-xs shadow-sm">
+                            <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-cyan-400">
+                              <MessageSquare className="h-3 w-3 shrink-0" />
+                              <span>Client Remark</span>
+                            </div>
+                            <p className="mt-1 text-xs text-slate-100 font-medium leading-relaxed whitespace-pre-wrap">
+                              "{clientRemarks}"
+                            </p>
+                          </div>
+                        ) : (
+                          <span className="text-[11px] text-muted-foreground/50 italic">
+                            No remarks submitted
+                          </span>
+                        )}
+                      </td>
+
                       {/* Office */}
-                      <td className="px-4 py-3.5">
+                      <td className="px-4 py-3.5 whitespace-nowrap">
                         <span className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-2 py-1 text-[11px] font-medium text-foreground">
                           <Building2 className="h-3 w-3 text-cyan-400" />
                           {v.city || "Ludhiana (Head Office)"}
@@ -490,7 +566,7 @@ export default function AdminVisitors() {
                       </td>
 
                       {/* Timestamp */}
-                      <td className="px-4 py-3.5 text-muted-foreground">
+                      <td className="px-4 py-3.5 text-muted-foreground whitespace-nowrap">
                         <div className="flex items-center gap-1">
                           <Clock className="h-3 w-3 text-slate-400" />
                           <span>
@@ -510,7 +586,7 @@ export default function AdminVisitors() {
                       </td>
 
                       {/* Status Selector */}
-                      <td className="px-4 py-3.5">
+                      <td className="px-4 py-3.5 whitespace-nowrap">
                         <select
                           value={v.lead_status || "new"}
                           onChange={(e) => handleStatusChange(v.id, e.target.value)}
@@ -524,8 +600,8 @@ export default function AdminVisitors() {
                         </select>
                       </td>
 
-                      {/* Notes / Remarks */}
-                      <td className="px-4 py-3.5">
+                      {/* Internal Staff Notes */}
+                      <td className="px-4 py-3.5 min-w-[200px]">
                         {isEditingNotes ? (
                           <div className="space-y-1.5">
                             <textarea
@@ -561,7 +637,7 @@ export default function AdminVisitors() {
                             className="cursor-pointer group flex items-start gap-1 text-muted-foreground hover:text-foreground"
                           >
                             <span className="line-clamp-2 text-[11px]">
-                              {v.admin_notes || <span className="italic text-muted-foreground/60">+ Click to add notes</span>}
+                              {v.admin_notes || <span className="italic text-muted-foreground/60">+ Click to add staff notes</span>}
                             </span>
                           </div>
                         )}
