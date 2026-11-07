@@ -57,14 +57,17 @@ import SmartProposalModal from "@/components/interactive/SmartProposalModal";
 import Industries from "./pages/Industries";
 import IndustryDetail from "./pages/IndustryDetail";
 import Audit from "./pages/Audit";
+import VisitorCheckin from "./pages/VisitorCheckin";
 
 const AppRoutes = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
+  const isDedicatedCheckin = location.pathname === "/checkin" || location.pathname === "/visitor-checkin";
+  const hideMarketingChrome = isAdminRoute || isDedicatedCheckin;
 
   return (
     <>
-      {!isAdminRoute && <Header />}
+      {!hideMarketingChrome && <Header />}
       <main>
         <Routes>
           <Route path="/" element={<Index />} />
@@ -82,6 +85,8 @@ const AppRoutes = () => {
           <Route path="/website-audit" element={<Navigate to="/audit" replace />} />
           <Route path="/solution-finder" element={<SolutionFinder />} />
           <Route path="/quiz" element={<Navigate to="/solution-finder" replace />} />
+          <Route path="/checkin" element={<VisitorCheckin />} />
+          <Route path="/visitor-checkin" element={<Navigate to="/checkin" replace />} />
           <Route path="/pay" element={<CustomPay />} />
           <Route path="/global" element={<Global />} />
           <Route path="/offshore" element={<Navigate to="/global" replace />} />
@@ -121,9 +126,9 @@ const AppRoutes = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-      {!isAdminRoute && <Footer />}
-      {!isAdminRoute && <WhatsAppButton />}
-      <SmartProposalModal />
+      {!hideMarketingChrome && <Footer />}
+      {!hideMarketingChrome && <WhatsAppButton />}
+      {!hideMarketingChrome && <SmartProposalModal />}
     </>
   );
 };
