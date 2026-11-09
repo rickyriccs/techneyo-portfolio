@@ -1,22 +1,32 @@
 <IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /
+    RewriteEngine On
 
-  # Route all API endpoints to Hostinger PHP backend
-  RewriteRule ^api/?(.*)$ api/index.php?route=$1 [QSA,L]
+    # ========================================================
+    # 1. BLOCK KNOWN HEAVY BOTS & SCRAPERS (Saves Max Processes)
+    # ========================================================
+    RewriteCond %{HTTP_USER_AGENT} (AhrefsBot|SemrushBot|MJ12bot|DotBot|PetalBot|Bytespider|ClaudeBot|GPTBot|DataForSeoBot|Scrapy|curl|python-requests|Wget) [NC]
+    RewriteRule .* - [F,L]
 
-  # Redirect Trailing Slashes If not a Folder...
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteCond %{REQUEST_URI} (.+)/$
-  RewriteRule ^ %1 [L,R=301]
+    # ========================================================
+    # 3. YOUR ORIGINAL REWRITE TO /public/
+    # ========================================================
+    RewriteBase /
 
-  # Direct access to existing files and folders
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^ - [L]
+    # Route all API endpoints to Hostinger PHP backend
+    RewriteRule ^api/?(.*)$ api/index.php?route=$1 [QSA,L]
 
-  # Rewrite all other URLs to index.html for SPA routing
-  RewriteRule ^ index.html [L]
+    # Redirect Trailing Slashes If not a Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Direct access to existing files and folders
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Rewrite all other URLs to index.html for SPA routing
+    RewriteRule ^ index.html [L]
 </IfModule>
 
 # Block access to sensitive files (.env, .sql, etc.)
