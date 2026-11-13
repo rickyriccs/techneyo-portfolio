@@ -54,6 +54,14 @@ Disallow: /api
 Disallow: /checkin
 Disallow: /visitor-checkin
 
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /api
+Disallow: /checkin
+Disallow: /visitor-checkin
+
 User-agent: PerplexityBot
 Allow: /
 Disallow: /admin

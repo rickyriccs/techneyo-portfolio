@@ -39,6 +39,7 @@ const staticPages = [
 
 // Core Services
 const serviceSlugs = [
+  "chatgpt-business-hub-setup",
   "website-development",
   "business-website-design",
   "crm-development",

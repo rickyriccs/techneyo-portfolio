@@ -69,18 +69,24 @@ export default function VisitorCheckin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
     if (!name.trim() || !phone.trim()) {
       toast.error("Please enter your name and phone number.");
       return;
     }
+
+    const cleanCompany = company.trim();
+    const cleanEmail = email.trim();
+    const cleanNotes = notes.trim();
 
     setIsSubmitting(true);
     try {
       await createContactEnquiry({
         name: name.trim(),
         phone: phone.trim(),
-        email: email.trim() || undefined,
-        businessName: company.trim() || undefined,
+        email: cleanEmail ? cleanEmail : undefined,
+        businessName: cleanCompany ? cleanCompany : undefined,
         city: "Ludhiana (Head Office)",
         state: "Punjab",
         serviceRequired: `Office Visitor Check-in: ${purpose}`,
@@ -89,8 +95,8 @@ export default function VisitorCheckin() {
           `Office: Ludhiana (Head Office)`,
           `Host Requested: ${host}`,
           `Purpose: ${purpose}`,
-          company ? `Organization: ${company}` : "",
-          notes ? `Notes / Agenda: ${notes}` : "",
+          cleanCompany ? `Organization: ${cleanCompany}` : "",
+          cleanNotes ? `Notes / Agenda: ${cleanNotes}` : "",
           `Check-in Time: ${new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}`,
         ]
           .filter(Boolean)
@@ -165,7 +171,7 @@ export default function VisitorCheckin() {
               transition={{ duration: 0.3 }}
               className="rounded-2xl border border-white/10 bg-slate-900/80 p-6 shadow-2xl backdrop-blur-xl sm:p-8"
             >
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} noValidate className="space-y-4">
                 {/* Honeypot field */}
                 <input
                   type="text"
@@ -217,14 +223,17 @@ export default function VisitorCheckin() {
                 {/* Company / Email Grid */}
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-300">
-                      Company / Organization <span className="text-slate-500 font-normal">(Optional)</span>
-                    </label>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
+                        Company / Organization
+                      </label>
+                      <span className="text-[11px] text-slate-400 font-normal">Optional</span>
+                    </div>
                     <div className="relative">
                       <Building2 className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                       <input
                         type="text"
-                        placeholder="Company name"
+                        placeholder="Company name (optional)"
                         value={company}
                         onChange={(e) => setCompany(e.target.value)}
                         className="w-full rounded-xl border border-white/10 bg-white/[0.04] py-3 pl-10 pr-4 text-sm text-white placeholder-slate-500 outline-none transition focus:border-cyan-400 focus:bg-white/[0.07] focus:ring-2 focus:ring-cyan-500/20"
@@ -233,14 +242,17 @@ export default function VisitorCheckin() {
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-300">
-                      Email Address <span className="text-slate-500 font-normal">(Optional)</span>
-                    </label>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
+                        Email Address
+                      </label>
+                      <span className="text-[11px] text-slate-400 font-normal">Optional</span>
+                    </div>
                     <div className="relative">
                       <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                       <input
                         type="email"
-                        placeholder="you@domain.com"
+                        placeholder="you@domain.com (optional)"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="w-full rounded-xl border border-white/10 bg-white/[0.04] py-3 pl-10 pr-4 text-sm text-white placeholder-slate-500 outline-none transition focus:border-cyan-400 focus:bg-white/[0.07] focus:ring-2 focus:ring-cyan-500/20"

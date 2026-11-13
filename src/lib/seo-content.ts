@@ -21,6 +21,8 @@ export type ServicePage = {
   whyChoose: string;
   related: string[];
   faqs: FaqItem[];
+  ctaPrimaryText?: string;
+  ctaPrimaryLink?: string;
 };
 
 export const servicePages: ServicePage[] = [
@@ -194,6 +196,63 @@ export const servicePages: ServicePage[] = [
       { question: "Can custom software include an admin panel?", answer: "Yes. Admin dashboards are often part of custom web-based software projects." },
       { question: "How is pricing decided?", answer: "Pricing depends on scope, features, roles, integrations, timeline, and support needs." },
     ],
+  },
+  {
+    slug: "chatgpt-business-hub-setup",
+    title: "ChatGPT Business Hub Setup & Ads Management",
+    seoTitle: "ChatGPT Business Hub Setup & Verification Agency | Techneyo",
+    metaDescription: "Claim and verify your business on ChatGPT Business Hub with Techneyo. We handle DNS & Persona verification, official Business Profile, product feed sync, Business Agent setup, and ongoing AI search ads management.",
+    keywords: "add business to chatgpt, chatgpt business hub setup, businesses in chatgpt agency, chatgpt business verification, chatgpt advertising agency, openai business hub, chatgpt business agent setup, ai search marketing",
+    h1: "Add Your Business to ChatGPT Business Hub & Run AI Search Ads",
+    intro: "Over 300 million people use ChatGPT every week to search for products, local services, and expert companies. Through OpenAI's official Businesses in ChatGPT program, Techneyo Solutions helps your company claim, verify, and dominate the ChatGPT Business Hub. We handle full DNS domain verification, official Persona identity vetting, business profile curation, real-time product/catalog feeds, custom Business Agents, and performance advertising so your brand is recommended first when high-intent customers search on ChatGPT.",
+    forWhom: [
+      "E-commerce brands & Shopify merchants wanting product feeds inside ChatGPT",
+      "B2B companies, SaaS providers, and tech agencies seeking high-intent AI search leads",
+      "Local and international service businesses looking for official ChatGPT verification",
+      "Brands ready to run sponsored placements, manage AI ads, and capture automated leads",
+    ],
+    problems: [
+      "ChatGPT gives outdated or competitor-biased answers about your business",
+      "Unverified business listings on AI search engines losing potential customers",
+      "DNS, Persona identity verification, and webhook rejections causing verification delays",
+      "No structured catalog or live pricing feed synced with OpenAI's search crawlers",
+      "Missing out on the new wave of ChatGPT Business Agents and conversational ads",
+    ],
+    features: [
+      "Official ChatGPT Business Hub Claiming & Profile Setup",
+      "Domain DNS TXT Verification & Persona Identity Approval Guarantee",
+      "Product Feed & Catalog Synchronization (CSV, JSONL, Shopify)",
+      "Interactive Custom Business Agent Prompting & Workflow Setup",
+      "AI Search Ads Strategy, Campaign Setup & Retainer Management",
+      "28-Day ChatGPT Business Analytics (Mentions, Queries, Topic Insights & CTR)",
+      "Technical Website Optimization for OAI-SearchBot and GPTBot Crawlers",
+      "Transparent One-Time Setup + Predictable Monthly Retainer Model",
+    ],
+    process: [
+      "1. Business & Domain Eligibility Audit: We check your domain, registration, and crawler status",
+      "2. DNS & Persona Verification: We add verified DNS TXT records and guide Persona legal documents",
+      "3. Profile & Catalog Integration: We format logos, bio, services, FAQs, and product feeds for AI discovery",
+      "4. Business Agent Deployment: We configure and test an interactive AI agent to represent your business",
+      "5. AI Search Ads & Analytics Retainer: We manage conversational ads, monitor mention frequency, and optimize CTR",
+    ],
+    benefits: [
+      "Verified brand authenticity inside ChatGPT recommendations",
+      "Direct click-throughs from ChatGPT conversations straight to your sales page or WhatsApp",
+      "Automated 24/7 lead capture through custom ChatGPT Business Agents",
+      "Early-mover advantage in AI search rankings over competitors",
+      "Predictable growth via professional AI ad campaign management",
+    ],
+    whyChoose: "Techneyo combines technical DNS engineering, rigorous official verification support, and performance AI marketing under one roof. We don't just get you a checkmark; we build an automated pipeline that turns ChatGPT searchers into paying clients.",
+    related: ["seo-digital-presence", "business-automation", "website-development", "custom-software-development"],
+    faqs: [
+      { question: "How does a business get listed in ChatGPT Business Hub?", answer: "OpenAI allows eligible businesses to claim their profile via the Business Hub. It requires domain ownership verification via DNS TXT records, identity verification via Persona with business registration documents, and profile configuration. Techneyo manages this complete process end-to-end for your brand." },
+      { question: "Can Techneyo manage ads and sponsored placements in ChatGPT?", answer: "Yes. As OpenAI expands business discovery and promotional features, Techneyo provides monthly retainer management covering AI search campaign optimization, query analysis, CTR tracking, and ongoing business profile tuning." },
+      { question: "What documents are needed for Persona identity verification?", answer: "You will need a valid government photo ID of the authorized business owner/representative, plus official business registration documents (such as Certificate of Incorporation, GST/VAT registration, or tax filing) matching your company name." },
+      { question: "How long does the ChatGPT verification and setup take?", answer: "Standard domain DNS and profile setup is typically completed within 2 to 4 business days once documents are submitted to Persona." },
+      { question: "Does being on ChatGPT Business Hub guarantee #1 ranking in ChatGPT answers?", answer: "OpenAI's models make independent recommendations, but claiming your verified profile, syncing live feeds, and optimizing website schema ensures ChatGPT has 100% accurate, up-to-date information, direct website links, and prioritizes verified data over unverified third-party scrapers." },
+    ],
+    ctaPrimaryText: "Book Free ChatGPT Audit",
+    ctaPrimaryLink: "/audit",
   },
 ];
 

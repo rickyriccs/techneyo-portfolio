@@ -42,6 +42,11 @@ const ServiceDetail = () => {
     .map((relatedSlug) => servicePages.find((item) => item.slug === relatedSlug))
     .filter(Boolean);
 
+  const whatsappUrl =
+    service.slug === "chatgpt-business-hub-setup"
+      ? "https://wa.me/919988773122?text=Hello%20Techneyo%20Solutions%2C%20I%20want%20to%20add%20my%20business%20to%20ChatGPT%20Business%20Hub%20and%20run%20AI%20ads."
+      : businessInfo.whatsappUrl;
+
   const schema = graphSchema(
     serviceSchema(service),
     faqSchema(service.faqs),
@@ -64,10 +69,10 @@ const ServiceDetail = () => {
             <h1 className="font-display text-4xl font-bold leading-tight text-white sm:text-6xl">{service.h1}</h1>
             <p className="mt-6 text-lg leading-8 text-white/68">{service.intro}</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/contact" className="premium-btn premium-btn-primary">
-                Get Website Quote <ArrowRight size={18} />
+              <Link to={service.ctaPrimaryLink || "/contact"} className="premium-btn premium-btn-primary">
+                {service.ctaPrimaryText || "Get Website Quote"} <ArrowRight size={18} />
               </Link>
-              <a href={businessInfo.whatsappUrl} target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn-ghost">
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn-ghost">
                 Chat on WhatsApp
               </a>
             </div>

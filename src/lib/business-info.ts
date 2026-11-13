@@ -18,6 +18,7 @@ export const businessInfo = {
     { label: "Instagram", url: "https://www.instagram.com/techneyo" },
   ],
   services: [
+    "ChatGPT Business Hub & AI Search Ads",
     "High-Converting Websites",
     "Mobile App Development",
     "Social Media & Video Reels Branding",

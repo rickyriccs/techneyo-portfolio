@@ -21,6 +21,7 @@ import {
   FileSpreadsheet,
   MessageSquare,
   Quote,
+  Trash2,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
@@ -241,6 +242,22 @@ export default function AdminVisitors() {
       toast.success("Visitor notes saved!");
     } catch (err: any) {
       toast.error(err.message || "Failed to save notes");
+    }
+  };
+
+  const handleDeleteVisitor = async (id: string, name: string) => {
+    if (!window.confirm(`Are you sure you want to delete the check-in record for "${name}"?`)) {
+      return;
+    }
+    if (!supabase) return;
+
+    try {
+      const { error } = await supabase.from("contact_enquiries").delete().eq("id", id);
+      if (error) throw error;
+      setVisitors((prev) => prev.filter((v) => v.id !== id));
+      toast.success(`Removed visitor record for ${name}`);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to delete record");
     }
   };
 
@@ -486,6 +503,7 @@ export default function AdminVisitors() {
                   <th className="px-4 py-3 font-semibold">Check-in Time</th>
                   <th className="px-4 py-3 font-semibold">Status</th>
                   <th className="px-4 py-3 font-semibold">Internal Staff Notes</th>
+                  <th className="px-4 py-3 font-semibold text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -641,6 +659,18 @@ export default function AdminVisitors() {
                             </span>
                           </div>
                         )}
+                      </td>
+
+                      {/* Actions */}
+                      <td className="px-4 py-3.5 whitespace-nowrap text-right">
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteVisitor(v.id, v.name)}
+                          title="Delete visitor record"
+                          className="inline-flex items-center justify-center rounded-lg p-1.5 text-muted-foreground transition hover:bg-red-500/10 hover:text-red-400"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
                       </td>
                     </tr>
                   );

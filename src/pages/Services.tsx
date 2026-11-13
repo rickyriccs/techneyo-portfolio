@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  Globe, MapPin, MessageCircle, Star, Sparkles, ArrowRight, CheckCircle2, PhoneCall, ShieldCheck, Zap, HelpCircle, BarChart3
+  Globe, MapPin, MessageCircle, Star, Sparkles, ArrowRight, CheckCircle2, PhoneCall, ShieldCheck, Zap, HelpCircle, BarChart3, Bot
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import PageMeta from "@/components/PageMeta";
@@ -113,6 +113,49 @@ const Services = () => {
               </a>
             </motion.div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Featured AI Spotlight: ChatGPT Business Hub & Ads */}
+      <section className="relative z-10 -mt-6 mb-8 px-4">
+        <div className="section-container">
+          <div className="relative overflow-hidden rounded-3xl border border-cyan-500/30 bg-gradient-to-r from-[#071329] via-[#0b1b3a] to-[#050f24] p-6 sm:p-8 shadow-2xl shadow-cyan-500/10">
+            <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl" />
+            <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              <div className="max-w-2xl space-y-3">
+                <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-500/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-cyan-200">
+                  <Bot className="h-3.5 w-3.5 text-cyan-300" />
+                  <span>Trending AI Offering</span>
+                </div>
+                <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-white">
+                  ChatGPT Business Hub Setup & AI Search Ads
+                </h2>
+                <p className="text-sm sm:text-base leading-relaxed text-white/75">
+                  Over 300M+ people use ChatGPT weekly. We handle complete domain DNS & Persona verification, official Business Hub profile curation, live product feed sync, custom Business Agents, and conversational ad management so your brand gets recommended first.
+                </p>
+                <div className="flex flex-wrap gap-x-4 gap-y-2 pt-1 text-xs text-cyan-200/90 font-medium">
+                  <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-cyan-400" /> DNS & Persona Verification</span>
+                  <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-cyan-400" /> Live Product Feed Sync</span>
+                  <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-cyan-400" /> Custom Business Agent</span>
+                  <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-cyan-400" /> Retainer Ad Management</span>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
+                <Link
+                  to="/services/chatgpt-business-hub-setup"
+                  className="premium-btn premium-btn-primary flex items-center justify-center gap-2 text-sm font-bold shadow-lg shadow-cyan-500/20"
+                >
+                  Explore Service & Setup <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  to="/audit"
+                  className="premium-btn premium-btn-ghost flex items-center justify-center gap-2 text-sm"
+                >
+                  Check ChatGPT Eligibility
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

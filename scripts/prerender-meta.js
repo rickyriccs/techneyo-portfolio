@@ -61,6 +61,12 @@ const pages = [
     keywords: "website development services india, crm software company, whatsapp automation agency, local seo services",
   },
   {
+    path: "services/chatgpt-business-hub-setup",
+    title: "ChatGPT Business Hub Setup & Verification Agency | Techneyo",
+    description: "Claim and verify your business on ChatGPT Business Hub with Techneyo. DNS & Persona verification, official Business Profile, product feed sync, Business Agent setup, and ongoing AI search ads management.",
+    keywords: "add business to chatgpt, chatgpt business hub setup, businesses in chatgpt agency, chatgpt business verification, chatgpt advertising agency, openai business hub, chatgpt business agent setup, ai search marketing",
+  },
+  {
     path: "offers",
     title: "Special Business Website & Automation Offers | Techneyo Solutions",
     description: "Explore active promotional packages including the ₹999/month Business Website Subscription, free domain, cloud hosting, and WhatsApp lead setup.",
